@@ -1,0 +1,3 @@
+&HEAD CHID='test'/
+&MESH XB=0,1,0,1,0,1, IJK=3,3,3/
+&TAIL/

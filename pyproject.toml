@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "xfds"
+version = "0.1.0"
+description = "FDS Runner using openbcl/fds-dockerfiles"
+license = "MIT"
+authors = ["Brian Cohan <briancohan@pbd.tools>"]
+readme = "README.md"
+homepage = "https://github.com/pbdtools/xfds"
+repository = "https://github.com/pbdtools/xfds"
+documentation = "https://github.com/pbdtools/xfds"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Scientific/Engineering",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+typer = "^0.4.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+mypy = "^0.931"
+black = "^21.12b0"
+pytest-datadir = "^1.3.1"
+pre-commit = "^2.16.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+xfds = "xfds.core:main"
