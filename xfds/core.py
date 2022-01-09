@@ -1,10 +1,9 @@
 """Core program for running fds in docker containers."""
 from __future__ import annotations
 
+import argparse
 import subprocess  # noqa: S404
 from pathlib import Path
-
-import typer
 
 from . import settings
 
@@ -12,14 +11,13 @@ from . import settings
 def get_version(version: str) -> str:
     """Ensure version is supported."""
     if version not in settings.VERSIONS:
-        raise typer.BadParameter(f"Version {version} is not supported")
+        raise ValueError(f"Version {version} is not supported")
 
     return version
 
 
 def build_arguments(
     interactive: bool = settings.INTERACTIVE,
-    linux: bool = settings.LINUX,
     windows: bool = settings.WINDOWS,
     processors: int = settings.PROCESSORS,
     version: str = settings.LATEST,
@@ -65,38 +63,60 @@ def build_arguments(
 
     # Add fds command to run file
     args.extend(["fds", str(fds_file.name)])
-    args.extend([">", str(fds_file.with_suffix(".err")), "&"])
 
     return args
 
 
-def app(
-    interactive: bool = typer.Option(
-        settings.INTERACTIVE, "--interactive", "-i", help="Run in interactive mode"
-    ),
-    linux: bool = typer.Option(
-        settings.LINUX, "--linux", "-l", help="Run in Linux container"
-    ),
-    windows: bool = typer.Option(
-        settings.WINDOWS, "--windows", "-w", help="Run in Windows container"
-    ),
-    processors: int = typer.Option(
-        settings.PROCESSORS, "--processors", "-n", help="Number of processors to use"
-    ),
-    version: str = typer.Option(
-        settings.LATEST, "--version", "-v", help="FDS version to use "
-    ),
-    fds_file: Path = typer.Argument(None),
-) -> None:
-    """Entry point for app."""
-    args = build_arguments(interactive, linux, windows, processors, version, fds_file)
-    print(" ".join(args))
-    _ = subprocess.Popen(args)  # noqa: S603
-
-
 def main() -> None:
     """Entry point for setup.py."""
-    typer.run(app)
+    parser = argparse.ArgumentParser(
+        prog="xfds",
+        description="Run FDS in docker container",
+        epilog="Developed by PBD Tools LLC.",
+    )
+    parser.add_argument(
+        "-i",
+        "--interactive",
+        action="store_true",
+        help="Run in interactive mode",
+    )
+    parser.add_argument(
+        "-w",
+        "--windows",
+        action="store_true",
+        help="Run in Windows container [Defaults to Linux]",
+    )
+    parser.add_argument(
+        "-n",
+        "--processors",
+        default=1,
+        type=int,
+        help="Number of processors to use",
+    )
+    parser.add_argument(
+        "-v",
+        "--version",
+        default=settings.LATEST,
+        choices=settings.VERSIONS.keys(),
+        help="FDS version to use",
+    )
+    parser.add_argument(
+        "fds_file",
+        nargs="?",
+        default=Path.cwd(),
+        help="FDS input file",
+    )
+
+    args = parser.parse_args()
+    cmd = build_arguments(
+        args.interactive,
+        args.windows,
+        args.processors,
+        args.version,
+        args.fds_file,
+    )
+    print(" ".join(cmd))
+    _ = subprocess.Popen(cmd)  # noqa: S603
 
 
 if __name__ == "__main__":

@@ -49,7 +49,7 @@ def test_command_for_linux_container(fds_file: Path) -> None:
     """Test command for linux container."""
     volume = fds_file.parent.resolve()
 
-    given = build_arguments(linux=True, fds_file=fds_file)
+    given = build_arguments(fds_file=fds_file)
     expected = (
         f"docker run --rm --name {fds_file.stem} -v {volume}:/workdir "
         f"openbcl/fds:{FDS} fds {fds_file.name}"
@@ -74,7 +74,7 @@ def test_command_for_linux_mpi(fds_file: Path) -> None:
     processors = 2
     volume = fds_file.parent.resolve()
 
-    given = build_arguments(linux=True, processors=processors, fds_file=fds_file)
+    given = build_arguments(processors=processors, fds_file=fds_file)
     expected = (
         f"docker run --rm --name {fds_file.stem} -v {volume}:/workdir "
         f"openbcl/fds:{FDS} mpiexec -n {processors} fds {fds_file.name}"
@@ -99,7 +99,7 @@ def test_command_for_linux_interactive() -> None:
     """Test command for linux interactive."""
     volume = Path.cwd().resolve()
 
-    given = build_arguments(linux=True, interactive=True)
+    given = build_arguments(interactive=True)
     expected = (
         f"docker run --rm -it --name fds-{FDS} -v {volume}:/workdir "
         f"openbcl/fds:{FDS}"
@@ -117,25 +117,6 @@ def test_command_for_windows_interactive() -> None:
         f"openbcl/fds:{FDS}"
     )
     assert " ".join(given) == expected
-
-
-@pytest.mark.parametrize(
-    "linux, windows, container",
-    [
-        (True, False, "linux"),  # Default to linux or linux specified
-        (True, True, "windows"),  # windows specified
-        (False, True, "windows"),  # windows specified, linux somehow false
-    ],
-)
-def test_command_selects_correct_container(
-    linux: bool, windows: bool, container: str, fds_file: Path
-) -> None:
-    """Test command selects correct container."""
-    volume = fds_file.parent.resolve()
-
-    given = build_arguments(linux=linux, windows=windows, fds_file=fds_file)
-    expected = f"{volume}:/workdir" if container == "linux" else f"{volume}:C:\\workdir"
-    assert expected in given
 
 
 def test_command_with_custom_version(fds_file: Path) -> None:
