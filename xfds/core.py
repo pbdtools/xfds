@@ -113,7 +113,7 @@ def main() -> None:
         args.windows,
         args.processors,
         args.version,
-        args.fds_file,
+        Path(args.fds_file).resolve(),
     )
     print(" ".join(cmd))
     _ = subprocess.Popen(cmd)  # noqa: S603
