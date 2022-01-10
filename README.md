@@ -1,6 +1,6 @@
 # xFDS
 
-Tool for managing FDS runs with [fds-dockerfiles](https://github.com/openbcl/fds-dockerfiles).
+Tool for e<u>x</u>ecuting FDS runs with [fds-dockerfiles](https://github.com/openbcl/fds-dockerfiles).
 
 ## Installation
 
