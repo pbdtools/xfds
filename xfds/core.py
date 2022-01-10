@@ -116,7 +116,7 @@ def main() -> None:
         Path(args.fds_file).resolve(),
     )
     print(" ".join(cmd))
-    _ = subprocess.Popen(cmd)  # noqa: S603
+    subprocess.run(cmd)  # noqa: S603
 
 
 if __name__ == "__main__":
