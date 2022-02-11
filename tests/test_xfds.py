@@ -1,30 +1,10 @@
 """Tests for command line interface."""
 from pathlib import Path
 
-import pytest
-
 from xfds import settings
 from xfds.core import build_arguments
 
 FDS = settings.VERSIONS[-1]
-
-
-@pytest.fixture
-def fds_file(shared_datadir: Path) -> Path:
-    """Fixture to point to FDS file."""
-    return shared_datadir / "fds" / "test.fds"
-
-
-@pytest.fixture
-def fds_dir(fds_file: Path) -> Path:
-    """Fixture to point to FDS directory."""
-    return fds_file.parent.resolve()
-
-
-@pytest.fixture
-def empty_dir(shared_datadir: Path) -> Path:
-    """Fixture to point to empty directory."""
-    return shared_datadir / "no_fds"
 
 
 def test_command_with_default_arguments(fds_file: Path, fds_dir: Path) -> None:
