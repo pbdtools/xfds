@@ -7,7 +7,7 @@ to generate a unique name.
 import uuid
 from pathlib import Path
 
-from pytest.monkeypatch import MonkeyPatch
+from _pytest.monkeypatch import MonkeyPatch
 
 from xfds.core import build_arguments
 
@@ -17,12 +17,17 @@ def patch_uuid() -> str:
     return "p4x-639"
 
 
+def container_name_from_command(command: list) -> str:
+    """Get the container name from the command."""
+    return command[command.index("--name") + 1]
+
+
 def test_interactive_name(monkeypatch: MonkeyPatch, latest: str) -> None:
     """Test interactive mode has unique name."""
     monkeypatch.setattr(uuid, "uuid4", patch_uuid)
     command = build_arguments(interactive=True)
 
-    given = command[command.index("--name") + 1]
+    given = container_name_from_command(command=command)
     expected = f"fds-{latest}-{patch_uuid()}"
 
     assert given == expected
@@ -35,7 +40,7 @@ def test_interactive_with_empty_dir(
     monkeypatch.setattr(uuid, "uuid4", patch_uuid)
     command = build_arguments(fds_file=empty_dir)
 
-    given = command[command.index("--name") + 1]
+    given = container_name_from_command(command=command)
     expected = f"fds-{latest}-{patch_uuid()}"
 
     assert given == expected
@@ -48,7 +53,7 @@ def test_noninteractive_name_with_fds_file(
     monkeypatch.setattr(uuid, "uuid4", patch_uuid)
     command = build_arguments(fds_file=fds_file)
 
-    given = command[command.index("--name") + 1]
+    given = container_name_from_command(command=command)
     expected = f"{fds_file.stem}-{patch_uuid()}"
 
     assert given == expected
@@ -61,7 +66,7 @@ def test_noninteractive_name_with_fds_dir(
     monkeypatch.setattr(uuid, "uuid4", patch_uuid)
     command = build_arguments(fds_file=fds_dir)
 
-    given = command[command.index("--name") + 1]
+    given = container_name_from_command(command=command)
     fds_file = next(fds_dir.glob("*.fds"))
     expected = f"{fds_file.stem}-{patch_uuid()}"
 
