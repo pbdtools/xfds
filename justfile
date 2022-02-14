@@ -5,8 +5,8 @@ install:
     @poetry install
 
 # Development
-test:
-    @poetry run pytest
+test *args:
+    @poetry run pytest {{args}}
 
 check:
     @poetry run pre-commit run --all-files
