@@ -3,9 +3,16 @@ from __future__ import annotations
 
 import argparse
 import subprocess  # noqa: S404
+import uuid
 from pathlib import Path
 
 from . import settings
+
+
+def container_name(interactive: bool, version: str, fds_file: Path) -> str:
+    """Get container name."""
+    base = f"fds-{version}" if interactive else fds_file.stem
+    return f"{base}-{uuid.uuid4()}"
 
 
 def build_arguments(
@@ -32,7 +39,7 @@ def build_arguments(
         args.append("-it")
 
     # Set container name
-    name = f"fds-{version}" if interactive else fds_file.stem
+    name = container_name(interactive=interactive, version=version, fds_file=fds_file)
     args.extend(["--name", name])
 
     # Set volume to mount
