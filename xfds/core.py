@@ -5,6 +5,9 @@ import argparse
 import subprocess  # noqa: S404
 import uuid
 from pathlib import Path
+from typing import Optional
+
+import markdown
 
 from . import settings
 
@@ -15,10 +18,27 @@ def container_name(interactive: bool, version: str, fds_file: Path) -> str:
     return f"{base}-{uuid.uuid4()}"
 
 
+def fds_version(fds_file: Path, version: Optional[str]) -> str:
+    """Return the FDS version of the specified file.
+
+    Command line arguments take precedence over metadata.
+    """
+    if version is not None:
+        return version
+
+    md = markdown.Markdown(extensions=["meta"])
+    try:
+        md.convert(fds_file.read_text())
+    except IsADirectoryError:
+        return version or settings.VERSIONS[-1]
+
+    return md.Meta.get("fds", [settings.VERSIONS[-1]])[0]
+
+
 def build_arguments(
     interactive: bool = settings.INTERACTIVE,
     processors: int = settings.PROCESSORS,
-    version: str = settings.VERSIONS[-1],
+    version: str = None,
     fds_file: Path = Path(),
 ) -> list[str]:
     """Build the command line arguments for the CLI."""
@@ -30,6 +50,8 @@ def build_arguments(
         except StopIteration:
             interactive = True
             volume = str(fds_file.resolve())
+
+    version = fds_version(fds_file=fds_file, version=version)
 
     # Docker run command
     args = ["docker", "run", "--rm"]
@@ -85,7 +107,7 @@ def main() -> None:
     parser.add_argument(
         "-v",
         "--version",
-        default=settings.VERSIONS[-1],
+        default=None,
         choices=settings.VERSIONS,
         help="FDS version to use",
     )

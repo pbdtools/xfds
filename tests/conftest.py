@@ -28,3 +28,9 @@ def fds_dir(fds_file: Path) -> Path:
 def empty_dir(shared_datadir: Path) -> Path:
     """Fixture to point to empty directory."""
     return shared_datadir / "no_fds"
+
+
+@pytest.fixture
+def meta_dir(shared_datadir: Path) -> Path:
+    """Fixture to point to empty directory."""
+    return shared_datadir / "from_metadata"
