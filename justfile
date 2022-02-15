@@ -20,6 +20,9 @@ sort:
 mypy:
     @poetry run mypy .
 
+push:
+    @git push --set-upstream origin `git rev-parse --abbrev-ref HEAD`
+
 # Publish
 build:
     @poetry build

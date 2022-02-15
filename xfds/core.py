@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 import subprocess  # noqa: S404
 import uuid
 from pathlib import Path
@@ -21,7 +22,11 @@ def container_name(interactive: bool, version: str, fds_file: Path) -> str:
 def fds_version(fds_file: Path, version: Optional[str]) -> str:
     """Return the FDS version of the specified file.
 
-    Command line arguments take precedence over metadata.
+    Version is selected in the following order:
+    - Command line arguments
+    - Metadata
+    - File path
+    - Latest version
     """
     if version is not None:
         return version
@@ -29,10 +34,18 @@ def fds_version(fds_file: Path, version: Optional[str]) -> str:
     md = markdown.Markdown(extensions=["meta"])
     try:
         md.convert(fds_file.read_text())
-    except IsADirectoryError:
-        return version or settings.VERSIONS[-1]
+        if "fds" in md.Meta.keys():
+            return md.Meta["fds"][0]
+    except (FileNotFoundError, IsADirectoryError):
+        pass
 
-    return md.Meta.get("fds", [settings.VERSIONS[-1]])[0]
+    pattern = r"((v|fds)?[._]?)(\d[._]\d[._]\d)"
+    for part in fds_file.parts:
+        match = re.match(pattern, part)
+        if match:
+            return match.group(3).replace("-", ".").replace("_", ".")
+
+    return settings.VERSIONS[-1]
 
 
 def build_arguments(
