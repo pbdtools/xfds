@@ -1,6 +1,9 @@
 """Tests for determining the FDS version."""
 from pathlib import Path
 
+import pytest
+from _pytest.monkeypatch import MonkeyPatch
+
 from xfds.core import build_arguments
 
 
@@ -44,3 +47,37 @@ def test_cli_version_overrides_metadata_version(meta_dir: Path, latest: str) -> 
     fds_file = meta_dir / "6.2.0.fds"
     cmd = build_arguments(version=latest, fds_file=fds_file)
     assert format_image_name(latest) == extract_container_name(cmd)
+
+
+paths = [
+    Path("path/to/1_2_3/case/"),
+    Path("path/to/1.2.3/case/"),
+    Path("path/to/v1_2_3/case/"),
+    Path("path/to/v1.2.3/case/"),
+    Path("path/to/fds_1_2_3/case/"),
+    Path("path/to/fds.1.2.3/case/"),
+    Path("path/to/fds_1.2.3/case/"),
+]
+
+
+@pytest.mark.parametrize(
+    "fds_file",
+    paths,
+    ids=[path.parts[-2] for path in paths],
+)
+def test_pulls_version_from_file_path(monkeypatch: MonkeyPatch, fds_file: Path) -> None:
+    """Test FDS version is extracted from file path."""
+
+    def image_name_from_command(command: list) -> str:
+        name = [item for item in command if "openbcl/fds" in item][0]
+        return name.replace("-", ".").replace("_", ".")
+
+    cmd = build_arguments(fds_file=fds_file)
+    assert format_image_name("1.2.3") == image_name_from_command(cmd)
+
+
+def test_metadata_overrides_file_path(meta_dir: Path) -> None:
+    """Test that the version specified in metadata takes precidence."""
+    fds_file = meta_dir / "6.7.5" / "test.fds"
+    cmd = build_arguments(fds_file=fds_file)
+    assert format_image_name("6.7.1") == extract_container_name(cmd)
