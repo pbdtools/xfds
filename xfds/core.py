@@ -22,7 +22,11 @@ def container_name(interactive: bool, version: str, fds_file: Path) -> str:
 def fds_version(fds_file: Path, version: Optional[str]) -> str:
     """Return the FDS version of the specified file.
 
-    Command line arguments take precedence over metadata.
+    Version is selected in the following order:
+    - Command line arguments
+    - Metadata
+    - File path
+    - Latest version
     """
     if version is not None:
         return version
