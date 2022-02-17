@@ -24,5 +24,8 @@ push:
     @git push --set-upstream origin `git rev-parse --abbrev-ref HEAD`
 
 # Publish
+pipx:
+    pipx install --force `find ./dist -name "*.whl" | sort | tail -n 1`
+
 build:
     @poetry build

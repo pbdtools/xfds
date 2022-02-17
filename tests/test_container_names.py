@@ -9,7 +9,7 @@ from pathlib import Path
 
 from _pytest.monkeypatch import MonkeyPatch
 
-from xfds.core import build_arguments
+from xfds.core import container_name
 
 
 def patch_uuid() -> str:
@@ -22,52 +22,37 @@ def container_name_from_command(command: list) -> str:
     return command[command.index("--name") + 1]
 
 
-def test_interactive_name(monkeypatch: MonkeyPatch, latest: str) -> None:
-    """Test interactive mode has unique name."""
-    monkeypatch.setattr(uuid, "uuid4", patch_uuid)
-    command = build_arguments(interactive=True)
-
-    given = container_name_from_command(command=command)
-    expected = f"fds-{latest}-{patch_uuid()}"
-
-    assert given == expected
-
-
-def test_interactive_with_empty_dir(
-    monkeypatch: MonkeyPatch, empty_dir: Path, latest: str
+def test_interactive_name(
+    monkeypatch: MonkeyPatch, latest: str, fds_file: Path
 ) -> None:
     """Test interactive mode has unique name."""
     monkeypatch.setattr(uuid, "uuid4", patch_uuid)
-    command = build_arguments(fds_file=empty_dir)
 
-    given = container_name_from_command(command=command)
-    expected = f"fds-{latest}-{patch_uuid()}"
+    name = container_name(
+        fds_file=fds_file,
+        interactive=True,
+        version=latest,
+    )
 
-    assert given == expected
+    assert "fds" in name
+    assert fds_file.stem not in name
+    assert latest in name
+    assert patch_uuid() in name
 
 
-def test_noninteractive_name_with_fds_file(
-    monkeypatch: MonkeyPatch, fds_file: Path
+def test_non_interactive_name(
+    monkeypatch: MonkeyPatch, latest: str, fds_file: Path
 ) -> None:
-    """Test non-interactive mode has unique name."""
+    """Test interactive mode has unique name."""
     monkeypatch.setattr(uuid, "uuid4", patch_uuid)
-    command = build_arguments(fds_file=fds_file)
 
-    given = container_name_from_command(command=command)
-    expected = f"{fds_file.stem}-{patch_uuid()}"
+    name = container_name(
+        fds_file=fds_file,
+        interactive=False,
+        version=latest,
+    )
 
-    assert given == expected
-
-
-def test_noninteractive_name_with_fds_dir(
-    monkeypatch: MonkeyPatch, fds_dir: Path
-) -> None:
-    """Test non-interactive mode has unique name."""
-    monkeypatch.setattr(uuid, "uuid4", patch_uuid)
-    command = build_arguments(fds_file=fds_dir)
-
-    given = container_name_from_command(command=command)
-    fds_file = next(fds_dir.glob("*.fds"))
-    expected = f"{fds_file.stem}-{patch_uuid()}"
-
-    assert given == expected
+    assert "fds" not in name
+    assert fds_file.stem in name
+    assert latest in name
+    assert patch_uuid() in name
