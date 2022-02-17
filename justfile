@@ -23,6 +23,10 @@ mypy:
 push:
     @git push --set-upstream origin `git rev-parse --abbrev-ref HEAD`
 
+# Manual Test
+run-fds *args:
+    @poetry run xfds {{args}} tests/data/fds/test.fds
+
 # Publish
 pipx:
     just build

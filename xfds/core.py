@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Optional
 
 import markdown
+from rich import print
 
 from . import settings
 
@@ -191,7 +192,7 @@ def main() -> None:
         container_name=_container_name,
         processors=_processors,
     )
-    print(" ".join(cmd))
+    print(f"[green]{' '.join(cmd)}[/]")
 
     if _interactive:
         subprocess.run(cmd)  # noqa: S603
@@ -199,6 +200,8 @@ def main() -> None:
         with _fds_file.resolve().with_suffix(".sout").open() as stdout:
             with _fds_file.resolve().with_suffix(".serr").open() as stderr:
                 subprocess.Popen(cmd, stdout=stdout, stderr=stderr)  # noqa: S603
+
+    print("\nFrom [#cc5500][link=https://pbd.tools]pbd.tools[/link][/] with ❤️")
 
 
 if __name__ == "__main__":
