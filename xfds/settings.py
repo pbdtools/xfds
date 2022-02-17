@@ -1,7 +1,6 @@
 """Default settings."""
-INTERACTIVE: bool = False
-PROCESSORS: int = 1
-
+INTERACTIVE = False
+PROCESSORS = 1
 VERSIONS = [
     "6.2.0",
     "6.3.0",
