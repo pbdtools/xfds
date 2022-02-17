@@ -174,7 +174,7 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    _fds_file = locate_fds_file(fds_file=args.fds_file)
+    _fds_file = locate_fds_file(fds_file=Path(args.fds_file))
     _volume = volume_to_mount(fds_file=_fds_file)
     _interactive = interactive_mode(fds_file=_fds_file, interactive=args.interactive)
     _version = fds_version(fds_file=_fds_file, version=args.version)
@@ -192,7 +192,13 @@ def main() -> None:
         processors=_processors,
     )
     print(" ".join(cmd))
-    subprocess.run(cmd)  # noqa: S603
+
+    if _interactive:
+        subprocess.run(cmd)  # noqa: S603
+    else:
+        with _fds_file.resolve().with_suffix(".sout").open() as stdout:
+            with _fds_file.resolve().with_suffix(".serr").open() as stderr:
+                subprocess.Popen(cmd, stdout=stdout, stderr=stderr)  # noqa: S603
 
 
 if __name__ == "__main__":

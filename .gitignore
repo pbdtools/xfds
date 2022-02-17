@@ -151,5 +151,14 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-**/data/fds/**
-!**/data/fds/*.fds
+# FDS Output Files
+**/data/**/*.binfo
+**/data/**/*.end
+**/data/**/*.out
+**/data/**/*.serr
+**/data/**/*.sinfo
+**/data/**/*.smv
+**/data/**/*.sout
+**/data/**/*.s3d*
+**/data/**/*.csv
+**/data/**/*.txt

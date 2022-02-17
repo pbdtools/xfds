@@ -25,6 +25,7 @@ push:
 
 # Publish
 pipx:
+    just build
     pipx install --force `find ./dist -name "*.whl" | sort | tail -n 1`
 
 build:
