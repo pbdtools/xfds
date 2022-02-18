@@ -24,6 +24,7 @@ xfds [options] [fds_file]
 - `-i`, `--interactive`: Launch Docker container in interactive mode (`--it`). By default, the Docker image will run the FDS model, but interactive mode will put you into the container where you can start the FDS model manually. This is good for when you are rapidly iterating and don't want to wait for the Docker image load time.
 - `-v`, `--version`: Specify FDS version to use. The FDS version can also be extracted from the file path or metadata in the FDS file.
 - `-n`, `--processors`: Specify number of processors. Defaults to 1 processor. If the number of processors is greater than 1, it will invoke MPI for you (`mpiexec -n #`). Ignored if interactive mode is enabled.
+- `--fds-versions`: List FDS versions available on Docker Hub and exit. See [fds-dockerfiles](https://github.com/openbcl/fds-dockerfiles) for compatability information.
 
 ### Arguments:
 - `fds_file`: The FDS file or directory to run.

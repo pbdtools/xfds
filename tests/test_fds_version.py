@@ -23,7 +23,7 @@ def extract_container_name(cmd: list) -> str:
 def test_latest_by_default(latest: str, fds_file: Path) -> None:
     """Test default FDS version is latest."""
     version = fds_version(fds_file=fds_file)
-    assert version == latest
+    assert version == "latest"
 
 
 def test_latest_if_specified(latest: str, fds_file: Path) -> None:
