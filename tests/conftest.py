@@ -3,13 +3,11 @@ from pathlib import Path
 
 import pytest
 
-from xfds import settings
-
 
 @pytest.fixture
 def latest() -> str:
     """Fixture to point to FDS version."""
-    return settings.VERSIONS[-1]
+    return "6.7.7"
 
 
 @pytest.fixture

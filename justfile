@@ -33,4 +33,5 @@ pipx:
     pipx install --force `find ./dist -name "*.whl" | sort | tail -n 1`
 
 build:
+    rm -Rf dist
     @poetry build

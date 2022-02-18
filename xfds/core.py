@@ -12,6 +12,7 @@ import markdown
 from rich import print
 
 from . import settings
+from .docker_hub import tags
 
 
 def locate_fds_file(fds_file: Optional[Path]) -> Path:
@@ -81,7 +82,7 @@ def fds_version(fds_file: Path, version: Optional[str] = None) -> str:
         if match:
             return match.group(3).replace("-", ".").replace("_", ".")
 
-    return settings.VERSIONS[-1]
+    return "latest"
 
 
 def container_name(fds_file: Path, version: str, interactive: bool) -> str:
@@ -105,7 +106,7 @@ def build_arguments(
     volume: Path = Path.cwd(),
     container_name: str = "",
     interactive: bool = settings.INTERACTIVE,
-    version: str = settings.VERSIONS[-1],
+    version: str = "latest",
     processors: int = settings.PROCESSORS,
 ) -> list[str]:
     """Build the command line arguments for the CLI."""
@@ -163,7 +164,6 @@ def main() -> None:
         "-v",
         "--version",
         default=None,
-        choices=settings.VERSIONS,
         help="FDS version to use",
     )
     parser.add_argument(
@@ -172,10 +172,19 @@ def main() -> None:
         default=None,
         help="FDS input file",
     )
+    parser.add_argument(
+        "--fds-versions",
+        action="store_true",
+        help="List available FDS versions",
+    )
 
     args = parser.parse_args()
 
-    _fds_file = locate_fds_file(fds_file=Path(args.fds_file))
+    if args.fds_versions:
+        print("\n".join(tags()))
+        return
+
+    _fds_file = locate_fds_file(fds_file=Path(args.fds_file or "."))
     _volume = volume_to_mount(fds_file=_fds_file)
     _interactive = interactive_mode(fds_file=_fds_file, interactive=args.interactive)
     _version = fds_version(fds_file=_fds_file, version=args.version)
@@ -197,11 +206,14 @@ def main() -> None:
     if _interactive:
         subprocess.run(cmd)  # noqa: S603
     else:
-        with _fds_file.resolve().with_suffix(".sout").open() as stdout:
-            with _fds_file.resolve().with_suffix(".serr").open() as stderr:
-                subprocess.Popen(cmd, stdout=stdout, stderr=stderr)  # noqa: S603
+        stdout = _fds_file.resolve().with_suffix(".stdout")
+        stderr = _fds_file.resolve().with_suffix(".stderr")
+        stdout.touch()
+        stderr.touch()
+        with stdout.open() as sout, stderr.open() as serr:
+            subprocess.Popen(cmd, stdout=sout, stderr=serr)  # noqa: S603
 
-    print("\nFrom [#cc5500][link=https://pbd.tools]pbd.tools[/link][/] with ❤️")
+    print("\nFrom [#cc5500][link=https://pbd.tools]pbd.tools[/link][/] with 💗")
 
 
 if __name__ == "__main__":
