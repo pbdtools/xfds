@@ -1,5 +1,6 @@
 [![Tests](https://github.com/pbdtools/xfds/workflows/Tests/badge.svg)](https://github.com/pbdtools/xfds/actions?workflow=Tests)
-[![Codecov](https://codecov.io/gh/pbdtools/xfds/branch/'master/graph/badge.svg)](https://codecov.io/gh/pbdtools/xfds)
+[![Codecov](https://codecov.io/gh/pbdtools/xfds/branch/master/graph/badge.svg)](https://codecov.io/gh/pbdtools/xfds)
+[![PyPI](https://img.shields.io/pypi/v/xfds.svg)](https://pypi.org/project/xfds)
 
 # xFDS
 
