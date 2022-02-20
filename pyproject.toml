@@ -25,9 +25,9 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.7"
-Markdown = "^3.3.6"
 rich = "^11.2.0"
 requests = "^2.27.1"
+Markdown = "^3.3.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "7.0"
