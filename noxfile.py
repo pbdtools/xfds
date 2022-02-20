@@ -65,6 +65,6 @@ def mypy(session: nox.session) -> None:
 
 @nox.session(python=python)
 def coverage(session: nox.session) -> None:
-    session.install("coverage", "codecov")
+    session.install("coverage[toml]", "codecov")
     session.run("coverage", "xml", "--fail-under=0")
     session.run("codecov", *session.posargs)
