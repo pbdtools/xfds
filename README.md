@@ -1,3 +1,6 @@
+[![Tests](https://github.com/pbdtools/xfds/workflows/Tests/badge.svg)](https://github.com/pbdtools/xfds/actions?workflow=Tests)
+[![Codecov](https://codecov.io/gh/pbdtools/xfds/branch/'master/graph/badge.svg)](https://codecov.io/gh/pbdtools/xfds)
+
 # xFDS
 
 Tool for executing FDS runs with [fds-dockerfiles](https://github.com/openbcl/fds-dockerfiles).

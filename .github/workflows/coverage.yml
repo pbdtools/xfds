@@ -1,14 +1,13 @@
-name: Tests
+name: Coverage
 on:
   - push
-  - pull_request
 
 jobs:
-  test:
+  coverage:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7, 3.8, 3.9, '3.10']
+        python-version: [3.9]
         poetry-version: [1.1.12]
       fail-fast: false
 
@@ -41,4 +40,6 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run tests
-      run: nox
+      run: nox --sessions tests-3.9 coverage
+      env:
+        CODECOV_TOKEN: ${CODECOV_TOKEN}
