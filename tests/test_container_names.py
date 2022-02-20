@@ -17,11 +17,6 @@ def patch_uuid() -> str:
     return "p4x-639"
 
 
-def container_name_from_command(command: list) -> str:
-    """Get the container name from the command."""
-    return command[command.index("--name") + 1]
-
-
 def test_interactive_name(
     monkeypatch: MonkeyPatch, latest: str, fds_file: Path
 ) -> None:

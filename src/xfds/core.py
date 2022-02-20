@@ -103,7 +103,7 @@ def image_name(version: str = "") -> str:
 
 def build_arguments(
     fds_file: Path,
-    volume: Path = Path.cwd(),
+    volume: Path = settings.CWD,
     container_name: str = "",
     interactive: bool = settings.INTERACTIVE,
     version: str = "latest",

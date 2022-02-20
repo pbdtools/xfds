@@ -7,18 +7,6 @@ from _pytest.monkeypatch import MonkeyPatch
 from xfds.core import fds_version, image_name
 
 
-# Helpers
-def format_image_name(fds_version: str) -> str:
-    """Return the image name for the specified FDS version."""
-    return f"openbcl/fds:{fds_version}"
-
-
-def extract_container_name(cmd: list) -> str:
-    """Extract the container name from the command line."""
-    return [arg for arg in cmd if "openbcl/fds" in arg][0]
-
-
-# Tests
 # - From Function Signature
 def test_latest_by_default(latest: str, fds_file: Path) -> None:
     """Test default FDS version is latest."""

@@ -1,0 +1,22 @@
+[flake8]
+max-line-length = 119
+exclude = .venv, __pycache__
+select = ANN, B, B9, BLK, C, E, F, S, W
+ignore =
+    # Missing Docstrings
+    D105  # Missing docstring in magic method
+    D107  # Missing docstring in __init__
+
+    # Docstring Quotes
+    D301  # Use r"" if any backslashes in a docstring
+    D302  # Deprecated: Use u"" for Unicode docstrings
+
+    # Type Annotations
+    ANN002  # Missing type annotation for *args
+    ANN003  # Missing type annotation for **kwargs
+    ANN101  # Missing type annotation for self in method
+    ANN102  # Missing type annotation for cls in classmethod
+per-file-ignores =
+    # Use of Assert
+    tests/*: S101
+max-complexity = 10
