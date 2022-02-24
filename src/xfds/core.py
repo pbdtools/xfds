@@ -162,7 +162,7 @@ def execute(
         return
 
     if interactive:
-        subprocess.run(cmd)  # noqa: S603
+        subprocess.run(cmd)  # pragma: no cover # noqa: S603
     else:
         stdout = fds_file.resolve().with_suffix(".stdout")
         stderr = fds_file.resolve().with_suffix(".stderr")
