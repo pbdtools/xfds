@@ -32,13 +32,6 @@ jobs:
       with:
         poetry-version: ${{ matrix.poetry-version }}
 
-    - name: Install dependencies
-      run: |
-        pip install pytest wheel
-        poetry install
-        poetry export --format requirements.txt --output requirements.txt
-        pip install -r requirements.txt
-
     - name: Run tests
       run: nox --sessions tests-3.9 coverage
       env:

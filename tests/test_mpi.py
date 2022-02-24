@@ -1,16 +1,18 @@
 """Tests for running in serial vs parallel."""
-from pathlib import Path
+from __future__ import annotations
 
-from xfds.core import build_arguments
+from xfds import core
 
 
-def test_serial_if_processors_is_none(fds_file: Path) -> None:
+def test_serial_if_processors_is_none(default_cmd_kwargs: dict) -> None:
     """Test container is serial when processors is None."""
-    cmd = build_arguments(processors=1, fds_file=fds_file)
+    default_cmd_kwargs["processors"] = 1
+    cmd = core.build_arguments(**default_cmd_kwargs)
     assert "mpiexec" not in cmd
 
 
-def test_mpi_if_processors_is_not_none(fds_file: Path) -> None:
+def test_mpi_if_processors_is_not_none(default_cmd_kwargs: dict) -> None:
     """Test container is mpi when processors is not None."""
-    cmd = build_arguments(processors=2, fds_file=fds_file)
+    default_cmd_kwargs["processors"] = 2
+    cmd = core.build_arguments(**default_cmd_kwargs)
     assert "mpiexec" in cmd

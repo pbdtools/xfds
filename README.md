@@ -10,37 +10,70 @@ Do you have FDS installed on your machine? Do you know where the FDS executable 
 
 xFDS leverages the power of Docker to give you acess to all the versions of FDS without having to manage the different versions of FDS yourself. Best of all, you don't have to change or install anything when FDS has a new release!
 
-Once xFDS is installed, all you have to do is navigate to your file and type `xfds`. It will locate the first FDS file in the directory and run it with the latest version of FDS!
+Once xFDS is installed, all you have to do is navigate to your file and type `xfds run`. It will locate the first FDS file in the directory and run it with the latest version of FDS!
 
 ```
 ~/tests/data/fds$ ls
 test.fds
-~/tests/data/fds$ xfds
+~/tests/data/fds$ xfds run
 docker run --rm --name test-1b6d0d27-2cce-4555-a827-4b31d0e03215 -v /tests/data/fds:/workdir openbcl/fds:6.7.7 fds test.fds
 ```
 
 ## Usage
 
-xfds [options] [fds_file]
+### `xfds run --help`
+```
+Usage: xfds run [OPTIONS] [FDS_FILE]
 
-### Options
-- `-h`, `--help`: Display help dialogue
-- `-i`, `--interactive`: Launch Docker container in interactive mode (`--it`). By default, the Docker image will run the FDS model, but interactive mode will put you into the container where you can start the FDS model manually. This is good for when you are rapidly iterating and don't want to wait for the Docker image load time.
-- `-v`, `--version`: Specify FDS version to use. The FDS version can also be extracted from the file path or metadata in the FDS file.
-- `-n`, `--processors`: Specify number of processors. Defaults to 1 processor. If the number of processors is greater than 1, it will invoke MPI for you (`mpiexec -n #`). Ignored if interactive mode is enabled.
-- `--fds-versions`: List FDS versions available on Docker Hub and exit. See [fds-dockerfiles](https://github.com/openbcl/fds-dockerfiles) for compatability information.
+  Run an FDS simulation locally
 
-### Arguments:
-- `fds_file`: The FDS file or directory to run.
-  - If a **FDS file** is specified, the FDS model will run.
-  - If a **directory** is specified, xFDS will find the first FDS file in the directory and assume that is what it should run. If no fds file exists, xFDS will default to interactive mode.
-  - if **nothing** is specified, the current directory is used and the above rules are applied.
+Arguments:
+  [FDS_FILE]  The FDS file or directory to run. If a **FDS file** is
+              specified, the FDS model will run. If a **directory** is
+              specified, xFDS will find the first FDS file in the directory
+              and assume that is what it should run. If no fds file exists,
+              xFDS will default to interactive mode. if **nothing** is
+              specified, the current directory is used and the above rules are
+              applied.   [default: .]
+
+Options:
+  -i, --interactive               Launch Docker container in interactive mode
+                                  (`docker run -it`). By default, the Docker
+                                  image will run the FDS model, but
+                                  interactive mode will put you into the
+                                  container where you can start the FDS model
+                                  manually. This is good for when you are
+                                  rapidly iterating and don't want to wait for
+                                  the Docker image load time.
+  -n, --processors INTEGER RANGE  Specify number of processors. If the number
+                                  of processors is greater than 1, it will
+                                  invoke MPI for you (`mpiexec -n #`). Ignored
+                                  if interactive mode is enabled.   [default:
+                                  1; x>=1]
+  --fds TEXT                      Specify FDS version to use. The FDS version
+                                  can also be extracted from the file path or
+                                  metadata in the FDS file. Run `xfds
+                                  versions` to see a list of available
+                                  versions.
+  --dry-run / --no-dry-run        View the command that would be run and exit.
+                                  [default: no-dry-run]
+  --help                          Show this message and exit.
+```
+### `xfds versions --help`
+```
+Usage: xfds versions [OPTIONS]
+
+  List available FDS versions
+
+Options:
+  --help  Show this message and exit.
+```
 
 ## Features
 
 **Auto-detect FDS file in directory**
 
-If you're in a directory containing an FDS file, xFDS will find the FDS file without you specifying what file to run. This is best when each FDS model has its own directory. If multiple FDS files are in the directory, only the first file found will be executed.
+If you're in a directory containing an FDS file, xFDS will find the FDS file without you specifying it. This is best when each FDS model has its own directory. If multiple FDS files are in the directory, only the first file found will be executed.
 
 If no FDS file is found, xFDS will put you into an interactive session with the directory mounted inside the Docker container. If no directory is specified, the current working directory will be used.
 
@@ -50,7 +83,7 @@ xFDS will always default to the latest version thanks to how the Docker images a
 
 **Always know what FDS version you're using.**
 
-xFDS will inject the FDS version into the container name so there's no question what version of FDS is running. xFSD will also append a globally unique ID so there's no conflicts in having multipe containers running.
+xFDS will inject the FDS version into the container name so there's no question what version of FDS is running. xFDS will also append a globally unique ID so there's no conflicts in having multipe containers running.
 
 **Runs in Background**
 
