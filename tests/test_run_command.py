@@ -11,7 +11,7 @@ runner = CliRunner()
 
 
 def timeout(
-    callback: Callable, timeout: float = 10.0, interval: float = 0.1, *args
+    callback: Callable, timeout: float = 30.0, interval: float = 0.1, *args
 ) -> None:
     """Timeout function."""
     start = time.time()
