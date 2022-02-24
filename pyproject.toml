@@ -45,6 +45,7 @@ flake8-bandit = "^2.1.2"
 flake8-annotations = "^2.7.0"
 safety = "^1.10.3"
 codecov = "^2.1.12"
+nox-poetry = "^0.9.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
