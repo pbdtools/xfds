@@ -100,7 +100,7 @@ def image_name(version: str = "") -> str:
 def build_arguments(
     fds_file: Path,
     volume: Path,
-    container_name: str,
+    container: str,
     interactive: bool,
     version: str,
     processors: int,
@@ -114,7 +114,7 @@ def build_arguments(
         args.append("-it")
 
     # Set container name
-    args.extend(["--name", container_name])
+    args.extend(["--name", container])
 
     # Set volume to mount
     args.extend(["-v", f"{volume}:/workdir"])
@@ -143,6 +143,7 @@ def execute(
     interactive: bool,
     version: str,
     processors: int,
+    dry_run: bool = False,
 ) -> None:
     """Entry point for setup.py."""
 
@@ -151,11 +152,14 @@ def execute(
         volume=volume,
         interactive=interactive,
         version=version,
-        container_name=container,
+        container=container,
         processors=processors,
     )
 
     print(f"[#ffa500]{' '.join(cmd)}[/]")
+
+    if dry_run:
+        return
 
     if interactive:
         subprocess.run(cmd)  # noqa: S603

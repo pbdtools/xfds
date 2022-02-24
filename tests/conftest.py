@@ -3,6 +3,8 @@ from pathlib import Path
 
 import pytest
 
+from xfds import core
+
 
 @pytest.fixture
 def latest() -> str:
@@ -32,3 +34,23 @@ def empty_dir(shared_datadir: Path) -> Path:
 def meta_dir(shared_datadir: Path) -> Path:
     """Fixture to point to empty directory."""
     return shared_datadir / "from_metadata"
+
+
+@pytest.fixture
+def default_cmd_kwargs(fds_file: Path) -> dict:
+    """Build the command line arguments for the CLI."""
+    _interactive = False
+    _version = "latest"
+    _volume = core.volume_to_mount(fds_file=fds_file)
+    _container = core.container_name(
+        fds_file=fds_file, version=_version, interactive=_interactive
+    )
+
+    return dict(
+        fds_file=fds_file,
+        volume=_volume,
+        interactive=_interactive,
+        version=_version,
+        container=_container,
+        processors=1,
+    )

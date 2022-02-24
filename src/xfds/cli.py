@@ -36,6 +36,9 @@ def run(
     fds_file: Path = typer.Argument(
         settings.CWD, help="FDS input file", callback=core.locate_fds_file
     ),
+    dry_run: bool = typer.Option(
+        False, help="View the command that would be run and exit"
+    ),
 ) -> None:
     """Run an FDS simulation."""
     _volume = core.volume_to_mount(fds_file=fds_file)
@@ -52,6 +55,7 @@ def run(
         version=_version,
         container=_container,
         processors=processors,
+        dry_run=dry_run,
     )
 
 
