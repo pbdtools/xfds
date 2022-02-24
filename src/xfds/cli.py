@@ -8,6 +8,55 @@ from . import __version__, core, docker_hub, settings
 
 EPILOG = "Developed by pbd.tools"
 
+# CLI Options
+INTERACTIVE_OPT: bool = typer.Option(
+    settings.INTERACTIVE,
+    "--interactive",
+    "-i",
+    help=(
+        "Launch Docker container in interactive mode (`docker run -it`). "
+        "By default, the Docker image will run the FDS model, "
+        "but interactive mode will put you into the container where you can start the FDS model manually. "
+        "This is good for when you are rapidly iterating and don't want to wait for the Docker image load time. "
+    ),
+)
+PROCESSORS_OPT: int = typer.Option(
+    settings.PROCESSORS,
+    "--processors",
+    "-n",
+    min=1,
+    help=(
+        "Specify number of processors. "
+        "If the number of processors is greater than 1, it will invoke MPI for you (`mpiexec -n #`). "
+        "Ignored if interactive mode is enabled. "
+    ),
+)
+VERSION_OPT: str = typer.Option(
+    None,
+    "--fds",
+    help=(
+        "Specify FDS version to use. "
+        "The FDS version can also be extracted from the file path or metadata in the FDS file. "
+        "Run `xfds versions` to see a list of available versions. "
+    ),
+)
+DRY_RUN_OPT: bool = typer.Option(
+    False, help="View the command that would be run and exit."
+)
+
+# CLI Arguments
+FDS_FILE_ARG: Path = typer.Argument(
+    ".",
+    callback=core.locate_fds_file,
+    help=(
+        "The FDS file or directory to run. "
+        "If a **FDS file** is specified, the FDS model will run. "
+        "If a **directory** is specified, xFDS will find the first FDS file in the directory "
+        "and assume that is what it should run. "
+        "If no fds file exists, xFDS will default to interactive mode. "
+        "if **nothing** is specified, the current directory is used and the above rules are applied. "
+    ),
+)
 
 app = typer.Typer(
     help="Manage FDS simulations.",
@@ -26,19 +75,11 @@ def main(
 
 @app.command(help="Run an FDS simulation locally", epilog=EPILOG)
 def run(
-    interactive: bool = typer.Option(
-        settings.INTERACTIVE, "--interactive", "-i", help="Run in interactive mode"
-    ),
-    processors: int = typer.Option(
-        settings.PROCESSORS, "--processors", "-n", help="Number of processors to use"
-    ),
-    version: str = typer.Option(None, "--fds", "-v", help="Specify FDS version to use"),
-    fds_file: Path = typer.Argument(
-        settings.CWD, help="FDS input file", callback=core.locate_fds_file
-    ),
-    dry_run: bool = typer.Option(
-        False, help="View the command that would be run and exit"
-    ),
+    interactive: bool = INTERACTIVE_OPT,
+    processors: int = PROCESSORS_OPT,
+    version: str = VERSION_OPT,
+    fds_file: Path = FDS_FILE_ARG,
+    dry_run: bool = DRY_RUN_OPT,
 ) -> None:
     """Run an FDS simulation."""
     _volume = core.volume_to_mount(fds_file=fds_file)
