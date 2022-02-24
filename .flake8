@@ -19,4 +19,6 @@ ignore =
 per-file-ignores =
     # Use of Assert
     tests/*: S101
+    # Do not perform function calls in argument defaults.
+    src/xfds/cli.py: B008
 max-complexity = 10
