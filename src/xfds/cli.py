@@ -4,7 +4,7 @@ from pathlib import Path
 
 import typer
 
-from . import core, docker_hub, settings
+from . import __version__, core, docker_hub, settings
 
 EPILOG = "Developed by pbd.tools"
 
@@ -20,7 +20,7 @@ def main(
     version: bool = typer.Option(False, "--version", "-v", help="Display xFDS Version"),
 ) -> None:
     if version:
-        typer.echo("0.2.0")
+        typer.echo(__version__)
         typer.Exit(code=0)
 
 
