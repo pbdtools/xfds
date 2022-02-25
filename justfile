@@ -11,17 +11,23 @@ test *args:
 check:
     @poetry run pre-commit run --all-files
 
-black:
-    @poetry run black .
+tests:
+    @nox -rs tests
 
-sort:
-    @poetry run isort
+black:
+    @nox -rs black
+
+lint:
+    @nox -rs lint
+
+safety:
+    @nox -rs safety
 
 mypy:
-    @poetry run mypy .
+    @nox -rs mypy
 
-push:
-    @git push --set-upstream origin `git rev-parse --abbrev-ref HEAD`
+coverage:
+    @nox -rs coverage
 
 # Maintenance
 usage:
@@ -32,10 +38,13 @@ run-fds *args:
     @poetry run xfds {{args}} tests/data/fds/test.fds
 
 # Publish
-pipx:
-    just build
-    pipx install --force `find ./dist -name "*.whl" | sort | tail -n 1`
+push:
+    @git push --set-upstream origin `git rev-parse --abbrev-ref HEAD`
 
 build:
     rm -Rf dist
     @poetry build
+
+pipx:
+    just build
+    pipx install --force `find ./dist -name "*.whl" | sort | tail -n 1`
