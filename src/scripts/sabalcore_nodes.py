@@ -1,8 +1,11 @@
 """Get Node Information from Sabalcore."""
+from __future__ import annotations
+
 import csv
 import io
 import json
 import os
+import re
 import subprocess  # noqa: S404
 
 from dotenv import load_dotenv
@@ -43,6 +46,21 @@ def node_info_to_csv(node_info: str) -> str:
     return node_info
 
 
+def normalize_value(field: str, value: str) -> str | int | float:
+    """Normalize value.
+
+    Convert to number if applicable. Removes units.
+    """
+    match = re.match(r"[\d\.]+", value)
+    if match:
+        num = match.group(0)
+        try:
+            return int(num)
+        except ValueError:
+            return float(num)
+    return value
+
+
 def csv_to_dict(csv_text: str) -> dict:
     """Convert CSV to JSON.
 
@@ -59,13 +77,13 @@ def csv_to_dict(csv_text: str) -> dict:
 
     data: dict = {k: {} for k in rows[0].keys() if k}
     for row in rows:
-        parameter = slugify(row[""])
-        if parameter in IGNORE_FIELDS:
+        field = slugify(row[""])
+        if field in IGNORE_FIELDS:
             continue
         for k, v in row.items():
             if k == "":
                 continue
-            data[k][parameter] = v
+            data[k][field] = normalize_value(field, v)
 
     for node in IGNORE_NODES:
         if node in data:

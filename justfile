@@ -33,6 +33,9 @@ coverage:
 usage:
     @poetry run python src/scripts/usage.py
 
+sabalcore:
+    @poetry run python src/scripts/sabalcore_nodes.py
+
 # Manual Test
 run-fds *args:
     @poetry run xfds {{args}} tests/data/fds/test.fds
