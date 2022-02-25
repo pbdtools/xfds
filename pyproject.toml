@@ -55,7 +55,7 @@ build-backend = "poetry.core.masonry.api"
 xfds = "xfds.cli:app"
 
 [tool.coverage.run]
-source = ["src"]
+source = ["src/xfds"]
 
 [tool.coverage.report]
 show_missing = true

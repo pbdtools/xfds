@@ -5,9 +5,10 @@ from typing import Any
 import nox
 from nox.sessions import Session
 
+nox.options.sessions = "tests", "black", "lint", "safety", "mypy", "coverage"
 locations = "src", "tests", "noxfile.py"
-pythons = ["3.7", "3.8", "3.9"]
-python = "3.9"
+python = "3.7", "3.8", "3.9", "3.10"
+py = python[-1]
 
 
 def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> None:
@@ -36,7 +37,15 @@ def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> Non
         session.install(f"--constraint={requirements.name}", *args, **kwargs)
 
 
-@nox.session(python=pythons)
+@nox.session(python=py)
+def test(session: Session) -> None:
+    """Run the unit tests for latest python."""
+    args = session.posargs or ["--cov"]
+    session.run("poetry", "install", external=True)
+    session.run("pytest", *args)
+
+
+@nox.session(python=python)
 def tests(session: Session) -> None:
     """Run the unit tests."""
     args = session.posargs or ["--cov"]
@@ -44,7 +53,7 @@ def tests(session: Session) -> None:
     session.run("pytest", *args)
 
 
-@nox.session(python=python)
+@nox.session(python=py)
 def black(session: Session) -> None:
     """Run black code formatter."""
     args = session.posargs or locations
@@ -52,7 +61,7 @@ def black(session: Session) -> None:
     session.run("black", *args)
 
 
-@nox.session(python=pythons)
+@nox.session(python=python)
 def lint(session: Session) -> None:
     """Lint using flake8."""
     args = session.posargs or locations
@@ -67,7 +76,7 @@ def lint(session: Session) -> None:
     session.run("flake8", *args)
 
 
-@nox.session(python=python)
+@nox.session(python=py)
 def safety(session: Session) -> None:
     """Check for insecure code. See: https://safety.openfaa.org/."""
     with tempfile.NamedTemporaryFile() as req:
@@ -84,7 +93,7 @@ def safety(session: Session) -> None:
         session.run("safety", "check", f"--file={req.name}", "--full-report")
 
 
-@nox.session(python=python)
+@nox.session(python=py)
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
     args = session.posargs or locations
@@ -92,7 +101,7 @@ def mypy(session: Session) -> None:
     session.run("mypy", *args)
 
 
-@nox.session(python=python)
+@nox.session(python=py)
 def coverage(session: Session) -> None:
     install_with_constraints(session, "coverage[toml]", "codecov")
     session.run("coverage", "xml", "--fail-under=0")
