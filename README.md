@@ -21,53 +21,7 @@ docker run --rm --name test-1b6d0d27-2cce-4555-a827-4b31d0e03215 -v /tests/data/
 
 ## Usage
 
-### `xfds run --help`
-```
-Usage: xfds run [OPTIONS] [FDS_FILE]
-
-  Run an FDS simulation locally
-
-Arguments:
-  [FDS_FILE]  The FDS file or directory to run. If a **FDS file** is
-              specified, the FDS model will run. If a **directory** is
-              specified, xFDS will find the first FDS file in the directory
-              and assume that is what it should run. If no fds file exists,
-              xFDS will default to interactive mode. if **nothing** is
-              specified, the current directory is used and the above rules are
-              applied.   [default: .]
-
-Options:
-  -i, --interactive               Launch Docker container in interactive mode
-                                  (`docker run -it`). By default, the Docker
-                                  image will run the FDS model, but
-                                  interactive mode will put you into the
-                                  container where you can start the FDS model
-                                  manually. This is good for when you are
-                                  rapidly iterating and don't want to wait for
-                                  the Docker image load time.
-  -n, --processors INTEGER RANGE  Specify number of processors. If the number
-                                  of processors is greater than 1, it will
-                                  invoke MPI for you (`mpiexec -n #`). Ignored
-                                  if interactive mode is enabled.   [default:
-                                  1; x>=1]
-  --fds TEXT                      Specify FDS version to use. The FDS version
-                                  can also be extracted from the file path or
-                                  metadata in the FDS file. Run `xfds
-                                  versions` to see a list of available
-                                  versions.
-  --dry-run / --no-dry-run        View the command that would be run and exit.
-                                  [default: no-dry-run]
-  --help                          Show this message and exit.
-```
-### `xfds versions --help`
-```
-Usage: xfds versions [OPTIONS]
-
-  List available FDS versions
-
-Options:
-  --help  Show this message and exit.
-```
+Run `xfds --help` to see available commands. For help on a specific command, run `xfds <command> --help`. See [USAGE.md](https://github.com/pbdtools/xfds/blob/main/USAGE.md) for more.
 
 ## Features
 

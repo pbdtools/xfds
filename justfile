@@ -23,6 +23,10 @@ mypy:
 push:
     @git push --set-upstream origin `git rev-parse --abbrev-ref HEAD`
 
+# Maintenance
+usage:
+    @poetry run python src/scripts/usage.py
+
 # Manual Test
 run-fds *args:
     @poetry run xfds {{args}} tests/data/fds/test.fds
