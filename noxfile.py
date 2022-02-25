@@ -5,8 +5,9 @@ from typing import Any
 import nox
 from nox.sessions import Session
 
+nox.options.sessions = "tests", "black", "lint", "safety", "mypy", "coverage"
 locations = "src", "tests", "noxfile.py"
-python = ["3.7", "3.8", "3.9", "3.10"]
+python = "3.7", "3.8", "3.9", "3.10"
 py = python[-1]
 
 
@@ -34,6 +35,14 @@ def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> Non
             external=True,
         )
         session.install(f"--constraint={requirements.name}", *args, **kwargs)
+
+
+@nox.session(python=py)
+def test(session: Session) -> None:
+    """Run the unit tests for latest python."""
+    args = session.posargs or ["--cov"]
+    session.run("poetry", "install", external=True)
+    session.run("pytest", *args)
 
 
 @nox.session(python=python)
