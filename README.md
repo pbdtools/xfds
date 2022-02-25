@@ -1,10 +1,22 @@
 [![Tests](https://github.com/pbdtools/xfds/workflows/Tests/badge.svg)](https://github.com/pbdtools/xfds/actions?workflow=Tests)
 [![Codecov](https://codecov.io/gh/pbdtools/xfds/main/graph/badge.svg)](https://codecov.io/gh/pbdtools/xfds)
+![Last Commit](https://img.shields.io/github/last-commit/pbdtools/xfds)
+
+![Python](https://img.shields.io/pypi/pyversions/xfds.svg)
+![Implementation](https://img.shields.io/pypi/implementation/xfds)
+![License](https://img.shields.io/github/license/pbdtools/xfds.svg)
+
 [![PyPI](https://img.shields.io/pypi/v/xfds.svg)](https://pypi.org/project/xfds)
+![Development Status](https://img.shields.io/pypi/status/xfds)
+![Wheel](https://img.shields.io/pypi/format/xfds)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/xfds)
+
 
 # xFDS
 
 Tool for executing FDS runs with [fds-dockerfiles](https://github.com/openbcl/fds-dockerfiles).
+
+![Docker](https://img.shields.io/docker/pulls/openbcl/fds?label=openbcl%2Ffds%20pulls&logo=docker)
 
 Do you have FDS installed on your machine? Do you know where the FDS executable is located? Do you know what version it is? If you installed FDS and Pathfinder, you might have multiple versions of FDS on your machine, but which one do you use?
 
