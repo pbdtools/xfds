@@ -11,7 +11,7 @@ import subprocess  # noqa: S404
 from dotenv import load_dotenv
 from slugify import slugify
 
-from xfds.settings import SABALCORE_NODES
+from xfds.settings import SABALCORE_NODES_FILE
 
 load_dotenv()
 HOST = os.environ["SABALCORE_HOST"]
@@ -101,7 +101,7 @@ def get_node_info() -> dict:
 
 def update_node_info() -> None:
     """Update node info."""
-    SABALCORE_NODES.write_text(json.dumps(get_node_info(), indent=4))
+    SABALCORE_NODES_FILE.write_text(json.dumps(get_node_info(), indent=4))
 
 
 if __name__ == "__main__":

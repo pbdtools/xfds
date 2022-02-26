@@ -1,12 +1,31 @@
+"""Command Line Interface."""
 from __future__ import annotations
 
 from pathlib import Path
+from typing import List
 
 import typer
 
-from . import __version__, core, docker_hub, settings
+from . import __version__, core, docker_hub, pbs, settings
 
 EPILOG = "Developed by pbd.tools"
+
+app = typer.Typer(help="Manage FDS simulations.", epilog=EPILOG)
+
+
+# CLI Arguments
+FDS_FILE_ARG: Path = typer.Argument(
+    ".",
+    callback=core.locate_fds_file,
+    help=(
+        "The FDS file or directory to run. "
+        "If a **FDS file** is specified, the FDS model will run. "
+        "If a **directory** is specified, xFDS will find the first FDS file in the directory "
+        "and assume that is what it should run. "
+        "If no fds file exists, xFDS will default to interactive mode. "
+        "if **nothing** is specified, the current directory is used and the above rules are applied. "
+    ),
+)
 
 # CLI Options
 INTERACTIVE_OPT: bool = typer.Option(
@@ -34,6 +53,7 @@ PROCESSORS_OPT: int = typer.Option(
 VERSION_OPT: str = typer.Option(
     None,
     "--fds",
+    "-v",
     help=(
         "Specify FDS version to use. "
         "The FDS version can also be extracted from the file path or metadata in the FDS file. "
@@ -43,24 +63,22 @@ VERSION_OPT: str = typer.Option(
 DRY_RUN_OPT: bool = typer.Option(
     False, help="View the command that would be run and exit."
 )
-
-# CLI Arguments
-FDS_FILE_ARG: Path = typer.Argument(
-    ".",
-    callback=core.locate_fds_file,
-    help=(
-        "The FDS file or directory to run. "
-        "If a **FDS file** is specified, the FDS model will run. "
-        "If a **directory** is specified, xFDS will find the first FDS file in the directory "
-        "and assume that is what it should run. "
-        "If no fds file exists, xFDS will default to interactive mode. "
-        "if **nothing** is specified, the current directory is used and the above rules are applied. "
-    ),
+EMAIL_OPT: List[str] = typer.Option(
+    [],
+    "--email",
+    "-m",
+    help=("Specify an email address for PBS job scheduler. "),
 )
-
-app = typer.Typer(
-    help="Manage FDS simulations.",
-    epilog=EPILOG,
+MAX_TIME_OPT: float = typer.Option(
+    0,
+    "--wall-time",
+    "-t",
+    min=0,
+    help=(
+        "Specify maximum time in hours. "
+        "If the job runs longer than the time specified, the scheduler will kill the job. "
+        "A time of 0 means no time limit. "
+    ),
 )
 
 
@@ -73,7 +91,7 @@ def main(
         typer.Exit(code=0)
 
 
-@app.command(help="Run an FDS simulation locally", epilog=EPILOG)
+@app.command(help="Run an FDS simulation locally")
 def run(
     interactive: bool = INTERACTIVE_OPT,
     processors: int = PROCESSORS_OPT,
@@ -100,6 +118,28 @@ def run(
     )
 
 
-@app.command(help="List available FDS versions", epilog=EPILOG)
+@app.command(help="List available FDS versions")
 def versions() -> None:
     print("\n".join(docker_hub.tags()))
+
+
+@app.command(name="pbs", help="Generate .pbs File")
+def create_pbs(
+    fds_file: Path = FDS_FILE_ARG,
+    version: str = VERSION_OPT,
+    email: List[str] = EMAIL_OPT,
+    processors: int = PROCESSORS_OPT,
+    max_time: float = MAX_TIME_OPT,
+) -> None:
+    _version = core.fds_version(fds_file=fds_file, version=version)
+    pbs.write_pbs(
+        fds_file=fds_file,
+        version=_version,
+        processors=processors,
+        emails=email,
+        max_time=max_time,
+    )
+
+
+for command in app.registered_commands:
+    command.epilog = EPILOG
