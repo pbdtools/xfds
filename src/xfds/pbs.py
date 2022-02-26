@@ -12,8 +12,6 @@ def _clusters(processors: int) -> str:
 
 def _name(fds_file: Path) -> str:
     """Return the name of the .pbs script."""
-    if fds_file is None:
-        raise TypeError("fds_file must be specified.")
     if not fds_file.is_file():
         raise TypeError(f"{fds_file} is not a file.")
     return f"#PBS -N {fds_file.stem}"
@@ -46,9 +44,6 @@ def _max_time(max_time: float = 0) -> str:
 
 def _module_load(version: str) -> str:
     """Return the load modules for PBS job scheduler."""
-    if version is None:
-        raise TypeError("version must be specified.")
-
     text = dedent(
         """
     # load required modules
