@@ -67,9 +67,7 @@ def lint(session: Session) -> None:
     args = session.posargs or locations
     install_with_constraints(
         session,
-        "black",
         "flake8",
-        "flake8-black",
         "flake8-bugbear",
         "flake8-bandit",
         "flake8-annotations",
