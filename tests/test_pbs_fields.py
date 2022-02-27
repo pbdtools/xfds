@@ -1,13 +1,41 @@
 """Test ability to select correct file or folder."""
 from pathlib import Path
+from textwrap import dedent
 
 import pytest
 
 from xfds import pbs
 
+CLUSTERS = {
+    "cfast": {
+        "cores-node": 2,
+        "total-cores": 4,
+    },
+    "fds": {
+        "cores-node": 8,
+        "total-cores": 64,
+    },
+    "pbd": {
+        "cores-node": 16,
+        "total-cores": 128,
+    },
+    "tools": {
+        "cores-node": 42,
+        "total-cores": 126,
+    },
+}
+
 
 def test_clusters() -> None:
-    pass
+    text = pbs._clusters(cores=42, node_list=CLUSTERS)
+    expected = dedent(
+        """
+        #PBS -l nodes=5:fds:ppn=8:1:fds:ppn=2
+        #PBS -l nodes+=2:pbd:ppn=16:1:pbd:ppn=10
+        #PBS -l nodes++=1:tools:ppn=42
+        """
+    )
+    assert text.strip() == expected.strip()
 
 
 def test_name_is_from_input_file(fds_file: Path) -> None:

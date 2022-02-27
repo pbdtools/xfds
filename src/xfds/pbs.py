@@ -4,10 +4,35 @@ from __future__ import annotations
 from pathlib import Path
 from textwrap import dedent
 
+from .settings import SABALCORE_NODES
 
-def _clusters(processors: int) -> str:
+
+def _clusters(cores: int, node_list: dict[str, dict] = SABALCORE_NODES) -> str:
     """Return the clusters for PBS job scheduler."""
-    return f"#PBS -l nodes=1:ppn={processors}"
+
+    def _cluster(cores: int, node: str, data: dict) -> str:
+        """Return the cluster string for PBS job scheduler."""
+        if cores > data["total-cores"]:
+            return ""
+
+        full_nodes, remainder = divmod(cores, data["cores-node"])
+        sep = ":" if full_nodes and remainder else ""
+        full = f"{full_nodes}:{node}:ppn={data['cores-node']}" if full_nodes else ""
+        part = f"1:{node}:ppn={remainder}" if remainder else ""
+
+        return f"{full}{sep}{part}"
+
+    cluster_strings = [
+        _cluster(cores, node_name, node_data)
+        for i, (node_name, node_data) in enumerate(node_list.items())
+    ]
+    cluster_strings = [cluster for cluster in cluster_strings if cluster]
+    return "\n".join(
+        [
+            f"#PBS -l nodes{'+' * i}={cluster_string}"
+            for i, cluster_string in enumerate(cluster_strings)
+        ]
+    )
 
 
 def _name(fds_file: Path) -> str:
@@ -86,13 +111,13 @@ def _commands(fds_file: Path) -> str:
 def generate_pbs(
     fds_file: Path,
     version: str,
-    processors: int,
+    cores: int,
     emails: list[str],
     max_time: float,
 ) -> str:
     """Generate a .pbs script for Portable Batch System (PBS)."""
     lines = [
-        _clusters(processors=processors),
+        _clusters(cores=cores),
         _name(fds_file=fds_file),
         _max_time(max_time=max_time),
         _shell(),
@@ -116,7 +141,7 @@ def write_pbs(
     text = generate_pbs(
         fds_file=fds_file,
         version=version,
-        processors=processors,
+        cores=processors,
         emails=emails,
         max_time=max_time,
     )
