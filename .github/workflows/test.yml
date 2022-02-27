@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.10']
-        poetry-version: [1.1.12]
+        python-version: ['3.9']
+        poetry-version: [1.1.13]
       fail-fast: false
     steps:
     - uses: actions/checkout@v2
@@ -29,8 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.10']
-        poetry-version: [1.1.12]
+        python-version: ['3.9']
+        poetry-version: [1.1.13]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
@@ -49,8 +49,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.10']
-        poetry-version: [1.1.12]
+        python-version: ['3.9']
+        poetry-version: [1.1.13]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
@@ -67,8 +67,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.10']
-        poetry-version: [1.1.12]
+        python-version: ['3.9']
+        poetry-version: [1.1.13]
       fail-fast: false
     steps:
     - uses: actions/checkout@v2
@@ -86,8 +86,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.10']
-        poetry-version: [1.1.12]
+        python-version: ['3.9']
+        poetry-version: [1.1.13]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
@@ -104,8 +104,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.10']
-        poetry-version: [1.1.12]
+        python-version: ['3.9']
+        poetry-version: [1.1.13]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2

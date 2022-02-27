@@ -29,6 +29,7 @@ rich = "^11.2.0"
 requests = "^2.27.1"
 Markdown = "^3.3.6"
 typer = "^0.4.0"
+python-dotenv = "^0.19.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "7.0"
@@ -39,13 +40,13 @@ pre-commit = "^2.16.0"
 tox = "^3.24.5"
 coverage = "^6.3.1"
 pytest-cov = "^3.0.0"
-flake8-black = "^0.2.4"
 flake8-bugbear = "^22.1.11"
 flake8-bandit = "^2.1.2"
 flake8-annotations = "^2.7.0"
 safety = "^1.10.3"
 codecov = "^2.1.12"
 nox-poetry = "^0.9.0"
+python-slugify = "^6.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
