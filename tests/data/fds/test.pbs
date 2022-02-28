@@ -1,0 +1,25 @@
+#PBS -l nodes=1:onyx:ppn=1
+#PBS -l nodes+=1:red:ppn=1
+#PBS -l nodes++=1:cobalt:ppn=1
+#PBS -l nodes+++=1:blue:ppn=1
+#PBS -l nodes++++=1:copper:ppn=1
+#PBS -l nodes+++++=1:chrome:ppn=1
+#PBS -N test
+#PBS -S /bin/bash
+#PBS -j oe
+
+# load required modules
+module load fds
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+
+# set MPI variables
+export I_MPI_PIN=1
+export I_MPI_PIN_MODE=pm
+export OMP_NUM_THREADS=1
+export MPI_PPN=$(($PBS_NUM_PPN / $OMP_NUM_THREADS))
+export MPI_NP=$(($PBS_NP / $OMP_NUM_THREADS))
+
+# run fds in parallel
+mpiexec -np $MPI_NP fds_mpi test.fds
