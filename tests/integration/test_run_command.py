@@ -31,7 +31,7 @@ def test_run_command_with_fds_file(fds_file: Path) -> None:
     """Test run command with fds file."""
     result = runner.invoke(app, ["run", "--dry-run", str(fds_file)])
     assert result.exit_code == 0
-    assert "openbcl/fds:latest fds test.fds" in result.output
+    assert "openbcl/fds:latest fds test.fds" in result.output.replace("\n", "")
 
 
 def test_run_command_with_fds_file_and_interactive(fds_file: Path) -> None:

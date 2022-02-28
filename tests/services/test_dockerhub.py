@@ -2,12 +2,13 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 import requests
 from _pytest.monkeypatch import MonkeyPatch
 
 from xfds.docker_hub import tags
+
+from . import DATADIR
 
 
 class MockTags:
@@ -18,7 +19,7 @@ class MockTags:
 
     def json(self) -> list[str]:
         """Return pre-fetched api response."""
-        json_file = Path(__file__).parent / "data" / "dockerhub" / "tags.json"
+        json_file = DATADIR / "dockerhub" / "tags.json"
         return json.loads(json_file.read_text())
 
 

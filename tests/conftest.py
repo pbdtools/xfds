@@ -7,15 +7,21 @@ from xfds import core
 
 
 @pytest.fixture
+def xfds_datadir() -> Path:
+    """Return the path to the xfds data directory."""
+    return Path(__file__).parent / "data"
+
+
+@pytest.fixture
 def latest() -> str:
     """Fixture to point to FDS version."""
     return "6.7.7"
 
 
 @pytest.fixture
-def fds_file(shared_datadir: Path) -> Path:
+def fds_file(xfds_datadir: Path) -> Path:
     """Fixture to point to FDS file."""
-    return shared_datadir / "fds" / "test.fds"
+    return xfds_datadir / "fds" / "test.fds"
 
 
 @pytest.fixture
@@ -25,15 +31,15 @@ def fds_dir(fds_file: Path) -> Path:
 
 
 @pytest.fixture
-def empty_dir(shared_datadir: Path) -> Path:
+def empty_dir(xfds_datadir: Path) -> Path:
     """Fixture to point to empty directory."""
-    return shared_datadir / "no_fds"
+    return xfds_datadir / "no_fds"
 
 
 @pytest.fixture
-def meta_dir(shared_datadir: Path) -> Path:
+def meta_dir(xfds_datadir: Path) -> Path:
     """Fixture to point to empty directory."""
-    return shared_datadir / "from_metadata"
+    return xfds_datadir / "from_metadata"
 
 
 @pytest.fixture
