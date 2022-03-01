@@ -4,10 +4,14 @@ from __future__ import annotations
 import json
 
 from _pytest.monkeypatch import MonkeyPatch
+from typer.testing import CliRunner
 
+from xfds.cli import app
 from xfds.services.github import Github
 
 from . import DATADIR
+
+runner = CliRunner()
 
 
 def mock_get_page(*args, **kwargs) -> list[str]:
@@ -32,3 +36,19 @@ def test_named_releases(monkeypatch: MonkeyPatch) -> None:
         "FDS6.5.3",
     ]
     assert gh_firemodels_fds.tag_list() == expected
+
+
+def test_cli_show_versions_fds(monkeypatch: MonkeyPatch) -> None:
+    """Test CLI show versions fds command."""
+    monkeypatch.setattr(Github, "get_page", mock_get_page)
+    result = runner.invoke(app, ["show", "versions", "fds"])
+    assert result.exit_code == 0
+    assert len(result.output.split(",")) == 9
+
+
+def test_cli_show_versions_latest_fds(monkeypatch: MonkeyPatch) -> None:
+    """Test CLI show versions fds command."""
+    monkeypatch.setattr(Github, "get_page", mock_get_page)
+    result = runner.invoke(app, ["show", "versions", "--latest", "fds"])
+    assert result.exit_code == 0
+    assert result.output.strip() == "FDS6.7.7"

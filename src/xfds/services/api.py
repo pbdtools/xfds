@@ -3,13 +3,13 @@ import requests
 
 
 class BaseAPI:
-    def __init__(self, base_url: str) -> None:
-        self.base_url = base_url
+
+    base_url = "https://pbd.tools"
 
     def get_page(self, url: str, params: dict = None) -> dict:
         """Get page data."""
-        response = requests.get(url, params=params)
-        return response.json()
+        response = requests.get(url, params=params)  # pragma: no cover
+        return response.json()  # pragma: no cover
 
     def get(self, endpoint: str, params: dict = None) -> list[dict]:
         """GET request.

@@ -14,9 +14,9 @@ Options:
   --help                          Show this message and exit.
 
 Commands:
-  pbs       Generate .pbs File
-  run       Run an FDS simulation locally
-  versions  List available FDS versions
+  pbs   Generate .pbs File
+  run   Run an FDS simulation locally
+  show  Show information about external services.
 
   Developed by pbd.tools
 
@@ -97,14 +97,18 @@ Options:
 
 ```
 
-# `xfds versions --help`
+# `xfds show --help`
 ```
-Usage: xfds versions [OPTIONS]
+Usage: xfds show [OPTIONS] COMMAND [ARGS]...
 
-  List available FDS versions
+  Show information about external services.
 
 Options:
   --help  Show this message and exit.
+
+Commands:
+  nodes     Show avaliable nodes for sabalcore.
+  versions  Show avaliable tags for docker images or fds versions.
 
   Developed by pbd.tools
 
