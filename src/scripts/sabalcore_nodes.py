@@ -7,6 +7,7 @@ import json
 import os
 import re
 import subprocess  # noqa: S404
+from typing import Any
 
 from dotenv import load_dotenv
 from slugify import slugify
@@ -75,7 +76,7 @@ def csv_to_dict(csv_text: str) -> dict:
                 break
             rows.append({k.strip(): v.strip() for k, v in row.items()})
 
-    data: dict = {k: {} for k in rows[0].keys() if k}
+    data: dict[Any, Any] = {k: {} for k in rows[0].keys() if k}
     for row in rows:
         field = slugify(row[""])
         if field in IGNORE_FIELDS:

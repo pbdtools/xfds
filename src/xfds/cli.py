@@ -6,12 +6,15 @@ from typing import List
 
 import typer
 
-from . import __version__, core, docker_hub, pbs, settings
+from . import __version__, core, pbs, settings
+from .cli_commands import commands
 
 EPILOG = "Developed by pbd.tools"
 
 app = typer.Typer(help="Manage FDS simulations.", epilog=EPILOG)
 
+for command in commands:
+    app.add_typer(command)
 
 # CLI Arguments
 FDS_FILE_ARG: Path = typer.Argument(
@@ -116,11 +119,6 @@ def run(
         processors=processors,
         dry_run=dry_run,
     )
-
-
-@app.command(help="List available FDS versions")
-def versions() -> None:
-    print("\n".join(docker_hub.tags()))
 
 
 @app.command(name="pbs", help="Generate .pbs File")
