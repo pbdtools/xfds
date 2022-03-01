@@ -10,4 +10,5 @@ def test_versions_command() -> None:
     """Test versions command displays list of fds versions."""
     result = runner.invoke(app, ["versions"])
     assert result.exit_code == 0
-    assert "latest" in result.output
+    assert "latest" not in result.output
+    assert len(result.output.splitlines()) >= 3

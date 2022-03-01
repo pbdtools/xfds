@@ -18,7 +18,7 @@
                     "os_version": null,
                     "size": 254909183,
                     "status": "active",
-                    "last_pulled": "2022-02-17T17:56:39.391465Z",
+                    "last_pulled": "2022-02-28T15:42:03.192352Z",
                     "last_pushed": "2021-11-26T09:09:04.589904Z"
                 }
             ],
@@ -30,7 +30,7 @@
             "full_size": 254909183,
             "v2": true,
             "tag_status": "active",
-            "tag_last_pulled": "2022-02-17T17:56:39.391465Z",
+            "tag_last_pulled": "2022-02-28T15:42:03.192352Z",
             "tag_last_pushed": "2021-11-26T09:09:04.589904Z"
         },
         {
@@ -48,7 +48,7 @@
                     "os_version": null,
                     "size": 254909183,
                     "status": "active",
-                    "last_pulled": "2022-02-17T17:56:39.391465Z",
+                    "last_pulled": "2022-02-28T15:42:03.192352Z",
                     "last_pushed": "2021-11-26T09:09:04.589904Z"
                 }
             ],
@@ -60,7 +60,7 @@
             "full_size": 254909183,
             "v2": true,
             "tag_status": "active",
-            "tag_last_pulled": "2022-02-17T17:56:39.391465Z",
+            "tag_last_pulled": "2022-02-28T15:42:03.192352Z",
             "tag_last_pushed": "2021-11-26T09:07:49.632672Z"
         },
         {
@@ -227,8 +227,8 @@
                     "os_features": "",
                     "os_version": null,
                     "size": 265781419,
-                    "status": "inactive",
-                    "last_pulled": "2022-01-03T15:34:16.578159Z",
+                    "status": "active",
+                    "last_pulled": "2022-02-24T15:10:34.758362Z",
                     "last_pushed": "2021-06-02T14:34:54.427052Z"
                 }
             ],
@@ -239,8 +239,8 @@
             "repository": 8352638,
             "full_size": 265781419,
             "v2": true,
-            "tag_status": "inactive",
-            "tag_last_pulled": "2022-01-03T15:34:16.578159Z",
+            "tag_status": "active",
+            "tag_last_pulled": "2022-02-24T15:10:34.758362Z",
             "tag_last_pushed": "2021-06-02T14:34:54.427052Z"
         },
         {
@@ -257,8 +257,8 @@
                     "os_features": "",
                     "os_version": null,
                     "size": 265781419,
-                    "status": "inactive",
-                    "last_pulled": "2022-01-03T15:34:16.578159Z",
+                    "status": "active",
+                    "last_pulled": "2022-02-24T15:10:34.758362Z",
                     "last_pushed": "2021-06-02T14:34:54.427052Z"
                 },
                 {
@@ -334,8 +334,8 @@
             "repository": 8352638,
             "full_size": 265781419,
             "v2": true,
-            "tag_status": "inactive",
-            "tag_last_pulled": "2022-01-03T15:34:16.578159Z",
+            "tag_status": "active",
+            "tag_last_pulled": "2022-02-24T15:10:34.758362Z",
             "tag_last_pushed": "2021-06-02T14:47:55.42699Z"
         },
         {

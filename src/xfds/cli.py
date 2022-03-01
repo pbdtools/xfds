@@ -6,11 +6,13 @@ from typing import List
 
 import typer
 
-from . import __version__, core, docker_hub, pbs, settings
+from . import __version__, core, pbs, settings
+from .services import DockerHub
 
 EPILOG = "Developed by pbd.tools"
 
 app = typer.Typer(help="Manage FDS simulations.", epilog=EPILOG)
+dh_openbcl_fds = DockerHub("openbcl", "fds")
 
 
 # CLI Arguments
@@ -120,7 +122,7 @@ def run(
 
 @app.command(help="List available FDS versions")
 def versions() -> None:
-    print("\n".join(docker_hub.tags()))
+    print("\n".join(dh_openbcl_fds.tag_list()))
 
 
 @app.command(name="pbs", help="Generate .pbs File")
