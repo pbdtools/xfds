@@ -7,13 +7,14 @@ from typing import List
 import typer
 
 from . import __version__, core, pbs, settings
-from .services import DockerHub
+from .cli_commands import commands
 
 EPILOG = "Developed by pbd.tools"
 
 app = typer.Typer(help="Manage FDS simulations.", epilog=EPILOG)
-dh_openbcl_fds = DockerHub("openbcl", "fds")
 
+for command in commands:
+    app.add_typer(command)
 
 # CLI Arguments
 FDS_FILE_ARG: Path = typer.Argument(
@@ -118,11 +119,6 @@ def run(
         processors=processors,
         dry_run=dry_run,
     )
-
-
-@app.command(help="List available FDS versions")
-def versions() -> None:
-    print("\n".join(dh_openbcl_fds.tag_list()))
 
 
 @app.command(name="pbs", help="Generate .pbs File")
