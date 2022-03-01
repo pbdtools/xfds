@@ -1,4 +1,6 @@
 """Base API for Github."""
+from __future__ import annotations
+
 from xfds.services.api import BaseAPI
 
 

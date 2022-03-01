@@ -1,4 +1,6 @@
 """Base Classes for Interacting with services."""
+from __future__ import annotations
+
 import requests
 
 
