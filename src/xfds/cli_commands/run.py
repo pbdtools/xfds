@@ -3,15 +3,18 @@
 Provides information about services.
 """
 from pathlib import Path
+from textwrap import dedent
 from typing import List
 
 import typer
 
 from .. import core, pbs
 from ..enums import Location
+from ..services import DockerHub
 from ..settings import EPILOG
 
 app = typer.Typer(name="run", help="Run an FDS simulation locally.", epilog=EPILOG)
+dh_openbcl_fds = DockerHub("openbcl", "fds")
 
 
 @app.callback(invoke_without_command=True)
@@ -95,6 +98,16 @@ def run(
     _container = core.container_name(
         fds_file=fds_file, version=_version, interactive=_interactive
     )
+
+    if _version and _version not in dh_openbcl_fds.tag_list() + ["latest"]:
+        raise typer.Exit(
+            dedent(
+                f"""
+            Version {_version} is not available.
+            Available versions: {", ".join(dh_openbcl_fds.tag_list())}
+            """
+            ).strip()
+        )
 
     if location == Location.LOCAL:
         core.execute(
