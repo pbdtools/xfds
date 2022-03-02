@@ -6,6 +6,7 @@ install:
 
 # Development
 test *args:
+    @just usage
     @poetry run pytest {{args}}
 
 check:

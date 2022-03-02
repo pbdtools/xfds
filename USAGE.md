@@ -16,6 +16,7 @@ Options:
 Commands:
   run   Run an FDS simulation locally.
   show  Show information about external services.
+  stop  Stop an FDS simulation that is running locally.
 
   Developed by pbd.tools
 
@@ -80,6 +81,26 @@ Options:
 Commands:
   nodes     Show avaliable nodes for sabalcore.
   versions  Show avaliable tags for docker images or fds versions.
+
+  Developed by pbd.tools
+
+```
+
+# `xfds stop --help`
+```
+Usage: xfds stop [OPTIONS] [FDS_FILE] COMMAND [ARGS]...
+
+  Stop an FDS simulation that is running locally.
+
+Arguments:
+  [FDS_FILE]  The FDS file or directory to stop. If a **FDS file** is specified,
+              the FDS model will be stopped. If a **directory** is specified,
+              xFDS will find the first FDS file in the directory and assume that
+              is what it should stop. if **nothing** is specified, the current
+              directory is used and the above rules are applied.   [default: .]
+
+Options:
+  --help  Show this message and exit.
 
   Developed by pbd.tools
 
