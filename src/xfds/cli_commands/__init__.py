@@ -1,3 +1,3 @@
-from . import run, show, stop
+from . import reset, run, show, stop
 
-commands = [run.app, show.app, stop.app]
+commands = [reset.app, run.app, show.app, stop.app]

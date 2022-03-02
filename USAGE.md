@@ -14,9 +14,32 @@ Options:
   --help                          Show this message and exit.
 
 Commands:
-  run   Run an FDS simulation locally.
-  show  Show information about external services.
-  stop  Stop an FDS simulation that is running locally.
+  reset  Reset a folder by clearing everything except the input files.
+  run    Run an FDS simulation locally.
+  show   Show information about external services.
+  stop   Stop an FDS simulation that is running locally.
+
+  Developed by pbd.tools
+
+```
+
+# `xfds reset --help`
+```
+Usage: xfds reset [OPTIONS] [FDS_FILE] COMMAND [ARGS]...
+
+  Reset a folder by clearing everything except the input files.
+
+Arguments:
+  [FDS_FILE]  The FDS file or directory to reset. If a **FDS file** is
+              specified, the FDS outputs will be cleared. If a **directory** is
+              specified, xFDS will find the first FDS file in the directory and
+              assume that is what it should reset. if **nothing** is specified,
+              the current directory is used and the above rules are applied.
+              [default: .]
+
+Options:
+  --chid TEXT  If specified, only files matching CHID will be deleted.
+  --help       Show this message and exit.
 
   Developed by pbd.tools
 
