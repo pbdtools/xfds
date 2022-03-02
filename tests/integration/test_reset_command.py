@@ -26,6 +26,7 @@ def test_only_deletes_files_matching_chid(fds_file: Path, stop_file: Path) -> No
     assert result.exit_code == 0
     assert stop_file.exists()
 
+    fds_file.parent.joinpath("pbd.out").touch()
     result = runner.invoke(app, ["reset", "--chid", "pbd", str(fds_file)])
     assert result.exit_code == 0
     assert len(list(fds_file.parent.iterdir())) == 2
