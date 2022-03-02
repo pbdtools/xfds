@@ -156,6 +156,8 @@ cython_debug/
 **/data/**/*.csv
 **/data/**/*.end
 **/data/**/*.out
+**/data/**/*.pbs
+**/data/**/*.restart
 **/data/**/*.s3d*
 **/data/**/*.serr
 **/data/**/*.sinfo
@@ -163,4 +165,5 @@ cython_debug/
 **/data/**/*.sout
 **/data/**/*.stderr
 **/data/**/*.stdout
+**/data/**/*.stop
 **/data/**/*.txt

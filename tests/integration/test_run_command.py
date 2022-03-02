@@ -21,6 +21,7 @@ def pbs_file(fds_file: Path) -> Generator[Path, None, None]:
 
     assert not pbs_file.exists()
     yield pbs_file
+    pbs_file.unlink()
 
 
 def timeout(
