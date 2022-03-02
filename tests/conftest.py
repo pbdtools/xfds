@@ -1,5 +1,6 @@
 """Tests for command line interface."""
 from pathlib import Path
+from typing import Generator
 
 import pytest
 
@@ -22,6 +23,19 @@ def latest() -> str:
 def fds_file(xfds_datadir: Path) -> Path:
     """Fixture to point to FDS file."""
     return xfds_datadir / "fds" / "test.fds"
+
+
+@pytest.fixture
+def stop_file(fds_file: Path) -> Generator[Path, None, None]:
+    """Create a stop file."""
+    _stop_file = fds_file.with_suffix(".stop")
+    if _stop_file.exists():
+        _stop_file.unlink()
+
+    assert not _stop_file.exists()
+    yield _stop_file
+    if _stop_file.exists():
+        _stop_file.unlink()
 
 
 @pytest.fixture
