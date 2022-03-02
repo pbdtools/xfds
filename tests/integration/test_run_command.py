@@ -78,3 +78,11 @@ def test_creates_pbs_file_when_sabalcore_is_selected(
     )
     assert result.exit_code == 0
     assert pbs_file.exists()
+
+
+def test_rejects_fds_version_not_available(fds_file: Path) -> None:
+    """Test rejects fds version not available."""
+    version = "1.2.3"
+    result = runner.invoke(app, ["run", "-v", version, str(fds_file)])
+    assert result.exit_code == 1
+    assert f"Version {version} is not available" in result.output
