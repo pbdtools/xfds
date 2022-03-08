@@ -70,8 +70,7 @@ Options:
   -n, --processors INTEGER RANGE  Specify number of processors. If the number of
                                   processors is greater than 1, it will invoke
                                   MPI for you (`mpiexec -n #`). Ignored if
-                                  interactive mode is enabled.   [default: 1;
-                                  x>=1]
+                                  interactive mode is enabled.   [x>=1]
   -v, --fds TEXT                  Specify FDS version to use. The FDS version
                                   can also be extracted from the file path or
                                   metadata in the FDS file. Run `xfds versions`

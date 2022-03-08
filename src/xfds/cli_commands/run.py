@@ -8,7 +8,7 @@ from typing import List
 
 import typer
 
-from .. import core, pbs
+from .. import core, mpi, pbs
 from ..enums import Location
 from ..services import DockerHub
 from ..settings import EPILOG
@@ -31,7 +31,7 @@ def run(
         ),
     ),
     processors: int = typer.Option(
-        1,
+        None,
         "--processors",
         "-n",
         min=1,
@@ -98,6 +98,7 @@ def run(
     _container = core.container_name(
         fds_file=fds_file, version=_version, interactive=_interactive
     )
+    _processors = processors or mpi.mpi_process_count(fds_text=fds_file.read_text())
 
     if _version and _version not in dh_openbcl_fds.tag_list() + ["latest"]:
         raise typer.Exit(
@@ -116,14 +117,14 @@ def run(
             interactive=_interactive,
             version=_version,
             container=_container,
-            processors=processors,
+            processors=_processors,
             dry_run=dry_run,
         )
     elif location == Location.SABALCORE:
         pbs.write_pbs(
             fds_file=fds_file,
             version=_version,
-            processors=processors,
+            processors=_processors,
             emails=email,
             max_time=max_time,
         )
