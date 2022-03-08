@@ -13,14 +13,6 @@ def _get_mpi_process(text: str) -> Optional[int]:
     return int(matches.group(1))
 
 
-def _extract_meshes(text: str) -> list[str]:
-    """Extract &MESH records from a text string."""
-    matches = re.findall(r"&MESH[^/]*/", text)
-    if matches is None:
-        return []
-    return matches
-
-
 def mpi_process_count(fds_text: str) -> int:
     """Determine how many cores are required for a FDS simulation.
 
@@ -28,7 +20,8 @@ def mpi_process_count(fds_text: str) -> int:
     If MPI_PROCESS is not specified, it is assumed that the MESH should
     have its own process.
     """
-    processes = [_get_mpi_process(record) for record in _extract_meshes(fds_text)]
+    mesh_records = re.findall(r"&MESH[^/]*/", fds_text)
+    processes = [_get_mpi_process(record) for record in mesh_records]
 
     implicit = [p for p in processes if p is None]
     explicit = set([p for p in processes if p is not None])
