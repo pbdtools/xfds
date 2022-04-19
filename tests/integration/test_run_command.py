@@ -7,7 +7,6 @@ import pytest
 from typer.testing import CliRunner
 
 from xfds.cli import app
-from xfds.enums import Location
 
 runner = CliRunner()
 
@@ -67,22 +66,3 @@ def test_run_command_executes_fds(fds_file: Path) -> None:
 
     timeout(out_file.exists)
     assert out_file.exists() is True
-
-
-def test_creates_pbs_file_when_sabalcore_is_selected(
-    fds_file: Path, pbs_file: Path
-) -> None:
-    """Test creates pbs file when sabalcore is selected."""
-    result = runner.invoke(
-        app, ["run", "--location", Location.SABALCORE.value, str(fds_file)]
-    )
-    assert result.exit_code == 0
-    assert pbs_file.exists()
-
-
-def test_rejects_fds_version_not_available(fds_file: Path) -> None:
-    """Test rejects fds version not available."""
-    version = "1.2.3"
-    result = runner.invoke(app, ["run", "-v", version, str(fds_file)])
-    assert result.exit_code == 1
-    assert f"Version {version} is not available" in result.output

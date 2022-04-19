@@ -3,18 +3,14 @@
 Provides information about services.
 """
 from pathlib import Path
-from textwrap import dedent
 from typing import List
 
 import typer
 
-from .. import core, pbs
-from ..enums import Location
-from ..services import DockerHub
+from .. import core
 from ..settings import EPILOG
 
 app = typer.Typer(name="run", help="Run an FDS simulation locally.", epilog=EPILOG)
-dh_openbcl_fds = DockerHub("openbcl", "fds")
 
 
 @app.callback(invoke_without_command=True)
@@ -66,13 +62,6 @@ def run(
     dry_run: bool = typer.Option(
         False, help="View the command that would be run and exit."
     ),
-    location: Location = typer.Option(
-        Location.LOCAL.value,
-        "--location",
-        "-l",
-        case_sensitive=False,
-        help=("Where to run the FDS file."),
-    ),
     email: List[str] = typer.Option(
         [],
         "--email",
@@ -99,31 +88,12 @@ def run(
         fds_file=fds_file, version=_version, interactive=_interactive
     )
 
-    if _version and _version not in dh_openbcl_fds.tag_list() + ["latest"]:
-        raise typer.Exit(
-            dedent(
-                f"""
-            Version {_version} is not available.
-            Available versions: {", ".join(dh_openbcl_fds.tag_list())}
-            """
-            ).strip()
-        )
-
-    if location == Location.LOCAL:
-        core.execute(
-            fds_file=fds_file,
-            volume=_volume,
-            interactive=_interactive,
-            version=_version,
-            container=_container,
-            processors=processors,
-            dry_run=dry_run,
-        )
-    elif location == Location.SABALCORE:
-        pbs.write_pbs(
-            fds_file=fds_file,
-            version=_version,
-            processors=processors,
-            emails=email,
-            max_time=max_time,
-        )
+    core.execute(
+        fds_file=fds_file,
+        volume=_volume,
+        interactive=_interactive,
+        version=_version,
+        container=_container,
+        processors=processors,
+        dry_run=dry_run,
+    )
