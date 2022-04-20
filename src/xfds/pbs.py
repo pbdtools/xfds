@@ -5,7 +5,7 @@ from pathlib import Path
 from textwrap import dedent
 
 
-def _clusters(cores: int, node_list: dict[str, dict] = dict()) -> str:
+def _clusters(cores: int, node_list: dict[str, dict] = None) -> str:
     """Return the clusters for PBS job scheduler."""
 
     def _cluster(cores: int, node: str, data: dict) -> str:
@@ -19,6 +19,9 @@ def _clusters(cores: int, node_list: dict[str, dict] = dict()) -> str:
         part = f"1:{node}:ppn={remainder}" if remainder else ""
 
         return f"{full}{sep}{part}"
+
+    if node_list is None:
+        node_list = dict()
 
     cluster_strings = [
         _cluster(cores, node_name, node_data)
