@@ -1,4 +1,6 @@
 """Integration tests for the `xfds run` command."""
+from __future__ import annotations
+
 import time
 from pathlib import Path
 from typing import Callable, Generator
@@ -42,14 +44,14 @@ def unlink(file: Path) -> None:
 
 def test_run_command_with_fds_file(fds_file: Path) -> None:
     """Test run command with fds file."""
-    result = runner.invoke(app, ["run", "--dry-run", str(fds_file)])
+    result = runner.invoke(app, ["--dry-run", "run", str(fds_file)])
     assert result.exit_code == 0
     assert "openbcl/fds:latest fds test.fds" in result.output.replace("\n", "")
 
 
 def test_run_command_with_fds_file_and_interactive(fds_file: Path) -> None:
     """Test run command with fds file."""
-    result = runner.invoke(app, ["run", "--dry-run", "-i", str(fds_file)])
+    result = runner.invoke(app, ["--dry-run", "run", "-i", str(fds_file)])
     assert result.exit_code == 0
     assert "-it" in result.output
     assert "fds test.fds" not in result.output

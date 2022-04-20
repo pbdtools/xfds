@@ -21,5 +21,5 @@ per-file-ignores =
     tests/*: S101
     # Do not perform function calls in argument defaults.
     src/xfds/cli.py: B008
-    src/xfds/cli_commands/*: B008
+    src/xfds/_*.py: B008
 max-complexity = 10

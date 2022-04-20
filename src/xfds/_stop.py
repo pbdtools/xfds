@@ -3,11 +3,12 @@ from pathlib import Path
 
 import typer
 
-from ..core import locate_fds_file
-from ..settings import EPILOG
+from . import log
+from .core import locate_fds_file
 
 app = typer.Typer(
-    name="stop", help="Stop an FDS simulation that is running locally.", epilog=EPILOG
+    name="stop",
+    help="Stop an FDS simulation that is running locally by creating a .stop file.",
 )
 
 
@@ -27,4 +28,5 @@ def stop(
 ) -> None:
     """Stop an FDS simulation."""
     stop_file = fds_file.resolve().with_suffix(".stop")
+    log.success(f"Stopping {fds_file}")
     stop_file.touch()

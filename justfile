@@ -6,7 +6,6 @@ install:
 
 # Development
 test *args:
-    @just usage
     @poetry run pytest {{args}}
 
 check:
@@ -29,13 +28,6 @@ mypy:
 
 coverage:
     @nox -rs coverage
-
-# Maintenance
-usage:
-    @poetry run python src/scripts/usage.py
-
-sabalcore:
-    @poetry run python src/scripts/sabalcore_nodes.py
 
 # Manual Test
 run-fds *args:

@@ -1,7 +1,8 @@
 """Test ability to select correct file or folder."""
 from pathlib import Path
 
-from xfds.core import locate_fds_file, volume_to_mount
+from xfds._run import volume_to_mount
+from xfds.core import locate_fds_file
 
 
 # Tests to Locate File or Directory To Run

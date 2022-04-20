@@ -4,7 +4,7 @@ from typing import Generator
 
 import pytest
 
-from xfds import core
+from xfds import _run
 
 
 @pytest.fixture
@@ -61,8 +61,8 @@ def default_cmd_kwargs(fds_file: Path) -> dict:
     """Build the command line arguments for the CLI."""
     _interactive = False
     _version = "latest"
-    _volume = core.volume_to_mount(fds_file=fds_file)
-    _container = core.container_name(
+    _volume = _run.volume_to_mount(fds_file=fds_file)
+    _container = _run.container_name(
         fds_file=fds_file, version=_version, interactive=_interactive
     )
 

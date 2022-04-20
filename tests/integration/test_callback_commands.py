@@ -1,4 +1,6 @@
 """Integration tests for the `xfds` command."""
+from __future__ import annotations
+
 from typer.testing import CliRunner
 
 from xfds import __version__
