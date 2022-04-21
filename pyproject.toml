@@ -27,6 +27,7 @@ classifiers = [
 python = "^3.7"
 Markdown = "^3.3.6"
 typer = "^0.4.0"
+click = "~8.0"
 
 
 [tool.poetry.dev-dependencies]
@@ -36,6 +37,7 @@ coverage = "^6.3.1"
 flake8-annotations = "^2.7.0"
 flake8-bandit = "^3.0.0"
 flake8-bugbear = "^22.1.11"
+freezegun = "^1.2.1"
 mypy = "^0.931"
 pre-commit = "^2.16.0"
 pytest = "7.0"

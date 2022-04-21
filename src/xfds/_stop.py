@@ -27,6 +27,7 @@ def stop(
     ),
 ) -> None:
     """Stop an FDS simulation."""
+    log.section("Stop Command", icon="🛑")
     stop_file = fds_file.resolve().with_suffix(".stop")
     log.success(f"Stopping {fds_file}")
     stop_file.touch()

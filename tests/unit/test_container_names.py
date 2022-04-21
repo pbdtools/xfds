@@ -7,14 +7,15 @@ to generate a unique name.
 from datetime import datetime
 from pathlib import Path
 
-from xfds import config
-from xfds._run import container_name
+from freezegun import freeze_time
+
+from xfds.core import container_name
 
 DATE = "2021-12-31 3:14:15"
-config.START_TIME = datetime.strptime(DATE, "%Y-%m-%d %H:%M:%S")
-TIMESTAMP = config.START_TIME.strftime("%m%d-%H%M")
+TIMESTAMP = datetime.strptime(DATE, "%Y-%m-%d %H:%M:%S").strftime("%m%d-%H%M")
 
 
+@freeze_time(DATE)
 def test_interactive_name(latest: str, fds_file: Path) -> None:
     """Test interactive mode has unique name."""
 
@@ -30,6 +31,7 @@ def test_interactive_name(latest: str, fds_file: Path) -> None:
     assert TIMESTAMP in name
 
 
+@freeze_time(DATE)
 def test_non_interactive_name(latest: str, fds_file: Path) -> None:
     """Test interactive mode has unique name."""
 

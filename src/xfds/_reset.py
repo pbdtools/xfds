@@ -41,6 +41,7 @@ def reset(
     ),
 ) -> None:
     """Stop an FDS simulation."""
+    log.section("Reset Command", icon="♻️ ")
     _keep = ALWAYS_KEEP + list(keep)
     for file in fds_file.parent.iterdir():
         if file.suffix in _keep:

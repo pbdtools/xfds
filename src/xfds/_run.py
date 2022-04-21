@@ -10,21 +10,7 @@ import markdown
 import typer
 
 from . import config, log
-from .core import locate_fds_file
-
-
-def volume_to_mount(fds_file: Path) -> Path:
-    """Get the volume to mount.
-
-    If the FDS input file is a directory, the directory is mounted.
-    Otherwise, the parent directory of the FDS input file is mounted.
-    """
-    if fds_file.is_dir():
-        folder = fds_file.resolve()
-    else:
-        folder = fds_file.parent.resolve()
-    log.info(f"Mounting Volume: {folder}", icon="📂")
-    return folder
+from .core import container_name, locate_fds_file, volume_to_mount
 
 
 def interactive_mode(fds_file: Path, interactive: bool) -> bool:
@@ -67,14 +53,6 @@ def fds_version(fds_file: Path, version: Optional[str] = None) -> str:
 
     log.info("Using latest version", icon="⚙️ ")
     return "latest"
-
-
-def container_name(fds_file: Path, version: str, interactive: bool) -> str:
-    """Get container name."""
-    base = "fds" if interactive else fds_file.stem
-    name = f"{base}_{version}_{config.START_TIME.strftime('%m%d-%H%M')}"
-    log.debug(f"Container name: {name}", icon="📦")
-    return name
 
 
 def image_name(version: str = "") -> str:

@@ -4,7 +4,7 @@ from textwrap import dedent
 
 import pytest
 
-from xfds import pbs
+from xfds import _pbs
 
 CLUSTERS = {
     "cfast": {
@@ -27,7 +27,7 @@ CLUSTERS = {
 
 
 def test_clusters() -> None:
-    text = pbs._clusters(cores=42, node_list=CLUSTERS)
+    text = _pbs._clusters(cores=42, node_list=CLUSTERS)
     expected = dedent(
         """
         #PBS -l nodes=5:fds:ppn=8:1:fds:ppn=2
@@ -40,26 +40,26 @@ def test_clusters() -> None:
 
 def test_name_is_from_input_file(fds_file: Path) -> None:
     """Test that name is from input file."""
-    text = pbs._name(fds_file=fds_file)
+    text = _pbs._name(fds_file=fds_file)
     assert fds_file.stem in text
 
 
 def test_name_raies_error_when_passed_directory(empty_dir: Path) -> None:
     """Test that name raises error when passed directory."""
     with pytest.raises(TypeError):
-        pbs._name(fds_file=empty_dir)
+        _pbs._name(fds_file=empty_dir)
 
 
 def test_email_is_blank_when_not_specified() -> None:
     """Test that email is blank when not specified."""
-    email = pbs._email()
+    email = _pbs._email()
     assert email == ""
 
 
 def test_email_format_with_single_email_address() -> None:
     """Test that email is formatted correctly."""
     emails = ["fds@pbd.tools"]
-    text = pbs._email(emails=emails)
+    text = _pbs._email(emails=emails)
     assert "#PBS -m abe" in text
     for email in emails:
         assert email in text
@@ -68,7 +68,7 @@ def test_email_format_with_single_email_address() -> None:
 def test_email_format_with_multiple_email_addresses() -> None:
     """Test that email is formatted correctly."""
     emails = ["fds@pbd.tools", "pbd@pbd.tools"]
-    text = pbs._email(emails=emails)
+    text = _pbs._email(emails=emails)
     assert "#PBS -m abe" in text
     for email in emails:
         assert email in text
@@ -76,32 +76,32 @@ def test_email_format_with_multiple_email_addresses() -> None:
 
 def test_shell_is_bash_when_not_specified() -> None:
     """Test that shell is bash when not specified."""
-    text = pbs._shell()
+    text = _pbs._shell()
     assert text == "#PBS -S /bin/bash"
 
 
 def test_shell_is_bash_when_none_is_specified() -> None:
     """Test that shell is bash when not specified."""
-    text = pbs._shell(shell=None)
+    text = _pbs._shell(shell=None)
     assert text == "#PBS -S /bin/bash"
 
 
 def test_shell_when_specified() -> None:
     """Test that shell is bash when not specified."""
     shell = "/bin/zsh"
-    text = pbs._shell(shell=shell)  # noqa: S604
+    text = _pbs._shell(shell=shell)  # noqa: S604
     assert text == f"#PBS -S {shell}"
 
 
 def test_max_time_is_empty_when_max_time_is_zero() -> None:
     """Test that max_time is empty when max_time is zero."""
-    text = pbs._max_time(max_time=0)
+    text = _pbs._max_time(max_time=0)
     assert text == ""
 
 
 def test_max_time_is_empty_when_max_time_is_negative() -> None:
     """Test that max_time is empty when max_time is negative."""
-    text = pbs._max_time(max_time=-1)
+    text = _pbs._max_time(max_time=-1)
     assert text == ""
 
 
@@ -116,7 +116,7 @@ def test_max_time_is_empty_when_max_time_is_negative() -> None:
 )
 def test_max_time_when_max_time_is_specified(hours: float, hhmmss: str) -> None:
     """Test that max_time is formatted correctly."""
-    text = pbs._max_time(max_time=hours)
+    text = _pbs._max_time(max_time=hours)
     assert text == f"#PBS -l walltime={hhmmss}"
 
 
@@ -131,5 +131,5 @@ def test_max_time_when_max_time_is_specified(hours: float, hhmmss: str) -> None:
 )
 def test_load_module_specified_correctly(version: str, module: str) -> None:
     """Test that fds_module is formatted correctly."""
-    text = pbs._module_load(version=version)
+    text = _pbs._module_load(version=version)
     assert module == text.strip().split()[-1]
