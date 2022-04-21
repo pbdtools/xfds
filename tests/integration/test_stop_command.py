@@ -1,4 +1,6 @@
 """Integration tests for the `xfds stop` command."""
+from __future__ import annotations
+
 from pathlib import Path
 
 from typer.testing import CliRunner

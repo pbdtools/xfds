@@ -1,4 +1,6 @@
 """Integration tests for the `xfds run` command."""
+from __future__ import annotations
+
 import time
 from pathlib import Path
 from typing import Callable, Generator
@@ -7,7 +9,6 @@ import pytest
 from typer.testing import CliRunner
 
 from xfds.cli import app
-from xfds.enums import Location
 
 runner = CliRunner()
 
@@ -43,14 +44,14 @@ def unlink(file: Path) -> None:
 
 def test_run_command_with_fds_file(fds_file: Path) -> None:
     """Test run command with fds file."""
-    result = runner.invoke(app, ["run", "--dry-run", str(fds_file)])
+    result = runner.invoke(app, ["--dry-run", "run", str(fds_file)])
     assert result.exit_code == 0
     assert "openbcl/fds:latest fds test.fds" in result.output.replace("\n", "")
 
 
 def test_run_command_with_fds_file_and_interactive(fds_file: Path) -> None:
     """Test run command with fds file."""
-    result = runner.invoke(app, ["run", "--dry-run", "-i", str(fds_file)])
+    result = runner.invoke(app, ["--dry-run", "run", "-i", str(fds_file)])
     assert result.exit_code == 0
     assert "-it" in result.output
     assert "fds test.fds" not in result.output
@@ -67,22 +68,3 @@ def test_run_command_executes_fds(fds_file: Path) -> None:
 
     timeout(out_file.exists)
     assert out_file.exists() is True
-
-
-def test_creates_pbs_file_when_sabalcore_is_selected(
-    fds_file: Path, pbs_file: Path
-) -> None:
-    """Test creates pbs file when sabalcore is selected."""
-    result = runner.invoke(
-        app, ["run", "--location", Location.SABALCORE.value, str(fds_file)]
-    )
-    assert result.exit_code == 0
-    assert pbs_file.exists()
-
-
-def test_rejects_fds_version_not_available(fds_file: Path) -> None:
-    """Test rejects fds version not available."""
-    version = "1.2.3"
-    result = runner.invoke(app, ["run", "-v", version, str(fds_file)])
-    assert result.exit_code == 1
-    assert f"Version {version} is not available" in result.output

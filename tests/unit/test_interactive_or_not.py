@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from xfds.core import build_arguments, interactive_mode
+from xfds._run import build_arguments, interactive_mode
 
 
 def test_interactive_if_interactive_true_with_fds_file(fds_file: Path) -> None:

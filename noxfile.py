@@ -1,6 +1,6 @@
 """File for automatic testing and checking."""
 import tempfile
-from typing import Any
+from typing import Optional
 
 import nox
 from nox.sessions import Session
@@ -11,7 +11,9 @@ python = "3.7", "3.8", "3.9", "3.10"
 py = "3.9"
 
 
-def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> None:
+def install_with_constraints(
+    session: Session, *args: str, **kwargs: Optional[dict]
+) -> None:
     """Install packages constrained by Poetry's lock file.
     This function is a wrapper for nox.sessions.Session.install. It
     invokes pip to install packages inside of the session's virtualenv.
