@@ -31,20 +31,12 @@ def reset(
     chid: str = typer.Option(
         None, "--chid", help=("If specified, only files matching CHID will be deleted.")
     ),
-    keep: list[str] = typer.Option(
-        None,
-        help=(
-            "List of files to keep in the reset folder."
-            "The following file extensions are always kept: "
-            f"[{', '.join(ALWAYS_KEEP)}]"
-        ),
-    ),
 ) -> None:
     """Stop an FDS simulation."""
     log.section("Reset Command", icon="♻️ ")
-    _keep = ALWAYS_KEEP + list(keep)
+
     for file in fds_file.parent.iterdir():
-        if file.suffix in _keep:
+        if file.suffix in ALWAYS_KEEP:
             log.success(f"Keeping {file.name}")
             continue
         if chid is None or file.name.startswith(chid):
