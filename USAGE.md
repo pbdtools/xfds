@@ -16,7 +16,6 @@ Options:
 Commands:
   reset  Reset a folder by clearing everything except the input files.
   run    Run an FDS simulation locally.
-  show   Show information about external services.
   stop   Stop an FDS simulation that is running locally.
 
   Developed by pbd.tools
@@ -78,8 +77,6 @@ Options:
                                   to see a list of available versions.
   --dry-run / --no-dry-run        View the command that would be run and exit.
                                   [default: no-dry-run]
-  -l, --location [local|sabalcore]
-                                  Where to run the FDS file.  [default: local]
   -m, --email TEXT                Specify an email address for PBS job
                                   scheduler.
   -t, --wall-time FLOAT RANGE     Specify maximum time in hours. If the job runs
@@ -87,23 +84,6 @@ Options:
                                   will kill the job. A time of 0 means no time
                                   limit.   [default: 0; x>=0]
   --help                          Show this message and exit.
-
-  Developed by pbd.tools
-
-```
-
-# `xfds show --help`
-```
-Usage: xfds show [OPTIONS] COMMAND [ARGS]...
-
-  Show information about external services.
-
-Options:
-  --help  Show this message and exit.
-
-Commands:
-  nodes     Show avaliable nodes for sabalcore.
-  versions  Show avaliable tags for docker images or fds versions.
 
   Developed by pbd.tools
 

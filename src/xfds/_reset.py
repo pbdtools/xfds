@@ -1,17 +1,18 @@
-"""Stop Command."""
+"""Reset Command."""
+from __future__ import annotations
+
 from pathlib import Path
 
 import typer
 
-from ..core import locate_fds_file
-from ..settings import EPILOG
+from . import config, log
+from .core import locate_fds_file
 
 app = typer.Typer(
     name="reset",
     help="Reset a folder by clearing everything except the input files.",
-    epilog=EPILOG,
 )
-KEEP = [".fds", ".psm", ".zip"]
+ALWAYS_KEEP = [".fds", ".psm", ".zip", ".pbs"]
 
 
 @app.callback(invoke_without_command=True)
@@ -32,10 +33,13 @@ def reset(
     ),
 ) -> None:
     """Stop an FDS simulation."""
+    log.section("Reset Command", icon="♻️ ")
+
     for file in fds_file.parent.iterdir():
-        if file.suffix in KEEP:
+        if file.suffix in ALWAYS_KEEP:
+            log.success(f"Keeping {file.name}")
             continue
-        if chid is None:
-            file.unlink()
-        elif file.name.startswith(chid):
-            file.unlink()
+        if chid is None or file.name.startswith(chid):
+            log.warning(f"Deleting {file.name}")
+            if not config.DRY:
+                file.unlink()

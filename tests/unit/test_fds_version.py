@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
-from xfds.core import fds_version, image_name
+from xfds._run import fds_version, image_name
 
 
 # - From Function Signature

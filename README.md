@@ -31,10 +31,6 @@ test.fds
 docker run --rm --name test-1b6d0d27-2cce-4555-a827-4b31d0e03215 -v /tests/data/fds:/workdir openbcl/fds:6.7.7 fds test.fds
 ```
 
-## Usage
-
-Run `xfds --help` to see available commands. For help on a specific command, run `xfds <command> --help`. See [USAGE.md](https://github.com/pbdtools/xfds/blob/main/USAGE.md) for more.
-
 ## Features
 
 **Auto-detect FDS file in directory**

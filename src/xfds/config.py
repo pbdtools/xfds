@@ -1,0 +1,3 @@
+VERBOSE = False
+DRY = False
+MESSAGE_ICONS = True
