@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from . import log
+from . import config, log
 
 
 def locate_fds_file(fds_file: Optional[Path]) -> Path:
@@ -45,6 +45,8 @@ def volume_to_mount(fds_file: Path) -> Path:
 def container_name(fds_file: Path, version: str, interactive: bool) -> str:
     """Get container name."""
     base = "fds" if interactive else fds_file.stem
-    name = f"{base}_{version}_{datetime.now().strftime('%m%d-%H%M')}"
+    name = (
+        f"{base}_{version}_{datetime.now().strftime(config.CONTAINER_TIMESTAMP_FORMAT)}"
+    )
     log.debug(f"Container name: {name}", icon="📦")
     return name

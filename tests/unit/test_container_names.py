@@ -9,10 +9,13 @@ from pathlib import Path
 
 from freezegun import freeze_time
 
+from xfds import config
 from xfds.core import container_name
 
 DATE = "2021-12-31 3:14:15"
-TIMESTAMP = datetime.strptime(DATE, "%Y-%m-%d %H:%M:%S").strftime("%m%d-%H%M")
+TIMESTAMP = datetime.strptime(DATE, "%Y-%m-%d %H:%M:%S").strftime(
+    config.CONTAINER_TIMESTAMP_FORMAT
+)
 
 
 @freeze_time(DATE)

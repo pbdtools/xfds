@@ -27,6 +27,9 @@ classifiers = [
 python = "^3.7"
 Markdown = "^3.3.6"
 typer = "^0.4.0"
+Jinja2 = "^3.1.1"
+PyYAML = "^6.0"
+toml = "^0.10.2"
 
 
 [tool.poetry.dev-dependencies]

@@ -4,6 +4,7 @@ from __future__ import annotations
 import typer
 
 from . import __version__, config, log
+from ._render import app as _render
 from ._reset import app as _reset
 from ._run import app as _run
 from ._stop import app as _stop
@@ -11,7 +12,7 @@ from ._stop import app as _stop
 EPILOG = "Developed by pbd.tools"
 app = typer.Typer(help="Manage FDS simulations.", epilog=EPILOG)
 
-commands = [_run, _stop, _reset]
+commands = [_run, _render, _stop, _reset]
 for command in commands:
     app.add_typer(command, epilog=EPILOG)
 
