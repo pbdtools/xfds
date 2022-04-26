@@ -1,12 +1,16 @@
 """Render Command."""
 from __future__ import annotations
 
-from datetime import datetime
+import json
+import pprint
+from itertools import product
 from pathlib import Path
-from typing import Union
+from typing import Optional, Union
 
 import markdown
+import toml
 import typer
+import yaml
 from jinja2 import Environment
 
 from . import config, log
@@ -18,38 +22,72 @@ app = typer.Typer(
 )
 
 
-def output_dir(base_path: Path, date: bool = False) -> Path:
-    """Return the output directory."""
-    if date:
-        return base_path / datetime.now().strftime(config.RENDER_TIMESTAMP_FORMAT)
-    return base_path / "models"
-
-
 def _normalize(value: str) -> Union[str, float, int]:
-    try:
-        return int(value)
-    except ValueError:
-        pass
+    """Normalize a value.
 
-    try:
-        return float(value)
-    except ValueError:
-        pass
+    Will return as int or float if possible, otherwise will return as string.
+    """
+    for cast in [int, float, str]:
+        try:
+            return cast(value)
+        except ValueError:
+            pass
 
     return value
 
 
 def get_meta(file_contents: str) -> dict:
+    """Process metadata from the FDS template file.
+
+    Values will be normalized to numbers if possible.
+    If a singular value is present, the value will be
+    returned rather than a list.
+    """
     md = markdown.Markdown(extensions=["meta"])
     md.convert(file_contents)
     meta = md.Meta
 
     for key, value in meta.items():
-        value = [_normalize(v) for v in value]
         if len(value) == 1:
-            meta[key] = value[0]
+            meta[key] = _normalize(value[0])
+        else:
+            meta[key] = [_normalize(v) for v in value]
 
     return meta
+
+
+def locate_config(fds_file: Path, meta: dict) -> Optional[Path]:
+    """Load the configuration file.
+
+    Will look for a confing file in the same directory as the FDS template file.
+    The config file should have the same base name as the original FDS file.
+    If no config file is found, search the FDS meta for a variable "config".
+    """
+    for suffix in [".yaml", ".yml", ".toml", ".json"]:
+        config_file = fds_file.with_suffix(suffix)
+        if config_file.exists():
+            return config_file
+
+    if "config" in meta:
+        config_file = Path(meta["config"])
+        if config_file.is_absolute():
+            return config_file
+        return fds_file.parent / config_file
+
+    return None
+
+
+def read_config(config_file: Path) -> dict:
+    """Read the configuration file."""
+    func = {
+        ".yml": yaml.safe_load,
+        ".yaml": yaml.safe_load,
+        ".toml": toml.load,
+        ".json": json.load,
+    }[config_file.suffix]
+
+    with config_file.open() as f:
+        return func(f)
 
 
 def compile(file_contents: str, data: dict) -> str:
@@ -64,8 +102,77 @@ def compile(file_contents: str, data: dict) -> str:
 
 
 def write(output_file: Path, contents: str) -> None:
+    if config.DRY:
+        return
     output_file.parent.mkdir(exist_ok=True, parents=True)
     output_file.write_text(contents)
+
+
+def generate_models(
+    fds_file: Path,
+    template_text: str,
+    model_name: str,
+    model_data: dict,
+    defaults: dict,
+    meta: dict,
+) -> None:
+    """Generate a model."""
+    log.debug(f"Model: {model_name}")
+    log.debug(f"Model data: {model_data}")
+
+    output_dir = fds_file.parent / "output"
+
+    if "matrix" not in model_data:
+        log.warning(f"No matrix specified for model {model_name}")
+        data = meta.copy()
+        data.update(defaults)
+        log.debug(f"=== Data ===\n{pprint.pformat(data)}")
+        contents = compile(template_text, data)
+        output_file = output_dir / model_name / f"{model_name}.fds"
+        write(output_file, contents)
+        return
+
+    keys, values = zip(*model_data["matrix"].items())
+    for matrix_values in product(*values):
+        data = meta.copy()
+        data.update(defaults)
+        data.update(zip(keys, matrix_values))
+        log.debug(f"=== Data ===\n{pprint.pformat(data)}")
+
+        contents = compile(template_text, data)
+        file_name = compile(model_name, data)
+        output_file = output_dir / file_name / f"{file_name}.fds"
+        write(output_file, contents)
+        log.success(f"Created: {output_file}")
+
+
+def main(fds_file: Path) -> None:
+
+    template_text = fds_file.read_text()
+    meta = get_meta(template_text)
+    log.debug(pprint.pformat(meta))
+
+    config_file = locate_config(fds_file, meta)
+    if config_file is None or not config_file.exists():
+        log.warning("No config file found.")
+    else:
+        log.info(f"Config file: {config_file}", icon="📄")
+    config_data = read_config(config_file) if config_file is not None else {}
+
+    defaults = config_data.get("defaults", {}).copy()
+    log.debug(f"Defaults: {defaults}")
+
+    models = config_data.get("models", {fds_file.name: {}}).copy()
+
+    for model_name, model_data in models.items():
+        generate_models(
+            fds_file=fds_file,
+            template_text=template_text,
+            model_name=model_name,
+            model_data=model_data,
+            defaults=defaults,
+            meta=meta,
+        )
 
 
 @app.callback(invoke_without_command=True)
@@ -81,17 +188,7 @@ def render(
             "if **nothing** is specified, the current directory is used and the above rules are applied. "
         ),
     ),
-    date: bool = typer.Option(True, help="Use a timestamp for the output directory."),
 ) -> None:
     """Render an FDS template into scenarios."""
     log.section("Render Command", icon="🖨️ ")
-
-    output = output_dir(fds_file.parent, date)
-    log.debug(f"Output directory: {output}")
-
-    contents = fds_file.read_text()
-    meta = get_meta(contents)
-
-    output_file = output / fds_file.stem / fds_file.name
-    write(output_file, compile(contents, meta))
-    log.success(f"Created: {output_file}")
+    main(fds_file)

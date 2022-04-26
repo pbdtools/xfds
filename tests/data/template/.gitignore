@@ -1,3 +1,7 @@
 *
 !.gitignore
-!template.fds
+!*.fds
+!*.yaml
+!*.yml
+!*.json
+!*.toml

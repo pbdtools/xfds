@@ -1,0 +1,21 @@
+defaults:
+  x0: 0
+  x1: 5
+  y0: 0
+  y1: 4
+  z0: 0
+  z1: 3
+  z_tenability: 1.8
+
+models:
+  resolution_{{res}}_m:
+    folder: "mesh_resolutions"
+    matrix:
+      res: [0.1, 0.2, 0.4]
+
+  tenability_{{z_tenability}}:
+    folder: "tenability_height"
+    res: 0.2
+    x1: 10
+    matrix:
+      z_tenability: [1.2, 1.6, 1.8]
