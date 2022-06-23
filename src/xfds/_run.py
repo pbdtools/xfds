@@ -1,4 +1,4 @@
-"""Run Command."""
+."""Run Command."""
 from __future__ import annotations
 
 import re
