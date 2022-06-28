@@ -1,0 +1,7 @@
+*
+!.gitignore
+!*.fds
+!*.yaml
+!*.yml
+!*.json
+!*.toml

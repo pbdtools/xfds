@@ -1,0 +1,25 @@
+author: Brian Cohan
+x0: 0
+x1: 5
+y0: 0
+y1: 4
+z0: 0
+z1: 3
+res: 0.1
+z_tenability: 1.8
+
+&SPEC ID='CARBON MONOXIDE'/
+&SPEC ID='SOOT'/
+
+&MESH XB = {{ x0 }}, {{ x1 }}, {{ y0 }}, {{ y1 }}, {{ z0 }}, {{ z1 }},
+      IJK = {{ ((x1 - x0) / res)|int }}, {{ ((y1 - y0) / res)|int }}, {{ ((z1 - z0) / res)|int }}/
+
+{% for x in range(x0 + 1, x1) %}
+{% for y in range(y0 + 1, y1) %}
+&DEVC ID='VIS_{{ x }}_{{ y }}', XYZ={{ x }},{{ y }},{{ z_tenability }}, QUANTITY='VISIBILITY'/
+&DEVC ID='TMP_{{ x }}_{{ y }}', XYZ={{ x }},{{ y }},{{ z_tenability }}, QUANTITY='TEMPERATURE'/
+&DEVC ID='OXY_{{ x }}_{{ y }}', XYZ={{ x }},{{ y }},{{ z_tenability }}, QUANTITY='VOLUME FRACTION', SPEC_ID='OXYGEN'/
+&DEVC ID='CO2_{{ x }}_{{ y }}', XYZ={{ x }},{{ y }},{{ z_tenability }}, QUANTITY='VOLUME FRACTION', SPEC_ID='CARBON DIOXIDE'/
+&DEVC ID='CMO_{{ x }}_{{ y }}', XYZ={{ x }},{{ y }},{{ z_tenability }}, QUANTITY='VOLUME FRACTION', SPEC_ID='CARBON MONOXIDE'/
+{% endfor %}
+{% endfor %}

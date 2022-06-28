@@ -8,7 +8,7 @@ from nox.sessions import Session
 nox.options.sessions = "tests", "black", "lint", "safety", "mypy", "coverage"
 locations = "src", "tests", "noxfile.py"
 python = "3.7", "3.8", "3.9", "3.10"
-py = "3.9"
+py = "3.10"
 
 
 def install_with_constraints(
@@ -71,7 +71,6 @@ def lint(session: Session) -> None:
         session,
         "flake8",
         "flake8-bugbear",
-        "flake8-bandit",
         "flake8-annotations",
     )
     session.run("flake8", *args)
