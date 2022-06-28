@@ -1,0 +1,83 @@
+# https://squidfunk.github.io/mkdocs-material/
+
+site_name: xFDS
+site_url: "https://xfds.pbd.tools"
+site_description: Command Line Utility for Managing FDS Models
+
+repo_url: https://github.com/pbdtools/xfds
+repo_name: pbdtools/xfds
+edit_uri: ""
+
+theme:
+  name: material
+  locale: en
+  font: Montserrat
+  logo: assets/xfds_logo_sm.png
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep orange
+      accent: red
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep orange
+      accent: red
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - content.code.annotate
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - markdown.extensions.codehilite:
+      guess_lang: false
+  - admonition
+  - codehilite
+  - extra
+  - pymdownx.superfences:
+      custom_fences:
+          - name: mermaid
+            class: mermaid
+            format: !!python/name:pymdownx.superfences.fence_code_format ''
+  - pymdownx.tabbed:
+      alternate_style: true
+  - mdx_include:
+      base_path: docs
+
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/pbdtools/xfds
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/pbdtools
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/pbdtools
+
+extra_css:
+  - css/termynal.css
+  - css/custom.css
+
+extra_javascript:
+  - js/termynal.js
+  - js/custom.js
+
+nav:
+  - Home: 'index.md'
+  - Installation: 'installation.md'
+  - API:
+    - Overview: 'commands/overview.md'
+    - 'xfds run': 'commands/run.md'
+    - 'xfds render': 'commands/render.md'
+    - 'xfds reset': 'commands/reset.md'
+    - 'xfds stop': 'commands/stop.md'
+  - External:
+    - 'PBD Tools': 'https://pbd.tools'
