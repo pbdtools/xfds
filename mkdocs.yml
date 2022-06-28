@@ -12,6 +12,7 @@ theme:
   name: material
   locale: en
   font: Montserrat
+  logo: assets/xfds_logo_sm.png
   icon:
     repo: fontawesome/brands/github
   palette:
@@ -44,11 +45,11 @@ markdown_extensions:
   - extra
   - pymdownx.superfences:
       custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
+          - name: mermaid
+            class: mermaid
+            format: !!python/name:pymdownx.superfences.fence_code_format ''
   - pymdownx.tabbed:
-      alternate_style: true 
+      alternate_style: true
   - mdx_include:
       base_path: docs
 
