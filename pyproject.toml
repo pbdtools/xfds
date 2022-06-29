@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "xfds"
 version = "0.2.0"
-description = "FDS Runner using openbcl/fds-dockerfiles"
+description = "Utility for managing FDS models"
 license = "MIT"
 authors = ["Brian Cohan <briancohan@pbd.tools>"]
 readme = "README.md"
-homepage = "https://github.com/pbdtools/xfds"
+homepage = "https://xfds.pbd.tools"
 repository = "https://github.com/pbdtools/xfds"
-documentation = "https://github.com/pbdtools/xfds"
+documentation = "https://xfds.pbd.tools"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",

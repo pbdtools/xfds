@@ -45,27 +45,5 @@ pipx:
     just build
     pipx install --force `find ./dist -name "*.whl" | sort | tail -n 1`
 
-# URLs
-repo:
-    #!/usr/bin/env python3
-    import toml
-    import webbrowser
-    pyproject_toml = toml.load("pyproject.toml")
-    url = pyproject_toml['tool']['poetry']['repository']
-    webbrowser.open(url)
-
-home:
-    #!/usr/bin/env python3
-    import toml
-    import webbrowser
-    pyproject_toml = toml.load("pyproject.toml")
-    url = pyproject_toml['tool']['poetry']['homepage']
-    webbrowser.open(url)
-
 docs:
-    #!/usr/bin/env python3
-    import toml
-    import webbrowser
-    pyproject_toml = toml.load("pyproject.toml")
-    url = pyproject_toml['tool']['poetry']['documentation']
-    webbrowser.open(url)
+    @poetry run mkdocs serve
