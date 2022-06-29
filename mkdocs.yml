@@ -73,6 +73,7 @@ extra_javascript:
 nav:
   - Home: 'index.md'
   - Installation: 'installation.md'
+  - License: 'license.md'
   - API:
     - Overview: 'commands/overview.md'
     - 'xfds run': 'commands/run.md'
