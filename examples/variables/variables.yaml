@@ -1,0 +1,4 @@
+models:
+  variables:
+    matrix:
+      blank: ['']

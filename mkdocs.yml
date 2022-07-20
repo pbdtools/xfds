@@ -1,5 +1,3 @@
-# https://squidfunk.github.io/mkdocs-material/
-
 site_name: xFDS
 site_url: "https://xfds.pbd.tools"
 site_description: Command Line Utility for Managing FDS Models
@@ -80,5 +78,8 @@ nav:
     - 'xfds render': 'commands/render.md'
     - 'xfds reset': 'commands/reset.md'
     - 'xfds stop': 'commands/stop.md'
+  - Contributing:
+    - 'Getting Set Up': 'contributing/setup.md'
+    - 'Repository Overview': 'contributing/repo_overview.md'
   - External:
     - 'PBD Tools': 'https://pbd.tools'

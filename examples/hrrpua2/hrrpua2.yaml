@@ -1,0 +1,4 @@
+models:
+  hrrpua2:
+    matrix:
+      blank: ['']
