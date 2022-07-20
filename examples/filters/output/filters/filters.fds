@@ -1,0 +1,33 @@
+# abs
+42
+
+# center
+"   xFDS   "
+
+# float
+42.0
+42.000000
+42.000
+" 42.000"
+
+# int
+42
+42
+
+# max
+3
+
+# min
+1
+
+# round
+3.142
+
+# trim
+"xFDS"
+
+# unique
+[1, 2]
+
+# upper
+PBD TOOLS

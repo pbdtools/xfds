@@ -1,0 +1,26 @@
+nx: 6
+ny: 4
+zmax: 3
+offset: 0.3048
+res: 0.2
+spacing: 2.438
+
+{% set dx = spacing * nx %}
+{% set dy = spacing * ny %}
+{% set x_start = -spacing * (nx - 1) / 2 %}
+{% set y_start = -spacing * (ny - 1) / 2 %}
+
+&MESH XB={{ (-dx / 2)|round(4) }}, {{ (dx / 2)|round(4) }}, {{ (-dy / 2)|round(4) }}, {{ (dy / 2)|round(4) }}, 0, {{ zmax }},
+      IJK= {{ (dx / res)|int }}, {{ (dy / res)|int }}, {{ (zmax / res)|int }}
+
+&PROP ID='Link',
+      QUANTITY='SPRINKLER LINK TEMPERATURE',
+      ACTIVATION_TEMPERATURE=74/
+
+{% for i in range(nx) %}
+{% for j in range(ny) %}
+{% set x = (x_start + i * spacing) %}
+{% set y = (y_start + j * spacing) %}
+&DEVC ID='SPR_{{i}}_{{j}}', XYZ={{ "%7.4f"|format(x) }}, {{ "%7.4f"|format(y) }}, {{ zmax - offset }}, PROP_ID='Link'/
+{% endfor %}
+{% endfor %}

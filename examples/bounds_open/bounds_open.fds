@@ -1,0 +1,10 @@
+bounds: open
+
+&MESH XB=0, 1, 0, 1, 0, 1, IJK=10, 10, 10/
+
+{% if bounds == "open" %}
+&VENT MB='XMIN', SURF_ID='OPEN'/
+&VENT MB='XMAX', SURF_ID='OPEN'/
+&VENT MB='YMIN', SURF_ID='OPEN'/
+&VENT MB='YMAX', SURF_ID='OPEN'/
+{% endif %}
