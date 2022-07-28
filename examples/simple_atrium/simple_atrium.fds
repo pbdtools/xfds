@@ -1,0 +1,72 @@
+cfm: {{ cfm }}
+mua: {{ cfm * mua_perc / 100 }}
+open_doors: {{ open_doors }}
+
+{% set ns = namespace(floor=0) %}
+{% macro exhaust(cfm) %}{{ cfm * 0.0004719 }}{% endmacro -%}
+
+{% macro fwp(value) %}{{ "%7.3f"|format(value) }}{% endmacro -%}
+
+{% macro tenability(x, y, z) -%}
+&DEVC ID='VIS_x{{x}}_y{{y}}_fl{{ ns.floor }}', XYZ={{ fwp(x) }}, {{ fwp(y) }}, {{ fwp(z) }}, QUANTITY='VISIBILITY'/
+&DEVC ID='TMP_x{{x}}_y{{y}}_fl{{ ns.floor }}', XYZ={{ fwp(x) }}, {{ fwp(y) }}, {{ fwp(z) }}, QUANTITY='TEMPERATURE'/
+&DEVC ID='OXY_x{{x}}_y{{y}}_fl{{ ns.floor }}', XYZ={{ fwp(x) }}, {{ fwp(y) }}, {{ fwp(z) }}, QUANTITY='VOLUME FRACTION', SPEC_ID='OXYGEN'/
+&DEVC ID='CO2_x{{x}}_y{{y}}_fl{{ ns.floor }}', XYZ={{ fwp(x) }}, {{ fwp(y) }}, {{ fwp(z) }}, QUANTITY='VOLUME FRACTION', SPEC_ID='CARBON DIOXIDE'/
+&DEVC ID='CMO_x{{x}}_y{{y}}_fl{{ ns.floor }}', XYZ={{ fwp(x) }}, {{ fwp(y) }}, {{ fwp(z) }}, QUANTITY='VOLUME FRACTION', SPEC_ID='CARBON MONOXIDE'/
+{%- endmacro -%}
+
+&MESH XB={{x0}}, {{x1}}, {{y0}}, {{y1}}, {{z0}}, {{z1}},
+      IJK={{((x1 - x0) / res)|int}}, {{((y1 - y0) / res)|int}}, {{((z1 - z0) / res)|int}}/
+&TIME T_END=30/
+&REAC FUEL='PROPANE'/
+
+####################
+# Burner
+####################
+{% set top = z0 + 0.2 %}
+{% set side = area ** 0.5 %}
+{% set r = (side / 2)|round(4) %}
+&SURF ID='BURNER', COLOR='RED', HRRPUA={{ (hrr / area)|round(2) }}/
+&OBST XB={{ -r }}, {{ r }}, {{ -r }}, {{ r }}, {{ z0 }}, {{ top }}/ ({{ area }} m^2)
+&VENT XB={{ -r }}, {{ r }}, {{ -r }}, {{ r }}, {{ top }}, {{ top }}, SURF_ID='BURNER'/
+
+####################
+# Exhaust
+####################
+&SURF ID='Exhaust', COLOR='GREEN', VOLUME_FLOW={{ exhaust(cfm / 4) }}/ {{ cfm / 4 }} cfm/vent
+&OBST XB={{ fwp(x0 + 1) }}, {{ fwp(x0 + 2) }}, {{ fwp(y0 + 1) }}, {{ fwp(y0 + 2) }}, {{ fwp(z1 - 0.2) }}, {{ fwp(z1) }}/
+&OBST XB={{ fwp(x1 - 2) }}, {{ fwp(x1 - 1) }}, {{ fwp(y0 + 1) }}, {{ fwp(y0 + 2) }}, {{ fwp(z1 - 0.2) }}, {{ fwp(z1) }}/
+&OBST XB={{ fwp(x0 + 1) }}, {{ fwp(x0 + 2) }}, {{ fwp(y1 - 2) }}, {{ fwp(y1 - 1) }}, {{ fwp(z1 - 0.2) }}, {{ fwp(z1) }}/
+&OBST XB={{ fwp(x1 - 2) }}, {{ fwp(x1 - 1) }}, {{ fwp(y1 - 2) }}, {{ fwp(y1 - 1) }}, {{ fwp(z1 - 0.2) }}, {{ fwp(z1) }}/
+&VENT XB={{ fwp(x0 + 1) }}, {{ fwp(x0 + 2) }}, {{ fwp(y0 + 1) }}, {{ fwp(y0 + 2) }}, {{ fwp(z1 - 0.2) }}, {{ fwp(z1 - 0.2) }}, SURF_ID='Exhaust'/
+&VENT XB={{ fwp(x1 - 2) }}, {{ fwp(x1 - 1) }}, {{ fwp(y0 + 1) }}, {{ fwp(y0 + 2) }}, {{ fwp(z1 - 0.2) }}, {{ fwp(z1 - 0.2) }}, SURF_ID='Exhaust'/
+&VENT XB={{ fwp(x0 + 1) }}, {{ fwp(x0 + 2) }}, {{ fwp(y1 - 2) }}, {{ fwp(y1 - 1) }}, {{ fwp(z1 - 0.2) }}, {{ fwp(z1 - 0.2) }}, SURF_ID='Exhaust'/
+&VENT XB={{ fwp(x1 - 2) }}, {{ fwp(x1 - 1) }}, {{ fwp(y1 - 2) }}, {{ fwp(y1 - 1) }}, {{ fwp(z1 - 0.2) }}, {{ fwp(z1 - 0.2) }}, SURF_ID='Exhaust'/
+
+####################
+# Makeup Air
+####################
+{% if mua_perc %}
+&SURF ID='Supply', COLOR='BLUE', VOLUME_FLOW={{ exhaust(cfm * (mua_perc / 100) / 2) }}/ {{ cfm * (mua_perc / 100) / 2 }} cfm/vent
+&OBST XB={{ fwp(x0) }}, {{ fwp(x0 + 1) }}, {{ fwp(y0) }}, {{ fwp(y1) }}, {{ fwp(z0) }}, {{ fwp(z0 + 0.1) }}/
+&VENT XB={{ fwp(x0) }}, {{ fwp(x0 + 1) }}, {{ fwp(y0) }}, {{ fwp(y1) }}, {{ fwp(z0 + 0.1) }}, {{ fwp(z0 + 0.1) }}, SURF_ID='Supply'/
+&OBST XB={{ fwp(x1 - 1) }}, {{ fwp(x1) }}, {{ fwp(y0) }}, {{ fwp(y1) }}, {{ fwp(z0) }}, {{ fwp(z0 + 0.1) }}/
+&VENT XB={{ fwp(x1 - 1) }}, {{ fwp(x1) }}, {{ fwp(y0) }}, {{ fwp(y1) }}, {{ fwp(z0 + 0.1) }}, {{ fwp(z0 + 0.1) }}, SURF_ID='Supply'/
+{% else %}
+&VENT XB=-1, 1, {{ y1 }}, {{ y1 }}, {{ z0 }}, {{ z0 + 2 }}, SURF_ID='OPEN'/ Doors
+{% endif %}
+
+####################
+# Geometry
+####################
+{% for z in range(z0 + floor_height, z1 - floor_height, floor_height) %}
+{% set ns.floor = ns.floor + 1 %}
+&OBST  XB={{fwp(x0)}}, {{fwp(x0 + balcony_width)}}, {{fwp(y0)}}, {{fwp(y1)}}, {{fwp(z)}}, {{fwp(z + 0.2)}}, ID="FL{{ns.floor}} XMIN Balcony"/
+&OBST  XB={{fwp(x0 + balcony_width - 0.2)}}, {{fwp(x0 + balcony_width)}}, {{fwp(y0)}}, {{fwp(y1)}}, {{fwp(z)}}, {{fwp(z + 1.2)}}, ID="FL{{ns.floor}} XMIN Rail"/
+&OBST  XB={{fwp(x1 - balcony_width)}}, {{fwp(x1)}}, {{fwp(y0)}}, {{fwp(y1)}}, {{fwp(z)}}, {{fwp(z + 0.2)}}, ID="FL{{ns.floor}} XMAX Balcony"/
+&OBST  XB={{fwp(x1 - balcony_width)}}, {{fwp(x1- balcony_width + 0.2)}}, {{fwp(y0)}}, {{fwp(y1)}}, {{fwp(z)}}, {{fwp(z + 1.2)}}, ID="FL{{ns.floor}} XMAX Rail"/
+{% for y in range(y0 + 1, y1, 2) %}
+{{ tenability(x0 + balcony_width - 1, y, z+2)}}
+{{ tenability(x1 - balcony_width + 1, y, z+2)}}
+{% endfor %}
+{% endfor %}

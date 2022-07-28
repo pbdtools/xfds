@@ -49,7 +49,7 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - mdx_include:
-      base_path: docs
+      base_path: examples
 
 extra:
   social:
@@ -78,6 +78,9 @@ nav:
     - 'xfds render': 'commands/render.md'
     - 'xfds reset': 'commands/reset.md'
     - 'xfds stop': 'commands/stop.md'
+  - 'File Formats':
+    - 'FDS File': 'files/fds.md'
+    - 'Config File': 'files/config.md'
   - Contributing:
     - 'Getting Set Up': 'contributing/setup.md'
     - 'Repository Overview': 'contributing/repo_overview.md'

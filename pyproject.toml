@@ -48,6 +48,7 @@ setuptools = "^62.1.0"
 mkdocs = "^1.3.0"
 mkdocs-material = "^8.3.6"
 mdx-include = "^1.4.1"
+pytest-datadir = "^1.3.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -61,3 +62,8 @@ source = ["src/xfds"]
 
 [tool.coverage.report]
 show_missing = true
+
+[tool.pytest.ini_options]
+markers = [
+    "integration_test: marks test as integration tests",
+]
