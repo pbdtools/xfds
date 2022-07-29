@@ -213,12 +213,14 @@ Additionally, tenability devices are placed at 1 meter intervals along the corri
 
 ## Filters
 
+### Jinja Filters
+
 !!! info "Jinja Docs"
     See the Jinja documentation for more information on [filters](https://jinja.palletsprojects.com/en/3.1.x/templates/#filters).
 
 Filters can modify the value of a variable or expression. This is useful when you need to ensure values follow a certain format. For example, in the &MESH lines above, IJK requires values to be integers. The `int` filter will ensure IJK gets integer values so FDS does not generate an error. The examples below demonstrate how to use some of the [built-in filters](https://jinja.palletsprojects.com/en/3.1.x/templates/#list-of-builtin-filters) provided by Jinja.
 
-### Absolute Value
+#### Absolute Value
 ```python title="examples/filters/filters.fds" linenums="2"
 {! filters/filters.fds [ln:2] !}
 ```
@@ -226,7 +228,7 @@ Filters can modify the value of a variable or expression. This is useful when yo
 {! filters/output/filters/filters.fds [ln:2] !}
 ```
 
-### Center Text
+#### Center Text
 ```python title="examples/filters/filters.fds" linenums="5"
 {! filters/filters.fds [ln:5] !}
 ```
@@ -234,7 +236,7 @@ Filters can modify the value of a variable or expression. This is useful when yo
 {! filters/output/filters/filters.fds [ln:5] !}
 ```
 
-### Convert to Float
+#### Convert to Float
 ```python title="examples/filters/filters.fds" linenums="8"
 {! filters/filters.fds [ln:8-11] !}
 ```
@@ -242,7 +244,7 @@ Filters can modify the value of a variable or expression. This is useful when yo
 {! filters/output/filters/filters.fds [ln:8-11] !}
 ```
 
-### Convert to integer
+#### Convert to integer
 ```python title="examples/filters/filters.fds" linenums="14"
 {! filters/filters.fds [ln:14-15] !}
 ```
@@ -250,7 +252,7 @@ Filters can modify the value of a variable or expression. This is useful when yo
 {! filters/output/filters/filters.fds [ln:14-15] !}
 ```
 
-### Maximum Value
+#### Maximum Value
 ```python title="examples/filters/filters.fds" linenums="18"
 {! filters/filters.fds [ln:18] !}
 ```
@@ -258,7 +260,7 @@ Filters can modify the value of a variable or expression. This is useful when yo
 {! filters/output/filters/filters.fds [ln:18] !}
 ```
 
-### Minimum Value
+#### Minimum Value
 ```python title="examples/filters/filters.fds" linenums="21"
 {! filters/filters.fds [ln:21] !}
 ```
@@ -266,7 +268,7 @@ Filters can modify the value of a variable or expression. This is useful when yo
 {! filters/output/filters/filters.fds [ln:21] !}
 ```
 
-### Round Value
+#### Round Value
 ```python title="examples/filters/filters.fds" linenums="24"
 {! filters/filters.fds [ln:24] !}
 ```
@@ -274,7 +276,7 @@ Filters can modify the value of a variable or expression. This is useful when yo
 {! filters/output/filters/filters.fds [ln:24] !}
 ```
 
-### Trim Text
+#### Trim Text
 ```python title="examples/filters/filters.fds" linenums="27"
 {! filters/filters.fds [ln:27] !}
 ```
@@ -282,7 +284,7 @@ Filters can modify the value of a variable or expression. This is useful when yo
 {! filters/output/filters/filters.fds [ln:27] !}
 ```
 
-### Filter Unique Values
+#### Filter Unique Values
 ```python title="examples/filters/filters.fds" linenums="30"
 {! filters/filters.fds [ln:30] !}
 ```
@@ -290,10 +292,62 @@ Filters can modify the value of a variable or expression. This is useful when yo
 {! filters/output/filters/filters.fds [ln:30] !}
 ```
 
-### Text to Uppercase
+#### Text to Uppercase
 ```python title="examples/filters/filters.fds" linenums="33"
 {! filters/filters.fds [ln:33] !}
 ```
 ```python title="examples/filters/output/filters/filters.fds" linenums="33"
 {! filters/output/filters/filters.fds [ln:33] !}
+```
+
+### xFDS Custom Filters
+
+In addition to the built-in filters that comes with Jinja, xFDS ships with some addition filters useful for creating FDS records.
+
+#### DXB
+
+Similar to the `xb` filter below, but takes a triplet representing the anchor point `(x, y, z)` and parameters to set the width, depth, and height respectfully. Specify `xloc`, `yloc`, or `zloc` as `min`, `max`, or `mid` to indicate how the anchor point should be treated. `dxb` also accepts a format string.
+
+```python title="examples/filters/filters.fds" linenums="40"
+{! filters/filters.fds [ln:40-43] !}
+```
+```python title="examples/filters/output/filters/filters.fds" linenums="40"
+{! filters/output/filters/filters.fds [ln:40-43] !}
+```
+
+#### IJK
+
+The `ijk` filter will take an `xb` sextuplet along with a resolution to calculate the IJK values for a MESH. The way `ijk` converts a float to an integer can be controlled by passing in a `rouding` parameter.
+
+- `rounding='ceil'`: Round the number up to the nearest integer.
+- `rounding='round'`: Round the number to the nearest integer (default).
+- `rounding='floor'`: Round the number down to the nearest integer.
+
+```python title="examples/filters/filters.fds" linenums="46"
+{! filters/filters.fds [ln:46-49] !}
+```
+```python title="examples/filters/output/filters/filters.fds" linenums="46"
+{! filters/output/filters/filters.fds [ln:46-49] !}
+```
+
+#### XB
+
+The `xb` filter takes a list of six numbers `(x0, x1, y0, y1, z0, z1)` and formats the numbers to have a consistent format. A custom format string can be provided. See [Python string formatting](https://docs.python.org/3/library/string.html#format-specification-mini-language) for more information.
+
+```python title="examples/filters/filters.fds" linenums="36"
+{! filters/filters.fds [ln:36-37] !}
+```
+```python title="examples/filters/output/filters/filters.fds" linenums="36"
+{! filters/output/filters/filters.fds [ln:36-37] !}
+```
+
+#### XYZ
+
+The `xyz` filter acts exactly the same as the `xb` filter, but takes a triplet rather than a sextuplet.
+
+```python title="examples/filters/filters.fds" linenums="52"
+{! filters/filters.fds [ln:52-53] !}
+```
+```python title="examples/filters/output/filters/filters.fds" linenums="52"
+{! filters/output/filters/filters.fds [ln:52-53] !}
 ```

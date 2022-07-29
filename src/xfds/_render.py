@@ -1,6 +1,7 @@
 """Render Command."""
 from __future__ import annotations
 
+from inspect import getmembers, isfunction
 from itertools import product
 from pathlib import Path
 
@@ -8,12 +9,20 @@ import typer
 import yaml
 from jinja2 import Environment
 
-from . import config, errors, log
+from . import config, errors, filters, log
 
 app = typer.Typer(
     name="render",
     help="Render an FDS template file into scenarios.",
 )
+
+ENV = Environment(
+    trim_blocks=True,
+    lstrip_blocks=True,
+    autoescape=True,
+)
+for filter in [o for o in getmembers(filters) if isfunction(o[1])]:
+    ENV.filters[filter[0]] = filter[1]
 
 
 def locate_config(cwd: Path) -> Path:
@@ -121,12 +130,7 @@ def parse_models(config_data: dict) -> list[dict]:
 
 def compile(file_contents: str, data: dict) -> str:
     """Compile the FDS template file."""
-    env = Environment(
-        trim_blocks=True,
-        lstrip_blocks=True,
-        autoescape=True,
-    )
-    template = env.from_string(file_contents)
+    template = ENV.from_string(file_contents)
     return template.render(**data)
 
 

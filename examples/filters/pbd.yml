@@ -1,0 +1,4 @@
+xfds:
+  render:
+    - file: filters.fds
+      name: filters

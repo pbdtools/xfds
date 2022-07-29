@@ -31,3 +31,23 @@
 
 # upper
 {{ 'pbd tools'|upper }}
+
+# xb
+&OBST XB={{ (0, 5, -2, 2, 0, 3)|xb }}/
+&OBST XB={{ (0, 5, -2, 2, 0, 3)|xb("%5.2f") }}/
+
+# dxb
+&OBST XB={{ (0, 0, 0)|dxb(2, 4, 1)}}/
+&OBST XB={{ (0, 0, 0)|dxb(2, 4, 1, xloc='max', yloc='mid', zloc='min')}}/
+&VENT XB={{ (0, 0, 0)|dxb(2, 0, 10, zloc='max')}}/
+&VENT XB={{ (0, 0, 0)|dxb(2, 0, 10, zloc='max', fmt="%5.2f")}}/
+
+# ijk
+{%+ set mesh = (0, 5, 0, 4, 0, 3) +%}
+&MESH XB={{ mesh|xb("%5.2f") }}, IJK={{ mesh|ijk(0.3, rounding='ceil') }}/
+&MESH XB={{ mesh|xb("%5.2f") }}, IJK={{ mesh|ijk(0.3) }}/
+&MESH XB={{ mesh|xb("%5.2f") }}, IJK={{ mesh|ijk(0.3, rounding='floor') }}/
+
+# xyz
+&DEVC XYZ={{ (1, 2, 3)|xyz }}, .../
+&DEVC XYZ={{ (1, 2, 3)|xyz("%5.2f") }}, .../
