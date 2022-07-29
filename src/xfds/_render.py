@@ -1,9 +1,13 @@
 """Render Command."""
 from __future__ import annotations
 
+import importlib.util
+import sys
 from inspect import getmembers, isfunction
 from itertools import product
 from pathlib import Path
+from types import ModuleType
+from typing import Any
 
 import typer
 import yaml
@@ -21,8 +25,27 @@ ENV = Environment(
     lstrip_blocks=True,
     autoescape=True,
 )
-for filter in [o for o in getmembers(filters) if isfunction(o[1])]:
-    ENV.filters[filter[0]] = filter[1]
+
+
+def load_filters(module: ModuleType) -> None:
+    for filter in [o for o in getmembers(module) if isfunction(o[1])]:
+        ENV.filters[filter[0]] = filter[1]
+
+
+def load_filters_from_path(file_path: Path) -> bool:
+    if not file_path.exists():
+        return False
+
+    module_name = "user_filters"
+    spec: Any = importlib.util.spec_from_file_location(module_name, file_path)
+    module: Any = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    load_filters(module)
+    return True
+
+
+load_filters(filters)
 
 
 def locate_config(cwd: Path) -> Path:
@@ -152,6 +175,10 @@ def render(
 
     config_file = locate_config(Path(directory))
     log.debug(f"Config File: {config_file}", icon="🛠️")
+
+    user_filters = directory / "filters.py"
+    if load_filters_from_path(user_filters):
+        log.debug(f"Loaded Custom Filters: {user_filters}", icon="🛠️")
 
     config_data = read_config(config_file)
     models = parse_models(config_data)

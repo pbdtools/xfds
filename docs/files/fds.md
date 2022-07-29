@@ -351,3 +351,19 @@ The `xyz` filter acts exactly the same as the `xb` filter, but takes a triplet r
 ```python title="examples/filters/output/filters/filters.fds" linenums="52"
 {! filters/output/filters/filters.fds [ln:52-53] !}
 ```
+
+### User Defined Filters
+
+!!! info "Jinja Docs"
+    See the Jinja documentation for more information on [custom filters](https://jinja.palletsprojects.com/en/3.0.x/api/#custom-filters)
+
+Users who are familiar with Python may create their own custom filters as desired. If there is a file called `filters.py` in the same directory as the configuration file `pbd.yml`, xFDS will import every function in `filters.py` and make it available to the template in `model.fds`.
+
+See the [user_filters test case](https://github.com/pbdtools/xfds/tree/main/tests/test_render/user_filters) as an example or checkout the [xFDS custom filters source file](https://github.com/pbdtools/xfds/blob/main/src/xfds/filters.py).
+
+```console title="/path/to/project/"
+.
+├── filters.py
+├── model.fds
+└── pbd.yml
+```

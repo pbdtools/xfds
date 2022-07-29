@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from textwrap import dedent
 
@@ -40,6 +41,13 @@ def datadir_model(datadir: Path) -> Path:
     folder = datadir / "model"
     files = list(folder.iterdir())
     assert len(files) == 2
+    return folder
+
+
+@pytest.fixture
+def datadir_filters(datadir: Path) -> Path:
+    """Provides reference to no_config directory."""
+    folder = datadir / "user_filters"
     return folder
 
 
@@ -251,6 +259,14 @@ def test_error_if_file_not_specified() -> None:
 @pytest.mark.integration_test
 def test_render_help() -> None:
     """Ensure render function is available by calling for --help."""
-    runner.invoke(app)
     result = runner.invoke(app, ["render", "--help"])
     assert result.exit_code == 0
+
+
+def test_loading_user_custom_filters(datadir_filters: Path) -> None:
+    """Test that user defined filters can be loaded."""
+    os.chdir(datadir_filters)
+    output_file = datadir_filters / "output" / "model" / "model.fds"
+    result = runner.invoke(app, ["render"])
+    assert result.exit_code == 0
+    assert output_file.read_text() == "Hello PBD Tools"
