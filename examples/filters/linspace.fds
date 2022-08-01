@@ -1,0 +1,12 @@
+{% set start = 0 %}
+{% set stop = 10 %}
+{% for x in 5|linspace(start, stop) %}
+&DEVC XYZ={{ "%5.2f"|format(x) }}, {{ "%5.2f"|format(stop - x) }}, 0, .../
+{% endfor %}
+
+{% set floor = 0 %}
+{% set ceiling = 10|convert('ft', 'm') %}
+{% set buffer = 6|convert('in', 'm') %}
+{% for z in 10|linspace(floor + buffer, ceiling - buffer) %}
+&DEVC ID="TC_TREE_z{{ "%.1f"|format(z) }}" XYZ= 0.00, 0.00, {{ "%.3f"|format(z) }}, QUANTITY='THERMOCOUPLE'/
+{% endfor %}

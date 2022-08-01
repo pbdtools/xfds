@@ -30,6 +30,8 @@ Jinja2 = "^3.1.1"
 PyYAML = "^6.0"
 toml = "^0.10.2"
 Pint = "^0.19.2"
+numpy = "^1.23.1"
+pandas = "^1.4.3"
 
 
 [tool.poetry.dev-dependencies]

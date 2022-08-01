@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import math
 
+import numpy as np
+
 from .units import ureg
 
 FLOAT_FORMAT: str = "%7.3f"
@@ -82,3 +84,11 @@ def convert(value: float, from_unit: str, to_unit: str) -> float:
 
 def str_convert(value: float, from_unit: str, to_unit: str, fmt: str) -> str:
     return fmt % convert(value=value, from_unit=from_unit, to_unit=to_unit)
+
+
+def arange(step: float, start: float, stop: float) -> list[float]:
+    return np.arange(start=start, stop=stop, step=step)
+
+
+def linspace(num: int, start: float, stop: float, endpoint: bool = True) -> list[float]:
+    return np.linspace(start=start, stop=stop, num=num, endpoint=endpoint)

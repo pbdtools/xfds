@@ -2,6 +2,8 @@ xfds:
   render:
     - file: abs.fds
       name: abs
+    - file: arange.fds
+      name: arange
     - file: center.fds
       name: center
     - file: convert.fds
@@ -14,6 +16,8 @@ xfds:
       name: ijk
     - file: int.fds
       name: int
+    - file: linspace.fds
+      name: linspace
     - file: max.fds
       name: max
     - file: min.fds

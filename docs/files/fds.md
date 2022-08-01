@@ -304,6 +304,17 @@ Filters can modify the value of a variable or expression. This is useful when yo
 
 In addition to the built-in filters that comes with Jinja, xFDS ships with some addition filters useful for creating FDS records.
 
+#### ARange
+
+To create evenly spaced items, Python's [`range()` function](https://docs.python.org/3/library/functions.html#func-range) could be used, but it requires integer values for its parameters. [Numpy's `arange()` function](https://numpy.org/doc/stable/reference/generated/numpy.arange.html) allows floats to be used. xFDS defines this as a filter for convience.
+
+```python title="examples/filters/arange.fds" linenums="1"
+{! filters/arange.fds !}
+```
+```python title="examples/filters/output/arange/arange.fds" linenums="1"
+{! filters/output/arange/arange.fds !}
+```
+
 #### Convert
 
 Thanks to the magic of [pint](https://pint.readthedocs.io/en/stable/), xFDS will allow you to convert between units. This allows the user to define their values in the config file with the desired units while ensuring that the correct units are passed to FDS. The `convert` will return a `float` type which could be used in further calculations. If the conversion will be part of the final output, the formatting can be controlled by using the `format` and `convert` filters together. Alternatively, `str_convert` can be used to improve readability.
@@ -351,6 +362,17 @@ The `ijk` filter will take an `xb` sextuplet along with a resolution to calculat
 {! filters/output/ijk/ijk.fds !}
 ```
 
+#### Linspace
+
+[Numpy's `linspace()` function](https://numpy.org/doc/stable/reference/generated/numpy.linspace.html) will generate evenly spaced intervals between two values. This is useful when records, such as DEVCs, need to be evenly spaced between two bounds such as tenability devices across a large space or a thermocouple tree.
+
+```python title="examples/filters/linspace.fds" linenums="1"
+{! filters/linspace.fds !}
+```
+```python title="examples/filters/output/linspace/linspace.fds" linenums="1"
+{! filters/output/linspace/linspace.fds !}
+```
+
 #### XB
 
 The `xb` filter takes a list of six numbers `(x0, x1, y0, y1, z0, z1)` and formats the numbers to have a consistent format. A custom format string can be provided. See g formatting](https://docs.python.org/3/library/string.html#format-specification-mini-language) for more information.
@@ -377,6 +399,9 @@ The `xyz` filter acts exactly the same as the `xb` filter, but takes a triplet r
 
 !!! info "Jinja Docs"
     See the Jinja documentation for more information on [custom filters](https://jinja.palletsprojects.com/en/3.0.x/api/#custom-filters)
+
+!!! Warning
+    Custom functions that depend on packages that do not ship with xFDS might not work. If possible, stick to packages in the [Python standard library](https://docs.python.org/3/library/). Additionally, [Numpy](https://numpy.org/) and [Pandas](https://pandas.pydata.org/) are included by default.
 
 Users who are familiar with Python may create their own custom filters as desired. If there is a file called `filters.py` in the same directory as the configuration file `pbd.yml`, xFDS will import every function in `filters.py` and make it available to the template in `model.fds`.
 
