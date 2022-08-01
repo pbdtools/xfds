@@ -1,0 +1,4 @@
+&OBST XB={{ (0, 0, 0)|dxb(2, 4, 1)}}/
+&OBST XB={{ (0, 0, 0)|dxb(2, 4, 1, xloc='max', yloc='mid', zloc='min')}}/
+&VENT XB={{ (0, 0, 0)|dxb(2, 0, 10, zloc='max')}}/
+&VENT XB={{ (0, 0, 0)|dxb(2, 0, 10, zloc='max', fmt="%5.2f")}}/

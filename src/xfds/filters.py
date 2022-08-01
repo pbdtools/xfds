@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import math
 
+from .units import ureg
+
 FLOAT_FORMAT: str = "%7.3f"
 
 
@@ -71,3 +73,12 @@ def ijk(xb: list[float], res: float, rounding: str = "round") -> str:
         )
 
     return ",".join([str(v) for v in values])
+
+
+def convert(value: float, from_unit: str, to_unit: str) -> float:
+    """Convert a value from one unit to another."""
+    return ureg.Quantity(value, from_unit).to(to_unit).magnitude
+
+
+def str_convert(value: float, from_unit: str, to_unit: str, fmt: str) -> str:
+    return fmt % convert(value=value, from_unit=from_unit, to_unit=to_unit)

@@ -68,6 +68,9 @@ extra_javascript:
   - js/termynal.js
   - js/custom.js
 
+watch:
+- examples
+
 nav:
   - Home: 'index.md'
   - Installation: 'installation.md'

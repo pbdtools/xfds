@@ -14,6 +14,7 @@ import yaml
 from jinja2 import Environment
 
 from . import config, errors, filters, log
+from .units import ureg
 
 app = typer.Typer(
     name="render",
@@ -180,11 +181,19 @@ def render(
     if load_filters_from_path(user_filters):
         log.debug(f"Loaded Custom Filters: {user_filters}", icon="🛠️")
 
+    user_units = directory / "units.txt"
+    if user_units.exists():
+        ureg.load_definitions(user_units.resolve())
+
     config_data = read_config(config_file)
     models = parse_models(config_data)
 
     for model in models:
         input_file = directory / model["file"]
+        if not input_file.exists():
+            raise FileNotFoundError(
+                f"Could not find {input_file.name} in {input_file.parent}"
+            )
         output_file = directory / "output" / model["name"] / f"{model['name']}.fds"
         output_text = compile(input_file.read_text(), model["data"])
         write(output_file=output_file, contents=output_text)

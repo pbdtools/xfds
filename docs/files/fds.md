@@ -221,98 +221,119 @@ Additionally, tenability devices are placed at 1 meter intervals along the corri
 Filters can modify the value of a variable or expression. This is useful when you need to ensure values follow a certain format. For example, in the &MESH lines above, IJK requires values to be integers. The `int` filter will ensure IJK gets integer values so FDS does not generate an error. The examples below demonstrate how to use some of the [built-in filters](https://jinja.palletsprojects.com/en/3.1.x/templates/#list-of-builtin-filters) provided by Jinja.
 
 #### Absolute Value
-```python title="examples/filters/filters.fds" linenums="2"
-{! filters/filters.fds [ln:2] !}
+```python title="examples/filters/abs.fds" linenums="1"
+{! filters/abs.fds!}
 ```
-```python title="examples/filters/output/filters/filters.fds" linenums="2"
-{! filters/output/filters/filters.fds [ln:2] !}
+```python title="examples/filters/output/filters/abs.fds" linenums="1"
+{! filters/output/abs/abs.fds !}
 ```
 
 #### Center Text
-```python title="examples/filters/filters.fds" linenums="5"
-{! filters/filters.fds [ln:5] !}
+```python title="examples/filters/center.fds" linenums="1"
+{! filters/center.fds !}
 ```
-```python title="examples/filters/output/filters/filters.fds" linenums="5"
-{! filters/output/filters/filters.fds [ln:5] !}
+```python title="examples/filters/output/filters/center.fds" linenums="1"
+{! filters/output/center/center.fds !}
 ```
 
 #### Convert to Float
-```python title="examples/filters/filters.fds" linenums="8"
-{! filters/filters.fds [ln:8-11] !}
+```python title="examples/filters/float.fds" linenums="1"
+{! filters/float.fds !}
 ```
-```python title="examples/filters/output/filters/filters.fds" linenums="8"
-{! filters/output/filters/filters.fds [ln:8-11] !}
+```python title="examples/filters/output/float/float.fds" linenums="1"
+{! filters/output/float/float.fds !}
 ```
 
 #### Convert to integer
-```python title="examples/filters/filters.fds" linenums="14"
-{! filters/filters.fds [ln:14-15] !}
+```python title="examples/filters/int.fds" linenums="1"
+{! filters/int.fds !}
 ```
-```python title="examples/filters/output/filters/filters.fds" linenums="14"
-{! filters/output/filters/filters.fds [ln:14-15] !}
+```python title="examples/filters/output/int/int.fds" linenums="1"
+{! filters/output/int/int.fds !}
 ```
 
 #### Maximum Value
-```python title="examples/filters/filters.fds" linenums="18"
-{! filters/filters.fds [ln:18] !}
+```python title="examples/filters/max.fds" linenums="1"
+{! filters/max.fds !}
 ```
-```python title="examples/filters/output/filters/filters.fds" linenums="18"
-{! filters/output/filters/filters.fds [ln:18] !}
+```python title="examples/filters/output/max/max.fds" linenums="1"
+{! filters/output/max/max.fds !}
 ```
 
 #### Minimum Value
-```python title="examples/filters/filters.fds" linenums="21"
-{! filters/filters.fds [ln:21] !}
+```python title="examples/filters/min.fds" linenums="1"
+{! filters/min.fds !}
 ```
-```python title="examples/filters/output/filters/filters.fds" linenums="21"
-{! filters/output/filters/filters.fds [ln:21] !}
+```python title="examples/filters/output/min/min.fds" linenums="1"
+{! filters/output/min/min.fds !}
 ```
 
 #### Round Value
-```python title="examples/filters/filters.fds" linenums="24"
-{! filters/filters.fds [ln:24] !}
+```python title="examples/filters/round.fds" linenums="1"
+{! filters/round.fds !}
 ```
-```python title="examples/filters/output/filters/filters.fds" linenums="24"
-{! filters/output/filters/filters.fds [ln:24] !}
+```python title="examples/filters/output/round/round.fds" linenums="1"
+{! filters/output/round/round.fds !}
 ```
 
 #### Trim Text
-```python title="examples/filters/filters.fds" linenums="27"
-{! filters/filters.fds [ln:27] !}
+```python title="examples/filters/trim.fds" linenums="1"
+{! filters/trim.fds !}
 ```
-```python title="examples/filters/output/filters/filters.fds" linenums="27"
-{! filters/output/filters/filters.fds [ln:27] !}
+```python title="examples/filters/output/trim/trim.fds" linenums="1"
+{! filters/output/trim/trim.fds !}
 ```
 
 #### Filter Unique Values
-```python title="examples/filters/filters.fds" linenums="30"
-{! filters/filters.fds [ln:30] !}
+```python title="examples/filters/unique.fds" linenums="1"
+{! filters/unique.fds !}
 ```
-```python title="examples/filters/output/filters/filters.fds" linenums="30"
-{! filters/output/filters/filters.fds [ln:30] !}
+```python title="examples/filters/output/unique/unique.fds" linenums="1"
+{! filters/output/unique/unique.fds !}
 ```
 
 #### Text to Uppercase
-```python title="examples/filters/filters.fds" linenums="33"
-{! filters/filters.fds [ln:33] !}
+```python title="examples/filters/upper.fds" linenums="1"
+{! filters/upper.fds !}
 ```
-```python title="examples/filters/output/filters/filters.fds" linenums="33"
-{! filters/output/filters/filters.fds [ln:33] !}
+```python title="examples/filters/output/upper/upper.fds" linenums="1"
+{! filters/output/upper/upper.fds !}
 ```
 
 ### xFDS Custom Filters
 
 In addition to the built-in filters that comes with Jinja, xFDS ships with some addition filters useful for creating FDS records.
 
+#### Convert
+
+Thanks to the magic of [pint](https://pint.readthedocs.io/en/stable/), xFDS will allow you to convert between units. This allows the user to define their values in the config file with the desired units while ensuring that the correct units are passed to FDS. The `convert` will return a `float` type which could be used in further calculations. If the conversion will be part of the final output, the formatting can be controlled by using the `format` and `convert` filters together. Alternatively, `str_convert` can be used to improve readability.
+
+!!! info
+    - List of [supported units](https://github.com/hgrecco/pint/blob/master/pint/default_en.txt) defined by pint.
+    - List of [custom units](https://github.com/pbdtools/xfds/blob/main/src/xfds/units.py) defined by xFDS.
+
+Pint allows [custom units](https://pint.readthedocs.io/en/stable/defining.html)
+to be defined. xFDS will detect a file called `units.txt` located in the same directory as the configuration file. Here is a simple definition of a [smoot](https://en.wikipedia.org/wiki/Smoot).
+
+```python title="examples/filters/units.txt" linenums="1"
+{! filters/units.txt !}
+```
+```python title="examples/filters/convert.fds" linenums="1"
+{! filters/convert.fds !}
+```
+```python title="examples/filters/output/convert/convert.fds" linenums="1"
+{! filters/output/convert/convert.fds !}
+```
+
 #### DXB
 
 Similar to the `xb` filter below, but takes a triplet representing the anchor point `(x, y, z)` and parameters to set the width, depth, and height respectfully. Specify `xloc`, `yloc`, or `zloc` as `min`, `max`, or `mid` to indicate how the anchor point should be treated. `dxb` also accepts a format string.
 
-```python title="examples/filters/filters.fds" linenums="40"
-{! filters/filters.fds [ln:40-43] !}
+```python title="examples/filters/dxb.fds" linenums="1"
+{! filters/dxb.fds !}
 ```
-```python title="examples/filters/output/filters/filters.fds" linenums="40"
-{! filters/output/filters/filters.fds [ln:40-43] !}
+```python title="examples/filters/output/dxb/dxb.fds" linenums="1"
+{! filters/output/dxb/dxb.fds !}
 ```
 
 #### IJK
@@ -323,33 +344,33 @@ The `ijk` filter will take an `xb` sextuplet along with a resolution to calculat
 - `rounding='round'`: Round the number to the nearest integer (default).
 - `rounding='floor'`: Round the number down to the nearest integer.
 
-```python title="examples/filters/filters.fds" linenums="46"
-{! filters/filters.fds [ln:46-49] !}
+```python title="examples/filters/ijk.fds" linenums="1"
+{! filters/ijk.fds !}
 ```
-```python title="examples/filters/output/filters/filters.fds" linenums="46"
-{! filters/output/filters/filters.fds [ln:46-49] !}
+```python title="examples/filters/output/ijk/ijk.fds" linenums="1"
+{! filters/output/ijk/ijk.fds !}
 ```
 
 #### XB
 
-The `xb` filter takes a list of six numbers `(x0, x1, y0, y1, z0, z1)` and formats the numbers to have a consistent format. A custom format string can be provided. See [Python string formatting](https://docs.python.org/3/library/string.html#format-specification-mini-language) for more information.
+The `xb` filter takes a list of six numbers `(x0, x1, y0, y1, z0, z1)` and formats the numbers to have a consistent format. A custom format string can be provided. See g formatting](https://docs.python.org/3/library/string.html#format-specification-mini-language) for more information.
 
-```python title="examples/filters/filters.fds" linenums="36"
-{! filters/filters.fds [ln:36-37] !}
+```python title="examples/filters/xb.fds" linenums="1"
+{! filters/xb.fds !}
 ```
-```python title="examples/filters/output/filters/filters.fds" linenums="36"
-{! filters/output/filters/filters.fds [ln:36-37] !}
+```python title="examples/filters/output/xb/xb.fds" linenums="1"
+{! filters/output/xb/xb.fds !}
 ```
 
 #### XYZ
 
 The `xyz` filter acts exactly the same as the `xb` filter, but takes a triplet rather than a sextuplet.
 
-```python title="examples/filters/filters.fds" linenums="52"
-{! filters/filters.fds [ln:52-53] !}
+```python title="examples/filters/xyz.fds" linenums="1"
+{! filters/xyz.fds !}
 ```
-```python title="examples/filters/output/filters/filters.fds" linenums="52"
-{! filters/output/filters/filters.fds [ln:52-53] !}
+```python title="examples/filters/output/xyz/xyz.fds" linenums="1"
+{! filters/output/xyz/xyz.fds !}
 ```
 
 ### User Defined Filters
@@ -365,5 +386,6 @@ See the [user_filters test case](https://github.com/pbdtools/xfds/tree/main/test
 .
 ├── filters.py
 ├── model.fds
-└── pbd.yml
+├── pbd.yml
+└── units.txt
 ```

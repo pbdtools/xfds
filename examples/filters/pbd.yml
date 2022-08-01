@@ -1,4 +1,32 @@
 xfds:
   render:
-    - file: filters.fds
-      name: filters
+    - file: abs.fds
+      name: abs
+    - file: center.fds
+      name: center
+    - file: convert.fds
+      name: convert
+    - file: dxb.fds
+      name: dxb
+    - file: float.fds
+      name: float
+    - file: ijk.fds
+      name: ijk
+    - file: int.fds
+      name: int
+    - file: max.fds
+      name: max
+    - file: min.fds
+      name: min
+    - file: round.fds
+      name: round
+    - file: trim.fds
+      name: trim
+    - file: unique.fds
+      name: unique
+    - file: upper.fds
+      name: upper
+    - file: xb.fds
+      name: xb
+    - file: xyz.fds
+      name: xyz
