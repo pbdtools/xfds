@@ -1,9 +1,9 @@
-nx: 6
-ny: 4
-zmax: 3
-offset: 0.3048
-res: 0.2
-spacing: 2.438
+{% set nx = 6 -%}
+{% set ny = 4 -%}
+{% set zmax = 3 -%}
+{% set offset = 0.3048 -%}
+{% set res = 0.2 -%}
+{% set spacing = 2.438 -%}
 
 {% set dx = spacing * nx %}
 {% set dy = spacing * ny %}

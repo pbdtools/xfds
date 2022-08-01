@@ -1,6 +1,6 @@
-hrr: 1000
-area: 1.5
-depth: 0.2
+{% set hrr = 1000 -%}
+{% set area = 1.5 -%}
+{% set depth = 0.2 -%}
 
 &MESH XB=-2, 2, -2, 2, 0, 4, IJK=40, 40, 40/
 &TIME T_END=30/

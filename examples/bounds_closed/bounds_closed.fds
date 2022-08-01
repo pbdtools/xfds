@@ -1,4 +1,4 @@
-bounds: closed
+{% set bounds = closed -%}
 
 &MESH XB=0, 1, 0, 1, 0, 1, IJK=10, 10, 10/
 

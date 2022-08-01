@@ -1,11 +1,3 @@
-x0: 0
-x1: 6
-y0: 0
-y1: 3
-z0: 0
-z1: 3
-res: 0.1
-
 # Corridor with open ends and wall on one side
 &MESH XB=0, 6, 0, 3, 0, 3,
       IJK=60, 30, 30/

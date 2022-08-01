@@ -1,0 +1,4 @@
+xfds:
+  render:
+    - file: variables.fds
+      name: variables

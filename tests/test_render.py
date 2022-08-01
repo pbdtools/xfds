@@ -270,3 +270,17 @@ def test_loading_user_custom_filters(datadir_filters: Path) -> None:
     result = runner.invoke(app, ["render"])
     assert result.exit_code == 0
     assert output_file.read_text() == "Hello PBD Tools"
+
+
+def gather_examples() -> list[Path]:
+    examples_dir = Path(__file__).resolve().parents[1] / "examples"
+    assert examples_dir.exists()
+    examples = [config_file.parent for config_file in examples_dir.rglob("pbd.yml")]
+    return examples
+
+
+@pytest.mark.parametrize("directory", gather_examples())
+def test_example_renders(directory: Path) -> None:
+    print(directory)
+    result = runner.invoke(app, ["render", str(directory)])
+    assert result.exit_code == 0

@@ -1,0 +1,4 @@
+xfds:
+  render:
+    - file: sprinkler_loop.fds
+      name: sprinkler_loop
