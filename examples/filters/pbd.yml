@@ -10,12 +10,16 @@ xfds:
       name: convert
     - file: dxb.fds
       name: dxb
+    - file: exhaust.fds
+      name: exhaust
     - file: float.fds
       name: float
     - file: ijk.fds
       name: ijk
     - file: int.fds
       name: int
+    - file: ior.fds
+      name: ior
     - file: linspace.fds
       name: linspace
     - file: max.fds
@@ -24,6 +28,8 @@ xfds:
       name: min
     - file: round.fds
       name: round
+    - file: t2.fds
+      name: t2
     - file: trim.fds
       name: trim
     - file: unique.fds

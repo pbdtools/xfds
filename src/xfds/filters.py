@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from typing import Optional
 
 import numpy as np
 
@@ -92,3 +93,41 @@ def arange(step: float, start: float, stop: float) -> list[float]:
 
 def linspace(num: int, start: float, stop: float, endpoint: bool = True) -> list[float]:
     return np.linspace(start=start, stop=stop, num=num, endpoint=endpoint)
+
+
+def t2(hrr: float, tg: float = 0, alpha: float = 0) -> float:
+    if tg and not alpha:
+        alpha = 1000 / tg**2
+    return abs(math.sqrt(hrr / alpha)) * -1
+
+
+def exhaust(flow: float) -> float:
+    return abs(flow)
+
+
+def supply(flow: float) -> float:
+    return abs(flow) * -1
+
+
+def ior(
+    axis: str,
+    from_device_to_target: Optional[str] = None,
+    from_target_to_device: Optional[str] = None,
+) -> int:
+    axes = "x", "y", "z"
+    directions = "-", "+"
+    if axis.lower() not in axes:
+        raise ValueError(f"Axis must be one of 'x', 'y', or 'z'. Received {axis}")
+
+    if from_device_to_target is None and from_target_to_device is None:
+        raise ValueError(
+            "You must specify either target direction or device direction as +/- relative to the other."
+        )
+
+    if from_device_to_target and from_target_to_device is None:
+        if from_device_to_target not in directions:
+            raise ValueError("Target direction from device should be +/- along axis.")
+        from_target_to_device = "-" if from_device_to_target == "+" else "+"
+
+    sign = 1 if from_target_to_device == "+" else -1
+    return sign * (axes.index(axis) + 1)

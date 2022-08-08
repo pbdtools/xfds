@@ -347,6 +347,20 @@ Similar to the `xb` filter below, but takes a triplet representing the anchor po
 {! filters/output/dxb/dxb.fds !}
 ```
 
+#### Exhaust/Supply
+
+For a &VENT, the sign of either `VOLUME_FLOW` or `VELOCITY` defined on the &SURF indicates if the vent is a supply or exhaust. These filters take the value specified and ensure the sign is correct. This makes the intent of the surface type clear to the reader.
+
+!!! Note
+    In this example, the exhaust and supply are both calculated as positive values, but the filters ensure the signs are correct for the respective types.
+
+```python title="examples/filters/exhaust.fds" linenums="1"
+{! filters/exhaust.fds !}
+```
+```python title="examples/filters/output/exhaust/exhaust.fds" linenums="1"
+{! filters/output/exhaust/exhaust.fds !}
+```
+
 #### IJK
 
 The `ijk` filter will take an `xb` sextuplet along with a resolution to calculate the IJK values for a MESH. The way `ijk` converts a float to an integer can be controlled by passing in a `rouding` parameter.
@@ -362,6 +376,22 @@ The `ijk` filter will take an `xb` sextuplet along with a resolution to calculat
 {! filters/output/ijk/ijk.fds !}
 ```
 
+#### IOR
+
+For devices that measure surface properties, the user needs to tell FDS which way the device should point. The IOR property is defined as the direction from the target to the device. To ensure the direction is defined correctly, the `ior` filter takes the axis (`x`, `y`, or `z`) and either the direction `from_target_to_device` or `from_device_to_target` as `+` or `-`.
+
+In the example below, the first device is located in the -X direction from the obstruction. Therefore, target is along the `x` axis and the direction can be defined either as either:
+
+- `from_target_to_device="-"` (negative x direction)
+- `from_device_to_target="+"` (positive x direction)
+
+```python title="examples/filters/ior.fds" linenums="1"
+{! filters/ior.fds !}
+```
+```python title="examples/filters/output/ior/ior.fds" linenums="1"
+{! filters/output/ior/ior.fds !}
+```
+
 #### Linspace
 
 [Numpy's `linspace()` function](https://numpy.org/doc/stable/reference/generated/numpy.linspace.html) will generate evenly spaced intervals between two values. This is useful when records, such as DEVCs, need to be evenly spaced between two bounds such as tenability devices across a large space or a thermocouple tree.
@@ -371,6 +401,19 @@ The `ijk` filter will take an `xb` sextuplet along with a resolution to calculat
 ```
 ```python title="examples/filters/output/linspace/linspace.fds" linenums="1"
 {! filters/output/linspace/linspace.fds !}
+```
+
+#### t2
+
+On a SURF, the TAU_Q parameter indicates the time at which the peak heat release rate is achieved. If a fire needs to be defined in terms of a standardized growth time (time to reach 1 MW), the `t2` filter will calculate TAU_Q from the peak heat release rate and characteristic growth time. Altenatively, alpha ($\alpha$) may be specified.
+
+$$Q=1000*\left(\frac{t}{t_g}\right)^2=\alpha t^2$$
+
+```python title="examples/filters/t2.fds" linenums="1"
+{! filters/t2.fds !}
+```
+```python title="examples/filters/output/t2/t2.fds" linenums="1"
+{! filters/output/t2/t2.fds !}
 ```
 
 #### XB
