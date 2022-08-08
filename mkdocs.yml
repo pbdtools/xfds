@@ -75,15 +75,15 @@ nav:
   - Home: 'index.md'
   - Installation: 'installation.md'
   - License: 'license.md'
+  - 'File Formats':
+    - 'FDS File: *.fds': 'files/fds.md'
+    - 'Config File: pbd.yml': 'files/config.md'
   - API:
     - Overview: 'commands/overview.md'
     - 'xfds run': 'commands/run.md'
     - 'xfds render': 'commands/render.md'
     - 'xfds reset': 'commands/reset.md'
     - 'xfds stop': 'commands/stop.md'
-  - 'File Formats':
-    - 'FDS File': 'files/fds.md'
-    - 'Config File': 'files/config.md'
   - Contributing:
     - 'Getting Set Up': 'contributing/setup.md'
     - 'Repository Overview': 'contributing/repo_overview.md'
