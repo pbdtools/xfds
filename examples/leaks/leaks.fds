@@ -6,31 +6,32 @@
 {% set z1 = 3 -%}
 {% set res = 0.1 -%}
 
+
 {% set ns = namespace(door_id=0, devc_loc=0) -%}
 
 {% macro door(x, width, height, leak_area) -%}
 {% set ns.door_id = ns.door_id + 1 %}
-&OBST ID='Door_{{ ns.door_id }}',   XB={{ x }}, {{ x + width }}, 2.0, 2.2, 0.0, {{ height }}/
-&VENT ID='Door_{{ ns.door_id }}_i', XB={{ x }}, {{ x + width }}, 2.0, 2.0, 0.0, {{ height }}, SURF_ID='LEAK'/
-&VENT ID='Door_{{ ns.door_id }}_o', XB={{ x }}, {{ x + width }}, 2.2, 2.2, 0.0, {{ height }}, SURF_ID='LEAK'/
+&OBST ID='Door_{{ ns.door_id }}',   XB={{ (x, x + width, 2.0, 2.2, 0.0, height)|xb }}/
+&VENT ID='Door_{{ ns.door_id }}_i', XB={{ (x, x + width, 2.0, 2.0, 0.0, height)|xb }}, SURF_ID='LEAK'/
+&VENT ID='Door_{{ ns.door_id }}_o', XB={{ (x, x + width, 2.2, 2.2, 0.0, height)|xb }}, SURF_ID='LEAK'/
 &HVAC ID='Door_{{ ns.door_id }}_l', VENT_ID='Door_{{ ns.door_id }}_i', VENT2_ID='Door_{{ ns.door_id }}_o', AREA={{ leak_area }}, TYPE_ID='LEAK'/
 {%- endmacro -%}
 
 {% macro tenability(x, y) -%}
 {% set ns.devc_loc = ns.devc_loc + 1 %}
-&DEVC ID='VIS_{{ ns.devc_loc }}', XYZ={{ x|float }}, {{ y }}, 1.8, QUANTITY='VISIBILITY'/
-&DEVC ID='TMP_{{ ns.devc_loc }}', XYZ={{ x|float }}, {{ y }}, 1.8, QUANTITY='TEMPERATURE'/
-&DEVC ID='OXY_{{ ns.devc_loc }}', XYZ={{ x|float }}, {{ y }}, 1.8, QUANTITY='VOLUME FRACTION', SPEC_ID='OXYGEN'/
-&DEVC ID='CO2_{{ ns.devc_loc }}', XYZ={{ x|float }}, {{ y }}, 1.8, QUANTITY='VOLUME FRACTION', SPEC_ID='CARBON DIOXIDE'/
-&DEVC ID='CMO_{{ ns.devc_loc }}', XYZ={{ x|float }}, {{ y }}, 1.8, QUANTITY='VOLUME FRACTION', SPEC_ID='CARBON MONOXIDE'/
+&DEVC ID='VIS_{{ ns.devc_loc }}', XYZ={{ (x, y, 1.8)|xyz }}, QUANTITY='VISIBILITY'/
+&DEVC ID='TMP_{{ ns.devc_loc }}', XYZ={{ (x, y, 1.8)|xyz }}, QUANTITY='TEMPERATURE'/
+&DEVC ID='OXY_{{ ns.devc_loc }}', XYZ={{ (x, y, 1.8)|xyz }}, QUANTITY='VOLUME FRACTION', SPEC_ID='OXYGEN'/
+&DEVC ID='CO2_{{ ns.devc_loc }}', XYZ={{ (x, y, 1.8)|xyz }}, QUANTITY='VOLUME FRACTION', SPEC_ID='CARBON DIOXIDE'/
+&DEVC ID='CMO_{{ ns.devc_loc }}', XYZ={{ (x, y, 1.8)|xyz }}, QUANTITY='VOLUME FRACTION', SPEC_ID='CARBON MONOXIDE'/
 {%- endmacro -%}
 
 # Corridor with open ends and wall on one side
-&MESH XB={{ x0 }}, {{ x1 }}, {{ y0 }}, {{ y1 }}, {{ z0 }}, {{ z1 }},
-      IJK={{ ((x1 - x0) / res)|int }}, {{ ((y1 - y0) / res)|int }}, {{ ((z1 - z0) / res)|int }}/
+{% set mesh = x0, x1, y0, y1, z0, z1 %}
+&MESH XB={{ mesh|xb }}, IJK={{ mesh|ijk(res) }}/
 &VENT MB='XMIN', SURF_ID='OPEN'/
 &VENT MB='XMAX', SURF_ID='OPEN'/
-&OBST XB={{ x0 }}, {{ x1 }}, 2.0, 2.2, {{ z0 }}, {{ z1 }}/
+&OBST XB={{ (x0, x1, 2.0, 2.2, z0, z1)|xb }}/
 
 &SURF ID='LEAK', COLOR='FIREBRICK'/
 

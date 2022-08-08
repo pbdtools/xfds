@@ -1,26 +1,25 @@
-{% set nx = 6 -%}
-{% set ny = 4 -%}
-{% set zmax = 3 -%}
-{% set offset = 0.3048 -%}
-{% set res = 0.2 -%}
-{% set spacing = 2.438 -%}
+{% set nx = 6 %}
+{% set ny = 4 %}
+{% set offset = 0.3048 %}
+{% set spacing = 2.438 %}
+{% set dx = spacing * (nx - 1) %}
+{% set dy = spacing * (ny - 1) %}
+{% set zmax = 3 %}
+{% set res = 0.2 %}
+{% set mesh = -dx / 2, dx / 2, -dy / 2, dy / 2, 0, zmax -%}
 
-{% set dx = spacing * nx %}
-{% set dy = spacing * ny %}
-{% set x_start = -spacing * (nx - 1) / 2 %}
-{% set y_start = -spacing * (ny - 1) / 2 %}
-
-&MESH XB={{ (-dx / 2)|round(4) }}, {{ (dx / 2)|round(4) }}, {{ (-dy / 2)|round(4) }}, {{ (dy / 2)|round(4) }}, 0, {{ zmax }},
-      IJK= {{ (dx / res)|int }}, {{ (dy / res)|int }}, {{ (zmax / res)|int }}
+&MESH XB={{ mesh|xb }}, IJK={{ mesh|ijk(res) }}
 
 &PROP ID='Link',
       QUANTITY='SPRINKLER LINK TEMPERATURE',
       ACTIVATION_TEMPERATURE=74/
 
-{% for i in range(nx) %}
-{% for j in range(ny) %}
-{% set x = (x_start + i * spacing) %}
-{% set y = (y_start + j * spacing) %}
-&DEVC ID='SPR_{{i}}_{{j}}', XYZ={{ "%7.4f"|format(x) }}, {{ "%7.4f"|format(y) }}, {{ zmax - offset }}, PROP_ID='Link'/
+{% for x in nx|linspace(-dx / 2, dx / 2) %}
+{% set i = loop.index %}
+{% for y in ny|linspace(-dy / 2, dy / 2) %}
+{% set j = loop.index %}
+&DEVC ID='SPR_{{i}}_{{j}}', XYZ={{ (x, y, zmax - offset)|xyz }}, PROP_ID='Link'/
 {% endfor %}
 {% endfor %}
+
+&OBST XB={{ (-0.5, 0.5, -0.5, 0.5, 0.0, 0.1)| xb }}, COLOR='RED'/

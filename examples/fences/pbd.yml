@@ -1,4 +1,0 @@
-xfds:
-  render:
-    - file: fences.fds
-      name: fences

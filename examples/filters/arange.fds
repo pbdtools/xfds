@@ -1,5 +1,5 @@
 {% for x in 0.25|arange(1.5, 2.5) %}
-&DEVC XYZ={{ "%.2f"|format(x) }}, 0, 0, .../
+&DEVC XYZ={{ (x, 0, 0)|xyz }}, .../
 {% endfor %}
 
 {#

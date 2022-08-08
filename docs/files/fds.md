@@ -158,6 +158,9 @@ By defining the number of sprinklers in each direction (`nx`, `ny`) and the spri
     - `%.4f`: format as a float to 4 decimals
     - `%7.4f`: format as float to 4 decimals and a fixed width of 7 characters (includes decimal '`.`' and sign '`-`')
 
+!!! tip
+    When looping, it might be useful to know what loop iteration is being processed. The loop index can be accessed by `{{ loop.index }}`. This is used to set `i` and `j` for the device naming scheme above.
+
 Note how each sprinkler has a unique `ID` and the &MESH will adjust based on the number of sprinklers.
 
 ```python title="examples/sprinkler_loop/output/sprinkler_loop/sprinkler_loop.fds" linenums="1"
