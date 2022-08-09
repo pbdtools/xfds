@@ -3,7 +3,6 @@
 {% endfor %}
 
 {#
-
     This would cause an error
     for x in range(1.5, 2.5, 0.25)
 #}

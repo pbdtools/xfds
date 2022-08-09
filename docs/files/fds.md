@@ -1,7 +1,7 @@
 !!! example
     All the input and output files on this page can be found in the [xFDS Examples directory](https://github.com/pbdtools/xfds/tree/main/examples).
 
-xFDS allows you to add more features to your FDS input files using the [Jinja template syntax](https://jinja.palletsprojects.com/en/3.1.x/templates/). While this page will cover a high level overview of the Jinja syntax, the user is encouraged to read the Jinja documentation for more information.
+xFDS allows you to add more features to your FDS input files using the [Jinja template syntax](https://jinja.palletsprojects.com/en/3.1.x/templates/). While this page covers a high level overview of the Jinja syntax, the user is encouraged to read the Jinja documentation for more information.
 
 xFDS uses Jinja's default delimeters. They are
 
@@ -16,59 +16,16 @@ Normal FDS syntax is always valid, but you can use Jinja to help build your FDS 
 !!! info "Jinja Docs"
     See the Jinja documentation for more information on [variables](https://jinja.palletsprojects.com/en/3.1.x/templates/#variables)
 
-The ability to set and use variables is what makes xFDS so powerful. There are three ways to define variables for your model.
-
-### With Metadatain the FDS file
-
-!!! Warning
-    This method is intended for when you're only creating a single output model. If the project requires generating multiple scenarios from the FDS file, the [configuration file](./config.md) method should be used.
-
-xFDS will read any metadata defined at the top of your file. The data must be at the very top of the FDS file and can optionally be enclosed by fences (`---`) above and below the data. After the metadata, there must be at least one single blank line to indicate the start of the content.
-
-Metadata variables are case-insensitive and can contain letters, numbers, underscores, and dashes. They must be followed by a colon `:` and then the value. See the [Python Markdown Documentation](https://python-markdown.github.io/extensions/meta_data/#syntax) for more details.
-
-**Without Fences**
-```python title="examples/variables/variables.fds" linenums="1"
-{! variables/variables.fds !}
-```
-
-**With Fences**
-```python title="examples/fences/fences.fds" linenums="1"
-{! fences/fences.fds !}
-```
-
-!!! Note
-    `{{ value|int }}` uses the `int` filter to convert the value to an integer. See [filters](#filters) for more information.
-
-xFDS will read the metadata and use the variables and use it to evaluate the expressions in the file. The variables for the `XB` parameter simply fill in the values while `IJK` will calculate the number of cells for each expression. This will generate the following output. Note that the metadata is carried through to the output file.
-
-**Without Fences**
-```python title="examples/variables/output/variables/variables.fds" linenums="1"
-{! variables/output/variables/variables.fds !}
-```
-**With Fences**
-```python title="examples/fences/output/fences/fences.fds" linenums="1"
-{! fences/output/fences/fences.fds !}
-```
-
-!!! Note
-    While this approach is not best suited for multiple files, it is a good idea to define metadata to help you understand the model later. You can even use Jinja expressions in defining the metadata. The `hrr` and `cfm` variables here would be defined in the configuration file. This would make the intent of the model clear without having to check the numbers manually.
-
-    ```
-    author: PBD Tools
-    project: xFDS Documentation
-    peak_hrr: {{ hrr }}
-    exhaust: {{ cfm }}
-    ```
+The ability to set and use variables is what makes xFDS so powerful. There are two ways to define variables for your model.
 
 ### Using Jinja's Assignments
 
-Jinja allows you to [assign](https://jinja.palletsprojects.com/en/3.1.x/templates/#assignments) values in the middle of your template. This can be useful when you want to perform a multi-step calculation or define a variable to use several times without having to define it. The variable may also be dynamic based on other inputs.
+Jinja allows you to [assign](https://jinja.palletsprojects.com/en/3.1.x/templates/#assignments) values in the middle of your template. This can be useful when you want to use a value several times without having to type the value out each time. Variables also make it easy to keep things consistent. The variable may also be dynamic based on other inputs.
 
 The following example automatically calculates the `HRRPUA` parameter and `XB` bounds for a 1000 kW fire on a 1.5 m<sup>2</sup> burner. Note how:
 
 - **Line 9**: `top` is set so that the &VENT always sits on the top of the &OBST. Updating the variable will set the `zmin` and `zmax` for the &VENT as well as the `zmax` for the &OBST.
-- **Line 10**: `area` is defined in the metadata, but the length of a `side` (for a square burner) is calculated in the template.
+- **Line 10**: `area` is defined in at the top, but the length of a `side` (for a square burner) is calculated in the template.
 - **Line 11**: `r` (radius) is defined to be half the length of a side. This helps define the `XB` so the burner is perfectly centered regardless of the area.
 - **Line 12**: `HRRPUA` is calculated based on the `hrr` and `area` variables defined. This way `HRRPUA` is always correct if either `hrr` or `area` are updated.
 - **Lines 13-14**: The `XB` parameters use `r`, `top`, and `depth` to ensure the burner is centered and that the &VENT always aligns with &OBST.
@@ -104,9 +61,9 @@ When generating multiple output files from a single fds input file, a configurat
 !!! info "Jinja Docs"
     See the Jinja documentation for more information on [if statements](https://jinja.palletsprojects.com/en/3.1.x/templates/#if).
 
-To make FDS records optional, use an `if` statement. The expression following the `if` keyword must evaluate to `True` or `False`. See this [Real Python article](https://realpython.com/python-boolean/) for more information on how Python evaluates truthiness.
+To make FDS records optional, use an `if` statement. The expression following the `if` keyword must evaluate to `True` or `False`. See this [Real Python article](https://realpython.com/python-boolean/) for more information on how Python evaluates "truthiness".
 
-In the example below, a varibale is defined for opening the mesh boundaries vs leaving them closed. Note how the only difference between the two files are the value of `bounds` on line 1. When the `bounds` are `closed`, the &VENT lines are omitted from the output file.
+In the example below, a varibale is defined for opening the mesh boundaries vs leaving them closed (default in FDS). Note how the only difference between the two files are the value of `bounds` on line 1. When the `bounds` are `closed`, the &VENT lines are omitted from the output file.
 
 **Open Bounds**
 ```python title="examples/bounds_open/bounds_open.fds" linenums="1"
@@ -144,24 +101,16 @@ Sometimes it is beneficial to iterate through a list or quickly generate an arra
 
 Imagine needing to quickly layout a grid of sprinklers, and the sprinklers need to have unique names (e.g. for developing &CTRL records). Devices do not support &MULT records. For loops can assist in generating the sprinkler grid while calculating the position for each sprinkler individually.
 
-By defining the number of sprinklers in each direction (`nx`, `ny`) and the sprinkler `spacing`, the location of the first sprinkler (`x_start`, `y_start`) is determined. Based on the initial sprinkler location and the spacing, the rest of the sprinkler positions are calculated and named based on the loop variables `i` and `j`.
+By defining the number of sprinklers in each direction (`nx`, `ny`) and the sprinkler `spacing`, the location of the sprinklers are determined. The [linspace](#linspace) filter will create `nx` sprinklers evenly spaced between `-dx / 2` and `dx / 2` and simlar for the y direction.
 
 ```python title="examples/sprinkler_loop/sprinkler_loop.fds" linenums="1"
 {! sprinkler_loop/sprinkler_loop.fds !}
 ```
-!!! tip
-    This example uses python's [printf-style formatting](https://docs.python.org/3/library/stdtypes.html#printf-style-string-formatting) along with the [format filter](https://jinja.palletsprojects.com/en/3.1.x/templates/#jinja-filters.format) to make the XYZ values line up.
-
-    `%7.4f"|format(x)` tells xFDS how to format the value of `x`.
-
-    - `%f`: format as a float
-    - `%.4f`: format as a float to 4 decimals
-    - `%7.4f`: format as float to 4 decimals and a fixed width of 7 characters (includes decimal '`.`' and sign '`-`')
 
 !!! tip
     When looping, it might be useful to know what loop iteration is being processed. The loop index can be accessed by `{{ loop.index }}`. This is used to set `i` and `j` for the device naming scheme above.
 
-Note how each sprinkler has a unique `ID` and the &MESH will adjust based on the number of sprinklers.
+Note how each sprinkler has a unique `ID` and the &MESH will adjust based on the number of sprinklers. Additionally, the &OBST representing the burner is perfectly centered between the 4 central sprinklers!
 
 ```python title="examples/sprinkler_loop/output/sprinkler_loop/sprinkler_loop.fds" linenums="1"
 {! sprinkler_loop/output/sprinkler_loop/sprinkler_loop.fds !}
@@ -176,7 +125,7 @@ Macros are useful when defining complex elements that require multiple lines of 
 
 For example, defining a simple leakage path through a door requires at least three different FDS records, two &VENTs and one &HVAC. It may be beneficial to include an &OBST record to ensure the &VENT records are applied to a solid surface.
 
-In the example below create doors along a wall in a corridor. A macro is defined on line 11 that takes in four parameters: the x position of the door, width and height of the door, and the leakage area. (The y position is fixed along the wall). The macro will determine the extends of the XB parameters and use a consistent naming scheme to tie the elements together.
+The example below creates doors along a wall in a corridor. A macro is defined on line 11 that takes in four parameters: the x position of the door, width and height of the door, and the leakage area. (The y position is fixed along the wall). The macro will determine the extends of the XB parameters and use a consistent naming scheme to tie the elements together.
 
 !!! tip
     Macros can be called by passing in a list of values, or by specifying the parameter and value. Both options work the same, but specifying the parameter and value will make the file more readable.
@@ -221,7 +170,7 @@ Additionally, tenability devices are placed at 1 meter intervals along the corri
 !!! info "Jinja Docs"
     See the Jinja documentation for more information on [filters](https://jinja.palletsprojects.com/en/3.1.x/templates/#filters).
 
-Filters can modify the value of a variable or expression. This is useful when you need to ensure values follow a certain format. For example, in the &MESH lines above, IJK requires values to be integers. The `int` filter will ensure IJK gets integer values so FDS does not generate an error. The examples below demonstrate how to use some of the [built-in filters](https://jinja.palletsprojects.com/en/3.1.x/templates/#list-of-builtin-filters) provided by Jinja.
+Filters can modify the value of a variable or expression. This is useful when you need to ensure values follow a certain format or if a value needs to be modified. The examples below demonstrate how to use some of the [built-in filters](https://jinja.palletsprojects.com/en/3.1.x/templates/#list-of-builtin-filters) provided by Jinja.
 
 #### Absolute Value
 ```python title="examples/filters/abs.fds" linenums="1"
@@ -240,6 +189,16 @@ Filters can modify the value of a variable or expression. This is useful when yo
 ```
 
 #### Convert to Float
+
+!!! tip
+    In addition to the `float` filter, this example uses python's [printf-style formatting](https://docs.python.org/3/library/stdtypes.html#printf-style-string-formatting) along with the [format filter](https://jinja.palletsprojects.com/en/3.1.x/templates/#jinja-filters.format) to control the number of decimals displayed.
+
+    `%7.4f"|format(x)` tells xFDS how to format the value of `x`.
+
+    - `%f`: format as a float
+    - `%.3f`: format as a float to 3 decimals
+    - `%8.3f`: format as float to 3 decimals and a fixed width of 8 characters (includes decimal '`.`', sign '`-`', and extra white space at the beginning)
+
 ```python title="examples/filters/float.fds" linenums="1"
 {! filters/float.fds !}
 ```
@@ -305,7 +264,7 @@ Filters can modify the value of a variable or expression. This is useful when yo
 
 ### xFDS Custom Filters
 
-In addition to the built-in filters that comes with Jinja, xFDS ships with some addition filters useful for creating FDS records.
+In addition to the built-in filters that comes with Jinja, xFDS ships with some additional filters useful for creating FDS records.
 
 #### ARange
 
@@ -320,7 +279,7 @@ To create evenly spaced items, Python's [`range()` function](https://docs.python
 
 #### Convert
 
-Thanks to the magic of [pint](https://pint.readthedocs.io/en/stable/), xFDS will allow you to convert between units. This allows the user to define their values in the config file with the desired units while ensuring that the correct units are passed to FDS. The `convert` will return a `float` type which could be used in further calculations. If the conversion will be part of the final output, the formatting can be controlled by using the `format` and `convert` filters together. Alternatively, `str_convert` can be used to improve readability.
+Thanks to the magic of [pint](https://pint.readthedocs.io/en/stable/), xFDS will allow you to convert between units. You can define values in the config file with the desired units (determined by you) while ensuring that the correct units are passed to FDS. The `convert` will return a `float` type which could be used in further calculations. If the conversion will be part of the final output, the formatting can be controlled by using the `format` and `convert` filters together. Alternatively, `str_convert` can be used to improve readability.
 
 !!! info
     - List of [supported units](https://github.com/hgrecco/pint/blob/master/pint/default_en.txt) defined by pint.
@@ -341,7 +300,7 @@ to be defined. xFDS will detect a file called `units.txt` located in the same di
 
 #### DXB
 
-Similar to the `xb` filter below, but takes a triplet representing the anchor point `(x, y, z)` and parameters to set the width, depth, and height respectfully. Specify `xloc`, `yloc`, or `zloc` as `min`, `max`, or `mid` to indicate how the anchor point should be treated. `dxb` also accepts a format string.
+Similar to the [`xb`](#xb) filter below, `dxb` takes a triplet representing the anchor point `(x, y, z)` and parameters to set the width, depth, and height respectfully. Specify `xloc`, `yloc`, or `zloc` as `min`, `max`, or `mid` to indicate how the anchor point should be treated. `dxb` also accepts a format string.
 
 ```python title="examples/filters/dxb.fds" linenums="1"
 {! filters/dxb.fds !}
@@ -421,7 +380,7 @@ $$Q=1000*\left(\frac{t}{t_g}\right)^2=\alpha t^2$$
 
 #### XB
 
-The `xb` filter takes a list of six numbers `(x0, x1, y0, y1, z0, z1)` and formats the numbers to have a consistent format. A custom format string can be provided. See g formatting](https://docs.python.org/3/library/string.html#format-specification-mini-language) for more information.
+The `xb` filter takes a list of six numbers `(x0, x1, y0, y1, z0, z1)` and formats the numbers to have a consistent format. A custom format string can be provided. See [Python's stringg formatting](https://docs.python.org/3/library/string.html#format-specification-mini-language) for more information.
 
 ```python title="examples/filters/xb.fds" linenums="1"
 {! filters/xb.fds !}

@@ -6,7 +6,6 @@
 {% set z1 = 3 -%}
 {% set res = 0.1 -%}
 
-
 {% set ns = namespace(door_id=0, devc_loc=0) -%}
 
 {% macro door(x, width, height, leak_area) -%}
