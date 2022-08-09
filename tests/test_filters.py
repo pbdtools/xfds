@@ -55,12 +55,18 @@ tests = [
     ("{{ 10|supply }}", "-10"),
     ("{{ 10|exhaust }}", "10"),
     # IOR
-    ("{{ '+x'|ior }}", "1"),
-    ("{{ '-x'|ior }}", "-1"),
-    ("{{ '+y'|ior }}", "2"),
-    ("{{ '-y'|ior }}", "-2"),
-    ("{{ '+z'|ior }}", "3"),
-    ("{{ '-z'|ior }}", "-3"),
+    ("{{ 'x'|ior(from_target_to_device='+') }}", "1"),
+    ("{{ 'x'|ior(from_target_to_device='-') }}", "-1"),
+    ("{{ 'y'|ior(from_target_to_device='+') }}", "2"),
+    ("{{ 'y'|ior(from_target_to_device='-') }}", "-2"),
+    ("{{ 'z'|ior(from_target_to_device='+') }}", "3"),
+    ("{{ 'z'|ior(from_target_to_device='-') }}", "-3"),
+    ("{{ 'x'|ior(from_device_to_target='-') }}", "1"),
+    ("{{ 'x'|ior(from_device_to_target='+') }}", "-1"),
+    ("{{ 'y'|ior(from_device_to_target='-') }}", "2"),
+    ("{{ 'y'|ior(from_device_to_target='+') }}", "-2"),
+    ("{{ 'z'|ior(from_device_to_target='-') }}", "3"),
+    ("{{ 'z'|ior(from_device_to_target='+') }}", "-3"),
 ]
 
 
