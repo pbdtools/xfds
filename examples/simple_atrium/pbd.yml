@@ -1,8 +1,11 @@
 xfds:
   render:
-    - file: simple_atrium.fds
-      name: atrium_{{cfm}}_{{mua_perc}}
+    - name: atrium_{{cfm}}_{{mua_perc}}
+      files:
+        - simple_atrium.fds
+        - simple_atrium.pbs
       variables:
+        proc: 20
         open_doors: false
         res: 0.2 # m
         # Mesh Bounds

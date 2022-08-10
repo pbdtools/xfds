@@ -1,4 +1,5 @@
 xfds:
   render:
-    - file: leaks.fds
-      name: leaks
+    - name: leaks
+      files:
+        - leaks.fds

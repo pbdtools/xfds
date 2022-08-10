@@ -1,6 +1,7 @@
 xfds:
   render:
-    - file: model.fds
-      name: model
+    - name: model
+      files:
+        - model.fds
       variables:
-        name: PBD Tools
+        greet: PBD Tools

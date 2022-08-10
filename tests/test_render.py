@@ -79,7 +79,7 @@ def test_model_contains_variables_only_when_no_matrix() -> None:
     config = yaml.safe_load(dedent(config_text))
     scenarios = render.parse_models(config)
     assert len(scenarios) == 1
-    assert scenarios[0]["data"] == {"pbd": "tools"}
+    assert scenarios[0]["data"] == {"pbd": "tools", "name": "model"}
 
 
 def test_model_contains_matrix_and_default_variables() -> None:
@@ -98,8 +98,18 @@ def test_model_contains_matrix_and_default_variables() -> None:
     config = yaml.safe_load(dedent(config_text))
     scenarios = render.parse_models(config)
     assert len(scenarios) == 9
-    assert scenarios[0]["data"] == {"pbd": "a", "tools": 1, "model": "fds"}
-    assert scenarios[-1]["data"] == {"pbd": "c", "tools": 3, "model": "fds"}
+    assert scenarios[0]["data"] == {
+        "pbd": "a",
+        "tools": 1,
+        "model": "fds",
+        "name": "model_a_1",
+    }
+    assert scenarios[-1]["data"] == {
+        "pbd": "c",
+        "tools": 3,
+        "model": "fds",
+        "name": "model_c_3",
+    }
 
 
 def test_adds_parameters_with_includes() -> None:
@@ -129,14 +139,16 @@ def test_adds_parameters_with_includes() -> None:
         "tools": 1,
         "model": "fds",
         "bar": "foo",
+        "name": "model_a_1",
     }
     assert scenarios[-1]["data"] == {
         "pbd": "c",
         "tools": 3,
         "model": "fds",
         "foo": "bar",
+        "name": "model_c_3",
     }
-    assert len(scenarios[1]["data"]) == 3
+    assert len(scenarios[1]["data"]) == 4
 
 
 def test_include_overrides_variable() -> None:
@@ -156,8 +168,12 @@ def test_include_overrides_variable() -> None:
     config = yaml.safe_load(dedent(config_text))
     scenarios = render.parse_models(config)
     assert len(scenarios) == 2
-    assert scenarios[0]["data"] == {"pbd": "a", "tools": "cfast"}
-    assert scenarios[1]["data"] == {"pbd": "b", "tools": "fds"}
+    assert scenarios[0]["data"] == {
+        "pbd": "a",
+        "tools": "cfast",
+        "name": "model_a_cfast",
+    }
+    assert scenarios[1]["data"] == {"pbd": "b", "tools": "fds", "name": "model_b_fds"}
 
 
 def test_excludes() -> None:
@@ -239,17 +255,6 @@ def test_error_if_name_not_specified() -> None:
     """
     config = yaml.safe_load(dedent(config_text))
     with pytest.raises(errors.ModelNameNotDefiend):
-        render.parse_models(config)
-
-
-def test_error_if_file_not_specified() -> None:
-    config_text = """
-    xfds:
-      render:
-        - name: pbdtools
-    """
-    config = yaml.safe_load(dedent(config_text))
-    with pytest.raises(errors.InputFileNotDefined):
         render.parse_models(config)
 
 

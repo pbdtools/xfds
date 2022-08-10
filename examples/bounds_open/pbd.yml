@@ -1,4 +1,5 @@
 xfds:
   render:
-    - file: bounds_open.fds
-      name: bounds_open
+    - name: bounds_open
+      files:
+        - bounds_open.fds

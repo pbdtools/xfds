@@ -1,0 +1,24 @@
+#PBS -l nodes=1:node1:ppn=12:1:node1:ppn=8
+#PBS -l nodes+=1:node2:ppn=16:1:node2:ppn=4
+#PBS -l nodes++=1:node3:ppn=20
+#PBS -N atrium_125000_85
+#PBS -S /bin/bash
+#PBS -m abe
+#PBS -M xfds@pbd.tools
+#PBS -j oe
+
+# load required modules
+module load fds/6.7.5
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+
+# set MPI variables
+export I_MPI_PIN=1
+export I_MPI_PIN_MODE=pm
+export OMP_NUM_THREADS=1
+export MPI_PPN=$(($PBS_NUM_PPN / $OMP_NUM_THREADS))
+export MPI_NP=$(($PBS_NP / $OMP_NUM_THREADS))
+
+# run fds in parallel
+mpiexec -np $MPI_NP fds_mpi atrium_125000_85.fds

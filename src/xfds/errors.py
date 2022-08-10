@@ -20,9 +20,3 @@ class ModelNameNotDefiend(Exception):
     """Model specification does not have a name provided."""
 
     pass
-
-
-class InputFileNotDefined(Exception):
-    """User did not specify input file for model."""
-
-    pass

@@ -1,4 +1,5 @@
 xfds:
   render:
-    - file: hrrpua.fds
-      name: hrrpua
+    - name: hrrpua
+      files:
+        - hrrpua.fds

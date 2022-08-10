@@ -80,10 +80,6 @@ def _values_match_for_shared_keys(d1: dict, d2: dict) -> bool:
 
 def _parse_model(model_spec: dict) -> list[dict]:
 
-    if "file" not in model_spec:
-        raise errors.InputFileNotDefined(
-            "You must specify the input file for each model definition."
-        )
     if "name" not in model_spec:
         raise errors.ModelNameNotDefiend(
             "You must specify the pattern for naming the output files."
@@ -131,6 +127,7 @@ def _parse_model(model_spec: dict) -> list[dict]:
         )
 
         model["name"] = compile(model["name"], model["data"])
+        model["data"]["name"] = model["name"]
 
     return models
 
@@ -189,11 +186,13 @@ def render(
     models = parse_models(config_data)
 
     for model in models:
-        input_file = directory / model["file"]
-        if not input_file.exists():
-            raise FileNotFoundError(
-                f"Could not find {input_file.name} in {input_file.parent}"
-            )
-        output_file = directory / "output" / model["name"] / f"{model['name']}.fds"
-        output_text = compile(input_file.read_text(), model["data"])
-        write(output_file=output_file, contents=output_text)
+        for file in model["files"]:
+            input_file = directory / file
+            if not input_file.exists():
+                raise FileNotFoundError(
+                    f"Could not find {input_file.name} in {input_file.parent}"
+                )
+            output_dir = directory / "output" / model["name"]
+            output_file = output_dir / f"{model['name']}{input_file.suffix}"
+            output_text = compile(input_file.read_text(), model["data"])
+            write(output_file=output_file, contents=output_text)
