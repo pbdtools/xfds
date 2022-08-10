@@ -3,17 +3,9 @@
 
 The configuration file is a yaml file that tells xfds how you want things to work. It should be located at the top directory for your modeling project.
 
-```console title="/path/to/project/"
-.
-├── filters.py
-├── model.fds
-├── pbd.yml
-└── units.txt
-```
-
 xFDS will look for the configuration file, `pbd.yml` when it is called (`pbd.yaml` is also acceptable). All configurations for xFDS start with the `xfds` keyword followed by the xFDS command and it's options.
 
-```yaml title="pbd.yml"
+```yaml title="/path/to/project/pbd.yml"
 xfds:
   render:
     # render command options
@@ -33,8 +25,8 @@ xfds:
 
 The `xfds render` command takes a list of objects that define the model and associated data. Each object takes the following parameters:
 
-- **file**: name of the associated fds input file. The fds input file is the template that is used for generating different scenarios.
-- **name**: The name to be used for naming the fds output files. The name should contain placeholders for variables to ensure unique file names.
+- **name**: The name to be used for naming the output files. The name should contain placeholders for variables to ensure unique file names. The file extension for the output files is taken from the given input file.
+- **files**: Names of the input files to be included in the output directory. The input files are templates used for each scenarios.
 - **variables**: A list of default variables to send to the fds template while rendering the output files. These variables are not considered in generating scenarios.
 - **parameters**: Variables defined in the parameters section will tell xFDS which parameters to use in generating scenarios. All variables defined here should have a list of values to consider.
     - **include**: Directive defining extra information to add to scenarios.
@@ -49,8 +41,9 @@ The example below shows a configuration for a mesh sensitivity study. This assum
 ```yaml title="pbd.yml"
 xfds:
   render:
-    - file: sensitivity.fds
-      name: sensitivity_{{resolution * 100}}cm
+    - name: sensitivity_{{resolution * 100}}cm
+      files:
+        - sensitivity.fds
       variables:
         hrr: 1000
       parameters:
@@ -64,8 +57,9 @@ All parameters defined under the `parameters` option are used to generate the di
 ```yaml title="examples/simple_atrium/pbd.yml"
 xfds:
   render:
-    - file: simple_atrium.fds
-      name: atrium_{{cfm}}_{{mua_perc}}
+    - name: atrium_{{cfm}}_{{mua_perc}}
+      files:
+        - simple_atrium.fds
       variables:
         ...
       parameters:

@@ -4,7 +4,7 @@ import pytest
 
 from xfds import _render as render
 
-tests = [
+happy_tests = [
     # xb filter
     (
         "{{ (-2, 2, -1, 1, 0, 3)|xb }}",
@@ -70,6 +70,36 @@ tests = [
 ]
 
 
-@pytest.mark.parametrize("tmpl, expected", tests)
-def test_convert(tmpl: str, expected: str) -> None:
+sad_tests = [
+    # xb
+    "{{ (1, 2, 3, 4, 5)|xb }}",
+    "{{ (1, 2, 3, 4, 5, 6, 7)|xb }}",
+    # dxb
+    "{{ (1, 2)|dxb(1, 1, 1) }}",
+    "{{ (1, 2, 3, 4)|dxb(1, 1, 1) }}",
+    # xyz
+    "{{ (1, 2)|xyz }}",
+    "{{ (1, 2, 3, 4)|xyz }}",
+    # ijk
+    "{{ (1, 2, 3, 4, 5)|ijk(0.1) }}",
+    "{{ (1, 2, 3, 4, 5, 6, 7)|ijk(0.1) }}",
+    # ior
+    "{{ 'x'|ior() }}",
+    "{{ 'i'|ior(from_device_to_target='-') }}",
+    "{{ 'x'|ior(from_device_to_target='pbd') }}",
+    "{{ 'i'|ior(from_target_to_device='-') }}",
+    "{{ 'x'|ior(from_target_to_device='pbd') }}",
+    # nodes
+    "{{ 4|node(8) }}",
+]
+
+
+@pytest.mark.parametrize("tmpl, expected", happy_tests)
+def test_happy_filters(tmpl: str, expected: str) -> None:
     assert render.compile(tmpl, {}) == expected
+
+
+@pytest.mark.parametrize("tmpl", sad_tests)
+def test_sad_filters(tmpl: str) -> None:
+    with pytest.raises(ValueError):
+        render.compile(tmpl, {})

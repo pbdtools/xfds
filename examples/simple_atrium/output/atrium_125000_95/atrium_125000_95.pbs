@@ -1,6 +1,6 @@
-#PBS -l nodes=1:node1:ppn=12:1:node1:ppn=8
-#PBS -l nodes+=1:node2:ppn=16:1:node2:ppn=4
-#PBS -l nodes++=1:node3:ppn=20
+#PBS -l nodes=0:node1:ppn=12:1:node1:ppn=1
+#PBS -l nodes+=0:node2:ppn=16:1:node2:ppn=1
+#PBS -l nodes++=0:node3:ppn=20:1:node3:ppn=1
 #PBS -N atrium_125000_95
 #PBS -S /bin/bash
 #PBS -m abe

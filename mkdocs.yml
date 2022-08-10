@@ -80,8 +80,9 @@ nav:
   - Home: 'index.md'
   - Installation: 'installation.md'
   - License: 'license.md'
+  - FAQs: 'faq.md'
   - 'File Formats':
-    - 'FDS File: *.fds': 'files/fds.md'
+    - 'Input Files': 'files/input.md'
     - 'Config File: pbd.yml': 'files/config.md'
   - API:
     - Overview: 'commands/overview.md'

@@ -1,0 +1,4 @@
+#PBS -l nodes=
+{%- if n|node(8, 'full') %}{{ n // 8 }}:node:ppn=8{% endif %}
+{%- if n|node(8, 'both') %}:{% endif %}
+{%- if n|node(8, 'part') %}1:node:ppn={{ n % 8 }}{% endif %}

@@ -1,6 +1,6 @@
-#PBS -l nodes={{ proc // 12 }}:node1:ppn=12{% if proc % 12 %}:1:node1:ppn={{ proc % 12 }}{% endif +%}
-#PBS -l nodes+={{ proc // 16 }}:node2:ppn=16{% if proc % 16 %}:1:node2:ppn={{ proc % 16 }}{% endif +%}
-#PBS -l nodes++={{ proc // 20 }}:node3:ppn=20{% if proc % 20 %}:1:node3:ppn={{ proc % 20 }}{% endif +%}
+#PBS -l nodes={{ proc // 12 }}:node1:ppn=12:1:node1:ppn={{ proc % 12 }}
+#PBS -l nodes+={{ proc // 16 }}:node2:ppn=16:1:node2:ppn={{ proc % 16 }}
+#PBS -l nodes++={{ proc // 20 }}:node3:ppn=20:1:node3:ppn={{ proc % 20 }}
 #PBS -N {{ name }}
 #PBS -S /bin/bash
 #PBS -m abe

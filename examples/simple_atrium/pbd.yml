@@ -5,7 +5,7 @@ xfds:
         - simple_atrium.fds
         - simple_atrium.pbs
       variables:
-        proc: 20
+        proc: 1
         open_doors: false
         res: 0.2 # m
         # Mesh Bounds

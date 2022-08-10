@@ -1,9 +1,12 @@
+!!! note
+    This page provides examples for how to write FDS files. However, all file listed under the `xfds.render.files` in the config file will have access to the template syntax described below.
+
 !!! example
     All the input and output files on this page can be found in the [xFDS Examples directory](https://github.com/pbdtools/xfds/tree/main/examples).
 
 xFDS allows you to add more features to your FDS input files using the [Jinja template syntax](https://jinja.palletsprojects.com/en/3.1.x/templates/). While this page covers a high level overview of the Jinja syntax, the user is encouraged to read the Jinja documentation for more information.
 
-xFDS uses Jinja's default delimeters. They are
+xFDS uses Jinja's default delimeters. They are:
 
 - `{{ ... }}` indicates an **expression**. This can be a variable, calculation, or a function call.
 - `{% ... %}` indicates a **statement** such as if/else conditionals and loops.

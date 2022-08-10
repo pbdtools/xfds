@@ -64,16 +64,12 @@ def ijk(xb: list[float], res: float, rounding: str = "round") -> str:
 
     values = [abs((xb[ix + 1] - xb[ix]) / res) for ix in range(0, 5, 2)]
 
-    if rounding == "round":
-        values = [round(v) for v in values]
-    elif rounding == "ceil":
+    if rounding == "ceil":
         values = [math.ceil(v) for v in values]
     elif rounding == "floor":
         values = [math.floor(v) for v in values]
     else:
-        raise ValueError(
-            f"Rounding must be one of ['round', 'ceil', 'floor'], received {rounding}"
-        )
+        values = [round(v) for v in values]
 
     return ",".join([str(v) for v in values])
 
@@ -129,5 +125,23 @@ def ior(
             raise ValueError("Target direction from device should be +/- along axis.")
         from_target_to_device = "-" if from_device_to_target == "+" else "+"
 
+    if from_target_to_device not in directions:
+        raise ValueError("Target direction from device should be +/- along axis.")
+
     sign = 1 if from_target_to_device == "+" else -1
     return sign * (axes.index(axis) + 1)
+
+
+def node(cores: int, ppn: int, mode: str = "") -> bool:
+    full, part = divmod(cores, ppn)
+    modes = ["full", "part", "both"]
+    mode = mode.lower()
+    if mode not in modes:
+        raise ValueError(f"Mode parameter must be one of: {modes}")
+
+    if mode == "full":
+        return bool(full)
+    elif mode == "part":
+        return bool(part)
+    else:
+        return bool(full) and bool(part)
