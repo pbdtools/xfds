@@ -1,0 +1,7 @@
+xfds:
+  render:
+    - name: model
+      files:
+        - model.fds
+      variables:
+        greet: PBD Tools

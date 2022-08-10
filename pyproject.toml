@@ -16,7 +16,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -24,12 +23,15 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 Markdown = "^3.3.6"
 typer = "^0.4.0"
 Jinja2 = "^3.1.1"
 PyYAML = "^6.0"
 toml = "^0.10.2"
+Pint = "^0.19.2"
+numpy = "^1.23.1"
+pandas = "^1.4.3"
 
 
 [tool.poetry.dev-dependencies]
@@ -48,6 +50,7 @@ setuptools = "^62.1.0"
 mkdocs = "^1.3.0"
 mkdocs-material = "^8.3.6"
 mdx-include = "^1.4.1"
+pytest-datadir = "^1.3.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -61,3 +64,8 @@ source = ["src/xfds"]
 
 [tool.coverage.report]
 show_missing = true
+
+[tool.pytest.ini_options]
+markers = [
+    "integration_test: marks test as integration tests",
+]

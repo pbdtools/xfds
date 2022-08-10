@@ -1,0 +1,8 @@
+xfds:
+  render:
+    - name: ppn_{{n}}
+      files:
+        - model.fds
+        - model.pbs
+      parameters:
+        n: [4, 8, 12]

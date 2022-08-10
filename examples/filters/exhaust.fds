@@ -1,0 +1,5 @@
+{% set ex = 100_000|convert('cfm', 'm^3/s') %}
+{% set sup = 0.95 * ex %}
+
+&SURF ID='EXHAUST', VOLUME_FLOW={{ ex|exhaust|round(1) }}/
+&SURF ID='SUPPLY',  VOLUME_FLOW={{ sup|supply|round(1) }}/

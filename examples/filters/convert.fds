@@ -1,0 +1,16 @@
+{{ 212|convert('degF', 'degC') }}
+{{ 212|str_convert('degF', 'degC', '%.0f') }}
+{{ '%.0f'|format(212|convert('degF', 'degC')) }}
+
+{{ 6|convert('ft', 'm')}}
+{{ 6|str_convert('ft', 'm', '%.3f')}}
+
+{{ 100_000|convert('ft^3/min', 'm^3/s')}}
+{{ 100_000|convert('cfm', 'm^3/s')}}
+{{ 100_000|str_convert('cfm', 'm^3/s', '%.2f')}}
+
+{{ 1_000|convert('BTU/s', 'kW')}}
+
+{{ 1|convert('smoot', 'm')}}
+{{ 1|convert('smoot', 'ft')}}
+{{ 1|str_convert('smoot', 'ft', '%.3f')}}

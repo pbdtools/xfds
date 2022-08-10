@@ -1,0 +1,10 @@
+{% set hrr = 1250 %}
+{% set area = 1.5 %}
+
+&SURF ID='BURNER_TG',
+      HRRPUA={{ (hrr / area)|round(1) }},
+      TAU_Q={{ hrr|t2(tg=300)|round(1) }}/
+
+&SURF ID='BURNER_ALPHA',
+      HRRPUA={{ (hrr / area)|round(1) }},
+      TAU_Q={{ hrr|t2(alpha=0.01111)|round(1) }}/

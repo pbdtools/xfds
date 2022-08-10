@@ -1,0 +1,5 @@
+xfds:
+  render:
+    - name: bounds_closed
+      files:
+        - bounds_closed.fds

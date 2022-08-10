@@ -1,0 +1,36 @@
+xfds:
+  render:
+    - name: atrium_{{cfm}}_{{mua_perc}}
+      files:
+        - simple_atrium.fds
+        - simple_atrium.pbs
+      variables:
+        proc: 1
+        open_doors: false
+        res: 0.2 # m
+        # Mesh Bounds
+        x0: -5 # m
+        x1:  5 # m
+        y0: -5 # m
+        y1:  5 # m
+        z0:  0 # m
+        z1: 20 # m
+        # Fire Parameters
+        hrr: 1000 # kW
+        area: 1.5 # m
+        # Geometry
+        floor_height: 3 # m
+        balcony_width: 2 # m
+      parameters:
+        cfm: [100_000, 125_000, 150_000]  # cfm
+        mua_perc: [0, 85, 90, 95] # %
+        include:
+            # Open doors if makeup air percentage is 0
+          - mua_perc: 0
+            open_doors: true
+        exclude:
+            # Not enough duct area to supply > 90% of cfm
+          - cfm: 150_000
+            mua_perc: 95
+          - cfm: 150_000
+            mua_perc: 90

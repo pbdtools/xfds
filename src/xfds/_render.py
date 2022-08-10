@@ -1,103 +1,157 @@
 """Render Command."""
 from __future__ import annotations
 
-import json
-import pprint
+import importlib.util
+import sys
+from inspect import getmembers, isfunction
 from itertools import product
 from pathlib import Path
-from typing import Optional, Union
+from types import ModuleType
+from typing import Any
 
-import markdown
-import toml
 import typer
 import yaml
 from jinja2 import Environment
 
-from . import config, log
-from .core import locate_fds_file
+from . import config, errors, filters, log
+from .units import ureg
 
 app = typer.Typer(
     name="render",
     help="Render an FDS template file into scenarios.",
 )
 
-
-def _normalize(value: str) -> Union[str, float, int]:
-    """Normalize a value.
-
-    Will return as int or float if possible, otherwise will return as string.
-    """
-    for cast in [int, float, str]:
-        try:
-            return cast(value)
-        except ValueError:
-            pass
-
-    return value
+ENV = Environment(
+    trim_blocks=True,
+    lstrip_blocks=True,
+    autoescape=True,
+)
 
 
-def get_meta(file_contents: str) -> dict:
-    """Process metadata from the FDS template file.
-
-    Values will be normalized to numbers if possible.
-    If a singular value is present, the value will be
-    returned rather than a list.
-    """
-    md = markdown.Markdown(extensions=["meta"])
-    md.convert(file_contents)
-    meta = md.Meta
-
-    for key, value in meta.items():
-        if len(value) == 1:
-            meta[key] = _normalize(value[0])
-        else:
-            meta[key] = [_normalize(v) for v in value]
-
-    return meta
+def load_filters(module: ModuleType) -> None:
+    for filter in [o for o in getmembers(module) if isfunction(o[1])]:
+        ENV.filters[filter[0]] = filter[1]
 
 
-def locate_config(fds_file: Path, meta: dict) -> Optional[Path]:
+def load_filters_from_path(file_path: Path) -> bool:
+    if not file_path.exists():
+        return False
+
+    module_name = "user_filters"
+    spec: Any = importlib.util.spec_from_file_location(module_name, file_path)
+    module: Any = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    load_filters(module)
+    return True
+
+
+load_filters(filters)
+
+
+def locate_config(cwd: Path) -> Path:
     """Load the configuration file.
 
     Will look for a confing file in the same directory as the FDS template file.
     The config file should have the same base name as the original FDS file.
     If no config file is found, search the FDS meta for a variable "config".
     """
-    for suffix in [".yaml", ".yml", ".toml", ".json"]:
-        config_file = fds_file.with_suffix(suffix)
+    for file in ["pbd.yaml", "pbd.yml"]:
+        config_file = cwd / file
         if config_file.exists():
             return config_file
 
-    if "config" in meta:
-        config_file = Path(meta["config"])
-        if config_file.is_absolute():
-            return config_file
-        return fds_file.parent / config_file
-
-    return None
+    raise errors.ConfigNotFound(f"Could not find Config file pbd.yml in {cwd}.")
 
 
 def read_config(config_file: Path) -> dict:
     """Read the configuration file."""
-    func = {
-        ".yml": yaml.safe_load,
-        ".yaml": yaml.safe_load,
-        ".toml": toml.load,
-        ".json": json.load,
-    }[config_file.suffix]
-
     with config_file.open() as f:
-        return func(f)
+        return yaml.safe_load(f)
+
+
+def _values_match_for_shared_keys(d1: dict, d2: dict) -> bool:
+    keys = set(d1.keys()).intersection(d2.keys())
+    for key in keys:
+        if d1[key] != d2[key]:
+            return False
+    return True
+
+
+def _parse_model(model_spec: dict) -> list[dict]:
+
+    if "name" not in model_spec:
+        raise errors.ModelNameNotDefiend(
+            "You must specify the pattern for naming the output files."
+        )
+
+    variables = model_spec.get("variables", dict())
+    params = model_spec.get("parameters", dict())
+    includes = params.get("include", [])
+    excludes = params.get("exclude", [])
+    params = {k: v for k, v in params.items() if k not in ["include", "exclude"]}
+
+    models = []
+    if not params:
+        models.append({"data": variables})
+    else:
+        keys, values = zip(*params.items())
+        for parameters in product(*values):
+            models.append({"data": dict(zip(keys, parameters))})
+
+        for model in models:
+            for include in includes:
+                if _values_match_for_shared_keys(model["data"], include):
+                    model["data"].update(include)
+
+        models = [
+            model
+            for model in models
+            if not any(
+                _values_match_for_shared_keys(model["data"], exclude)
+                for exclude in excludes
+            )
+        ]
+
+    for model in models:
+        data = variables.copy()
+        data.update(model["data"])
+        model["data"] = data
+
+        model.update(
+            {
+                key: value
+                for key, value in model_spec.items()
+                if key not in ["variables", "parameters"]
+            }
+        )
+
+        model["name"] = compile(model["name"], model["data"])
+        model["data"]["name"] = model["name"]
+
+    return models
+
+
+def parse_models(config_data: dict) -> list[dict]:
+    """Create scenarios as defined in the config file."""
+    if "xfds" not in config_data.keys():
+        raise errors.xFDSNotDefined(
+            "'xfds' is not defined as a top-level key in config file."
+        )
+    if "render" not in config_data["xfds"].keys():
+        raise errors.RenderNotDefined(
+            "'render' is not defined under 'xfds' in config file."
+        )
+
+    models = []
+    for model in config_data["xfds"]["render"]:
+        models.extend(_parse_model(model))
+    return models
 
 
 def compile(file_contents: str, data: dict) -> str:
     """Compile the FDS template file."""
-    env = Environment(
-        trim_blocks=True,
-        lstrip_blocks=True,
-        autoescape=True,
-    )
-    template = env.from_string(file_contents)
+    template = ENV.from_string(file_contents)
     return template.render(**data)
 
 
@@ -108,87 +162,37 @@ def write(output_file: Path, contents: str) -> None:
     output_file.write_text(contents)
 
 
-def generate_models(
-    fds_file: Path,
-    template_text: str,
-    model_name: str,
-    model_data: dict,
-    defaults: dict,
-    meta: dict,
-) -> None:
-    """Generate a model."""
-    log.debug(f"Model: {model_name}")
-    log.debug(f"Model data: {model_data}")
-
-    output_dir = fds_file.parent / "output"
-
-    if "matrix" not in model_data:
-        log.warning(f"No matrix specified for model {model_name}")
-        data = meta.copy()
-        data.update(defaults)
-        log.debug(f"=== Data ===\n{pprint.pformat(data)}")
-        contents = compile(template_text, data)
-        output_file = output_dir / model_name / f"{model_name}.fds"
-        write(output_file, contents)
-        return
-
-    keys, values = zip(*model_data["matrix"].items())
-    for matrix_values in product(*values):
-        data = meta.copy()
-        data.update(defaults)
-        data.update(zip(keys, matrix_values))
-        log.debug(f"=== Data ===\n{pprint.pformat(data)}")
-
-        contents = compile(template_text, data)
-        file_name = compile(model_name, data)
-        output_file = output_dir / file_name / f"{file_name}.fds"
-        write(output_file, contents)
-        log.success(f"Created: {output_file}")
-
-
-def main(fds_file: Path) -> None:
-
-    template_text = fds_file.read_text()
-    meta = get_meta(template_text)
-    log.debug(pprint.pformat(meta))
-
-    config_file = locate_config(fds_file, meta)
-    if config_file is None or not config_file.exists():
-        log.warning("No config file found.")
-    else:
-        log.info(f"Config file: {config_file}", icon="📄")
-    config_data = read_config(config_file) if config_file is not None else {}
-
-    defaults = config_data.get("defaults", {}).copy()
-    log.debug(f"Defaults: {defaults}")
-
-    models = config_data.get("models", {fds_file.name: {}}).copy()
-
-    for model_name, model_data in models.items():
-        generate_models(
-            fds_file=fds_file,
-            template_text=template_text,
-            model_name=model_name,
-            model_data=model_data,
-            defaults=defaults,
-            meta=meta,
-        )
-
-
 @app.callback(invoke_without_command=True)
 def render(
-    fds_file: Path = typer.Argument(
-        ".",
-        callback=locate_fds_file,
-        help=(
-            "The FDS file or directory to reset. "
-            "If a **FDS file** is specified, the FDS outputs will be cleared. "
-            "If a **directory** is specified, xFDS will find the first FDS file in the directory "
-            "and assume that is what it should reset. "
-            "if **nothing** is specified, the current directory is used and the above rules are applied. "
-        ),
-    ),
+    directory: Path = typer.Argument(
+        ".", help="Directory containing pbd.yml configuration file."
+    )
 ) -> None:
     """Render an FDS template into scenarios."""
     log.section("Render Command", icon="🖨️ ")
-    main(fds_file)
+
+    config_file = locate_config(Path(directory))
+    log.debug(f"Config File: {config_file}", icon="🛠️")
+
+    user_filters = directory / "filters.py"
+    if load_filters_from_path(user_filters):
+        log.debug(f"Loaded Custom Filters: {user_filters}", icon="🛠️")
+
+    user_units = directory / "units.txt"
+    if user_units.exists():
+        ureg.load_definitions(user_units.resolve())
+
+    config_data = read_config(config_file)
+    models = parse_models(config_data)
+
+    for model in models:
+        for file in model["files"]:
+            input_file = directory / file
+            if not input_file.exists():
+                raise FileNotFoundError(
+                    f"Could not find {input_file.name} in {input_file.parent}"
+                )
+            output_dir = directory / "output" / model["name"]
+            output_file = output_dir / f"{model['name']}{input_file.suffix}"
+            output_text = compile(input_file.read_text(), model["data"])
+            write(output_file=output_file, contents=output_text)

@@ -1,0 +1,1 @@
+#PBS -l nodes=1:node:ppn=4

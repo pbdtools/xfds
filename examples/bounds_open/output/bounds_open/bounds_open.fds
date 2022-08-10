@@ -1,5 +1,3 @@
-bounds: open
-
 &MESH XB=0, 1, 0, 1, 0, 1, IJK=10, 10, 10/
 
 &VENT MB='XMIN', SURF_ID='OPEN'/
