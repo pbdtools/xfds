@@ -1,0 +1,31 @@
+#PBS -l nodes=
+{%- if n|node(4, 'full') %}{{ n // 8 }}:pbd:ppn=8{% endif %}
+{%- if n|node(4, 'both') %}:{% endif %}
+{%- if n|node(4, 'part') %}1:pbd:ppn={{ n % 8 }}{% endif %}
+
+#PBS -l nodes+=
+{%- if n|node(8, 'full') %}{{ n // 8 }}:tools:ppn=8{% endif %}
+{%- if n|node(8, 'both') %}:{% endif %}
+{%- if n|node(8, 'part') %}1:tools:ppn={{ n % 8 }}{% endif %}
+
+#PBS -N {{ name }}
+#PBS -S /bin/bash
+#PBS -m abe
+#PBS -M xfds@pbd.tools
+#PBS -j oe
+
+# load required modules
+module load fds/{{ fds }}
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+
+# set MPI variables
+export I_MPI_PIN=1
+export I_MPI_PIN_MODE=pm
+export OMP_NUM_THREADS=1
+export MPI_PPN=$(($PBS_NUM_PPN / $OMP_NUM_THREADS))
+export MPI_NP=$(($PBS_NP / $OMP_NUM_THREADS))
+
+# run fds in parallel
+mpiexec -np $MPI_NP fds_mpi {{ name }}.fds

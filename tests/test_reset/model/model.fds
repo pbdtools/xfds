@@ -1,0 +1,4 @@
+fds: {{ fds }}
+
+{% set xb = 0, 5, 0, 4, 0, 3 %}
+&MESH XB={{ xb|xb }}, IJK={{ xb|ijk(res) }}/

@@ -1,0 +1,15 @@
+xfds:
+  render:
+    - name: model_{{ "%.2f"|format(res) }}
+      files:
+        - model.fds
+        - model.pbs
+      variables:
+        fds: 6.7.7
+        n: 1
+      parameters:
+        res: [0.10, 0.15]
+  reset:
+    keep:
+      - "*.fds"
+      - "*.pbs"
