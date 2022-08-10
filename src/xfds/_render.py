@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 import sys
 from inspect import getmembers, isfunction
 from itertools import product
@@ -10,10 +11,10 @@ from types import ModuleType
 from typing import Any
 
 import typer
-import yaml
 from jinja2 import Environment
 
 from . import config, errors, filters, log
+from .core import locate_config, read_config
 from .units import ureg
 
 app = typer.Typer(
@@ -47,27 +48,6 @@ def load_filters_from_path(file_path: Path) -> bool:
 
 
 load_filters(filters)
-
-
-def locate_config(cwd: Path) -> Path:
-    """Load the configuration file.
-
-    Will look for a confing file in the same directory as the FDS template file.
-    The config file should have the same base name as the original FDS file.
-    If no config file is found, search the FDS meta for a variable "config".
-    """
-    for file in ["pbd.yaml", "pbd.yml"]:
-        config_file = cwd / file
-        if config_file.exists():
-            return config_file
-
-    raise errors.ConfigNotFound(f"Could not find Config file pbd.yml in {cwd}.")
-
-
-def read_config(config_file: Path) -> dict:
-    """Read the configuration file."""
-    with config_file.open() as f:
-        return yaml.safe_load(f)
 
 
 def _values_match_for_shared_keys(d1: dict, d2: dict) -> bool:
@@ -173,6 +153,7 @@ def render(
 
     config_file = locate_config(Path(directory))
     log.debug(f"Config File: {config_file}", icon="🛠️")
+    os.chdir(config_file.parent)
 
     user_filters = directory / "filters.py"
     if load_filters_from_path(user_filters):

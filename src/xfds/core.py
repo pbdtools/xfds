@@ -3,7 +3,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from . import config, log
+import yaml
+
+from . import config, errors, log
 
 
 def locate_fds_file(fds_file: Optional[Path]) -> Path:
@@ -26,6 +28,30 @@ def locate_fds_file(fds_file: Optional[Path]) -> Path:
             pass
 
     return fds_file
+
+
+def locate_config(cwd: Path) -> Path:
+    """Load the configuration file.
+
+    Will look for a confing file in the same directory as the FDS template file.
+    The config file should have the same base name as the original FDS file.
+    If no config file is found, search the FDS meta for a variable "config".
+    """
+    cwd = cwd.resolve()
+    for parent in [cwd, *cwd.parents]:
+        for file in ["pbd.yaml", "pbd.yml"]:
+            config_file = parent / file
+            if config_file.exists():
+                print(config_file)
+                return config_file
+
+    raise errors.ConfigNotFound(f"Could not find Config file pbd.yml in {cwd}.")
+
+
+def read_config(config_file: Path) -> dict:
+    """Read the configuration file."""
+    with config_file.open() as f:
+        return yaml.safe_load(f)
 
 
 def volume_to_mount(fds_file: Path) -> Path:
