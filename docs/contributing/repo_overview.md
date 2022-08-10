@@ -29,6 +29,18 @@ Code for the documentation hosted at https://xfds.pbd.tools.
 
 Documentation is built on [mkdocs](https://www.mkdocs.org/) and uses the [Material Theme](https://squidfunk.github.io/mkdocs-material/). You can include snippets from other files thanks to [mdx_include](https://github.com/neurobin/mdx_include).
 
+## examples
+
+The examples directory show ways that xFDS can be used. Most of the examples are used in the documentation. Thanks to [mdx-include](https://pypi.org/project/mdx-include/), the code below includes `/examples/variables/variables.fds`. The documentation is configured to look in the `examples` directory when looking for files to include.
+
+```markdown title="mdx_include syntax"
+\{! variables/variables.fds !}
+```
+
+```python title="included file"
+{! variables/variables.fds !}
+```
+
 ## src/xfds
 
 This directory contains all the source code for the project.

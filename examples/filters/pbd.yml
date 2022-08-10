@@ -1,0 +1,62 @@
+xfds:
+  render:
+    - name: abs
+      files:
+        - abs.fds
+    - name: arange
+      files:
+        - arange.fds
+    - name: center
+      files:
+        - center.fds
+    - name: convert
+      files:
+        - convert.fds
+    - name: dxb
+      files:
+        - dxb.fds
+    - name: exhaust
+      files:
+        - exhaust.fds
+    - name: float
+      files:
+        - float.fds
+    - name: ijk
+      files:
+        - ijk.fds
+    - name: int
+      files:
+        - int.fds
+    - name: ior
+      files:
+        - ior.fds
+    - name: linspace
+      files:
+        - linspace.fds
+    - name: max
+      files:
+        - max.fds
+    - name: min
+      files:
+        - min.fds
+    - name: round
+      files:
+        - round.fds
+    - name: t2
+      files:
+        - t2.fds
+    - name: trim
+      files:
+        - trim.fds
+    - name: unique
+      files:
+        - unique.fds
+    - name: upper
+      files:
+        - upper.fds
+    - name: xb
+      files:
+        - xb.fds
+    - name: xyz
+      files:
+        - xyz.fds

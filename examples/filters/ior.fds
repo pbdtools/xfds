@@ -1,0 +1,27 @@
+{% set xb = -1.5, 1.5, -1.5, 1.5, -1.5, 1.5 %}
+&MESH XB={{ xb|xb }}, IJK={{ xb|ijk(0.15) }}/
+&OBST XB={{ (-0.9, 0.9, -0.9, 0.9, -0.9, 0.9)|xb }}/
+
+{% set xyz= -1,0,0 %}
+&DEVC XYZ={{xyz|xyz}}, IOR={{ 'x'|ior(from_target_to_device="-") }}, QUANTITY='INCIDENT HEAT FLUX'/
+&DEVC XYZ={{xyz|xyz}}, IOR={{ 'x'|ior(from_device_to_target="+") }}, QUANTITY='INCIDENT HEAT FLUX'/
+
+{% set xyz= 1,0,0 %}
+&DEVC XYZ={{xyz|xyz}}, IOR={{ 'x'|ior(from_target_to_device="+") }}, QUANTITY='INCIDENT HEAT FLUX'/
+&DEVC XYZ={{xyz|xyz}}, IOR={{ 'x'|ior(from_device_to_target="-") }}, QUANTITY='INCIDENT HEAT FLUX'/
+
+{% set xyz= 0,-1,0 %}
+&DEVC XYZ={{xyz|xyz}}, IOR={{ 'y'|ior(from_target_to_device="-") }}, QUANTITY='INCIDENT HEAT FLUX'/
+&DEVC XYZ={{xyz|xyz}}, IOR={{ 'y'|ior(from_device_to_target="+") }}, QUANTITY='INCIDENT HEAT FLUX'/
+
+{% set xyz= 0,1,0 %}
+&DEVC XYZ={{xyz|xyz}}, IOR={{ 'y'|ior(from_target_to_device="+") }}, QUANTITY='INCIDENT HEAT FLUX'/
+&DEVC XYZ={{xyz|xyz}}, IOR={{ 'y'|ior(from_device_to_target="-") }}, QUANTITY='INCIDENT HEAT FLUX'/
+
+{% set xyz= 0,0,-1 %}
+&DEVC XYZ={{xyz|xyz}}, IOR={{ 'z'|ior(from_target_to_device="-") }}, QUANTITY='INCIDENT HEAT FLUX'/
+&DEVC XYZ={{xyz|xyz}}, IOR={{ 'z'|ior(from_device_to_target="+") }}, QUANTITY='INCIDENT HEAT FLUX'/
+
+{% set xyz= 0,0,1 %}
+&DEVC XYZ={{xyz|xyz}}, IOR={{ 'z'|ior(from_target_to_device="+") }}, QUANTITY='INCIDENT HEAT FLUX'/
+&DEVC XYZ={{xyz|xyz}}, IOR={{ 'z'|ior(from_device_to_target="-") }}, QUANTITY='INCIDENT HEAT FLUX'/

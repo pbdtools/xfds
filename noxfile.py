@@ -7,7 +7,7 @@ from nox.sessions import Session
 
 nox.options.sessions = "tests", "black", "lint", "safety", "mypy", "coverage"
 locations = "src", "tests", "noxfile.py"
-python = "3.7", "3.8", "3.9", "3.10"
+python = "3.8", "3.9", "3.10"
 py = "3.10"
 
 

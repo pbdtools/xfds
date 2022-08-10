@@ -1,0 +1,11 @@
+# Centered at (0, 0, 0) by default
+&OBST XB={{ (0, 0, 0)|dxb(2, 4, 1)}}/
+
+# Only xmax and zmin are `0`,
+&OBST XB={{ (0, 0, 0)|dxb(2, 4, 1, xloc='max', yloc='mid', zloc='min')}}/
+
+# zloc = 'max' forces the xb to be drawn below 0.0.
+&VENT XB={{ (0, 0, 0)|dxb(2, 0, 10, zloc='max')}}/
+
+# Same as above, but formatted differntly.
+&VENT XB={{ (0, 0, 0)|dxb(2, 0, 10, zloc='max', fmt="%5.2f")}}/

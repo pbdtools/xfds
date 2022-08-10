@@ -1,0 +1,8 @@
+
+&SURF ID='BURNER_TG',
+      HRRPUA=833.3,
+      TAU_Q=-335.4/
+
+&SURF ID='BURNER_ALPHA',
+      HRRPUA=833.3,
+      TAU_Q=-335.4/

@@ -1,0 +1,8 @@
+xfds:
+  render:
+    - file: model.fds
+      name: model_{{tool}}
+      variables:
+        res: 0.2 # m
+      parameters:
+        tool: [fdts, cfast, fds]

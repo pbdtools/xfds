@@ -1,0 +1,4 @@
+{% for ix in range(n) %}
+{% set xb = ix, ix + 1, 0, 1, 0, 1%}
+&MESH XB={{ xb|xb }}, IJK={{ xb|ijk(0.25) }}
+{% endfor %}

@@ -1,4 +1,0 @@
-models:
-  filters:
-    matrix:
-      blank: ['']

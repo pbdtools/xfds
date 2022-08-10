@@ -1,0 +1,71 @@
+cfm: {{ cfm }}
+mua: {{ cfm * mua_perc / 100 }}
+open_doors: {{ open_doors }}
+
+{% set ns = namespace(floor=0) %}
+
+{% macro tenability(x, y, z) -%}
+&DEVC ID='VIS_x{{x}}_y{{y}}_fl{{ ns.floor }}', XYZ={{ (x, y, z)|xyz }}, QUANTITY='VISIBILITY'/
+&DEVC ID='TMP_x{{x}}_y{{y}}_fl{{ ns.floor }}', XYZ={{ (x, y, z)|xyz }}, QUANTITY='TEMPERATURE'/
+&DEVC ID='OXY_x{{x}}_y{{y}}_fl{{ ns.floor }}', XYZ={{ (x, y, z)|xyz }}, QUANTITY='VOLUME FRACTION', SPEC_ID='OXYGEN'/
+&DEVC ID='CO2_x{{x}}_y{{y}}_fl{{ ns.floor }}', XYZ={{ (x, y, z)|xyz }}, QUANTITY='VOLUME FRACTION', SPEC_ID='CARBON DIOXIDE'/
+&DEVC ID='CMO_x{{x}}_y{{y}}_fl{{ ns.floor }}', XYZ={{ (x, y, z)|xyz }}, QUANTITY='VOLUME FRACTION', SPEC_ID='CARBON MONOXIDE'/
+{%- endmacro -%}
+
+{% set mesh = x0, x1, y0, y1, z0, z1 %}
+&MESH XB={{ mesh|xb }}, IJK={{ mesh|ijk(res) }}/
+&TIME T_END=30/
+&REAC FUEL='PROPANE'/
+
+####################
+# Burner
+####################
+{% set top = z0 + 0.2 %}
+{% set side = area ** 0.5 %}
+{% set r = (side / 2)|round(4) %}
+&SURF ID='BURNER', COLOR='RED', HRRPUA={{ (hrr / area)|round(2) }}/
+&OBST XB={{ (-r, r, -r, r, z0, top)|xb }}/
+&VENT XB={{ (-r, r, -r, r, top, top)|xb }}, SURF_ID='BURNER'/
+
+####################
+# Exhaust
+####################
+{% set ex_per = cfm / 4 %}
+&SURF ID='Exhaust', COLOR='GREEN', VOLUME_FLOW={{ ex_per|convert('cfm', 'm^3/s')|round(2)|exhaust }}/ {{ ex_per }} cfm/vent
+&OBST XB={{ (x0 + 1, x0 + 2, y0 + 1, y0 + 2, z1 - 0.2, z1)|xb }}/
+&OBST XB={{ (x1 - 2, x1 - 1, y0 + 1, y0 + 2, z1 - 0.2, z1)|xb }}/
+&OBST XB={{ (x0 + 1, x0 + 2, y1 - 2, y1 - 1, z1 - 0.2, z1)|xb }}/
+&OBST XB={{ (x1 - 2, x1 - 1, y1 - 2, y1 - 1, z1 - 0.2, z1)|xb }}/
+&VENT XB={{ (x0 + 1, x0 + 2, y0 + 1, y0 + 2, z1 - 0.2, z1 - 0.2)|xb }}, SURF_ID='Exhaust'/
+&VENT XB={{ (x1 - 2, x1 - 1, y0 + 1, y0 + 2, z1 - 0.2, z1 - 0.2)|xb }}, SURF_ID='Exhaust'/
+&VENT XB={{ (x0 + 1, x0 + 2, y1 - 2, y1 - 1, z1 - 0.2, z1 - 0.2)|xb }}, SURF_ID='Exhaust'/
+&VENT XB={{ (x1 - 2, x1 - 1, y1 - 2, y1 - 1, z1 - 0.2, z1 - 0.2)|xb }}, SURF_ID='Exhaust'/
+
+####################
+# Makeup Air
+####################
+{% if mua_perc %}
+{% set su_per = cfm * (mua_perc / 100) / 2 %}
+&SURF ID='Supply', COLOR='BLUE', VOLUME_FLOW={{ su_per|convert('cfm', 'm^3/s')|round(2)|supply }}/ {{ su_per }} cfm/vent
+&OBST XB={{ (x0,     x0 + 1, y0, y1, z0,       z0 + 0.1)|xb }}/
+&VENT XB={{ (x0,     x0 + 1, y0, y1, z0 + 0.1, z0 + 0.1)|xb }}, SURF_ID='Supply'/
+&OBST XB={{ (x1 - 1, x1,     y0, y1, z0,       z0 + 0.1)|xb }}/
+&VENT XB={{ (x1 - 1, x1,     y0, y1, z0 + 0.1, z0 + 0.1)|xb }}, SURF_ID='Supply'/
+{% else %}
+&VENT XB={{ (-1, 1, y1, y1, z0, z0 + 2)|xb }}, SURF_ID='OPEN'/ Doors
+{% endif %}
+
+####################
+# Geometry
+####################
+{% for z in range(z0 + floor_height, z1 - floor_height, floor_height) %}
+{% set ns.floor = ns.floor + 1 %}
+&OBST  XB={{ (x0, x0 + balcony_width, y0, y1, z, z + 0.2)|xb }}, ID="FL{{ns.floor}} XMIN Balcony"/
+&OBST  XB={{ (x0 + balcony_width - 0.2, x0 + balcony_width, y0, y1, z, z + 1.2)|xb }}, ID="FL{{ns.floor}} XMIN Rail"/
+&OBST  XB={{ (x1 - balcony_width, x1, y0, y1, z, z + 0.2)|xb }}, ID="FL{{ns.floor}} XMAX Balcony"/
+&OBST  XB={{ (x1 - balcony_width, x1- balcony_width + 0.2, y0, y1, z, z + 1.2)|xb }}, ID="FL{{ns.floor}} XMAX Rail"/
+{% for y in range(y0 + 1, y1, 2) %}
+{{ tenability(x0 + balcony_width - 1, y, z+2)}}
+{{ tenability(x1 - balcony_width + 1, y, z+2)}}
+{% endfor %}
+{% endfor %}

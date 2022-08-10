@@ -1,0 +1,5 @@
+xfds:
+  render:
+    - name: model
+      files:
+        - model.fds
