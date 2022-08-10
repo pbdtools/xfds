@@ -152,3 +152,19 @@ The `exclude` directive will eliminate scenarios matching each directive given. 
 ```
 
 In the end, 10 scenarios remain and xFDS will generate 10 models.
+
+## Reset
+
+When testing out changes in models, it is sometimes useful to remove the old output files. The `xfds reset` command will delete all files in the directory unless they match a specified pattern.
+
+To keep certain files when `xfds reset` is run, specify the file patterns with the `keep` parameter. Use [glob patterns](https://en.wikipedia.org/wiki/Glob_(programming)) to specify which files you want to keep.
+
+```yaml title="pbd.yml"
+xfds:
+  reset:
+    keep:
+      - '*.fds'
+      - '*.ini'
+      - '*.in'
+      - '*.zip'
+```
