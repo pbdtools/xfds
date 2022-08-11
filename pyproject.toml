@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "xfds"
-version = "0.2.0"
+version = "0.3.0"
 description = "Utility for managing FDS models"
 license = "MIT"
 authors = ["Brian Cohan <briancohan@pbd.tools>"]
