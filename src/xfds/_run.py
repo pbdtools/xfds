@@ -96,12 +96,14 @@ def build_arguments(
     if interactive:
         return args
 
-    # Use mpi if multiple processors are specified
-    if processors > 1:
-        args.extend(["mpiexec", "-n", str(processors)])
+    args.extend(["bash", "-c"])
 
-    # Add fds command to run file
-    args.extend(["fds", str(fds_file.name)])
+    # Use mpi if multiple processors are specified
+    cmd = f"fds {fds_file.name} 1> {fds_file.with_suffix('.log').name} 2> {fds_file.with_suffix('.err').name}"
+    if processors > 1:
+        cmd = f"mpiexec -n {processors} " + cmd
+
+    args.append(cmd)
 
     return args
 
@@ -135,12 +137,7 @@ def execute(
     if interactive:
         subprocess.run(cmd)  # pragma: no cover # noqa: S603
     else:
-        stdout = fds_file.resolve().with_suffix(".stdout")
-        stderr = fds_file.resolve().with_suffix(".stderr")
-        stdout.touch()
-        stderr.touch()
-        with stdout.open() as sout, stderr.open() as serr:
-            subprocess.Popen(cmd, stdout=sout, stderr=serr)  # noqa: S603
+        subprocess.Popen(cmd)  # noqa: S603
 
 
 app = typer.Typer(name="run", help="Run an FDS in a Docker container.")

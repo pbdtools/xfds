@@ -157,6 +157,7 @@ cython_debug/
 **/data/**/*.binfo
 **/data/**/*.csv
 **/data/**/*.end
+**/data/**/*.err
 **/data/**/*.out
 **/data/**/*.pbs
 **/data/**/*.restart

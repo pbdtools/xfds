@@ -15,4 +15,5 @@ def test_mpi_if_processors_is_not_none(default_cmd_kwargs: dict) -> None:
     """Test container is mpi when processors is not None."""
     default_cmd_kwargs["processors"] = 2
     cmd = build_arguments(**default_cmd_kwargs)
-    assert "mpiexec" in cmd
+    print(cmd)
+    assert "mpiexec" in " ".join(cmd)
