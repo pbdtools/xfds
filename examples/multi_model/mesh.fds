@@ -1,0 +1,8 @@
+&MESH XB={{ bounds|xb }}, IJK={{ bounds|ijk(res|convert('cm', 'm')) }}/
+&TIME T_END=60/
+&REAC FUEL='PROPANE'/
+
+{% set r = area ** 0.5 / 2 %}
+&SURF ID='BURNER', COLOR='RED', HRRPUA={{ (hrr / area)|round(2) }}/
+&OBST XB={{ (-r, r, -r, r, 0.0, 0.2)|xb }}/
+&VENT XB={{ (-r, r, -r, r, 0.2, 0.2)|xb }}, SURF_ID='BURNER'/

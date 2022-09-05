@@ -1,0 +1,31 @@
+{% for floor in floors[:-1] %}
+{% set mesh_bounds = bounds[0], bounds[1], bounds[2], bounds[3], floor, floors[loop.index] %}
+&MESH XB={{ mesh_bounds|xb }}, IJK={{ mesh_bounds|ijk(res|convert('cm', 'm')) }}/
+{% endfor %}
+&TIME T_END=60/
+&REAC FUEL='PROPANE'/
+
+{% set r = area ** 0.5 / 2 %}
+&SURF ID='BURNER', COLOR='RED', HRRPUA={{ (hrr / area)|round(2) }}/
+&OBST XB={{ (-r, r, -r, r, 0.0, 0.2)|xb }}/
+&VENT XB={{ (-r, r, -r, r, 0.2, 0.2)|xb }}, SURF_ID='BURNER'/
+
+########################################
+# Tenability Devices
+########################################
+{% macro tenability(x, y, z, name) -%}
+&DEVC ID='VIS_{{ name }}', XYZ={{ (x, y, z)|xyz }}, QUANTITY='VISIBILITY'/
+&DEVC ID='TMP_{{ name }}', XYZ={{ (x, y, z)|xyz }}, QUANTITY='TEMPERATURE'/
+&DEVC ID='OXY_{{ name }}', XYZ={{ (x, y, z)|xyz }}, QUANTITY='VOLUME FRACTION', SPEC_ID='OXYGEN'/
+&DEVC ID='CO2_{{ name }}', XYZ={{ (x, y, z)|xyz }}, QUANTITY='VOLUME FRACTION', SPEC_ID='CARBON DIOXIDE'/
+&DEVC ID='CMO_{{ name }}', XYZ={{ (x, y, z)|xyz }}, QUANTITY='VOLUME FRACTION', SPEC_ID='CARBON MONOXIDE'/
+{%- endmacro -%}
+
+{% for x in 4|linspace(bounds[0] + 1, bounds[1] - 1) %}
+{% set i = loop.index %}
+{% for y in 4|linspace(bounds[2] + 1, bounds[3] - 1) %}
+{% set j = loop.index %}
+{% set name = i|trim + "-" + j|trim %}
+{{ tenability(x, y, 6|convert('ft', 'm'), name) }}
+{% endfor %}
+{% endfor %}

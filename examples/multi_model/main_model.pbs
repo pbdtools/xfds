@@ -1,0 +1,30 @@
+{% macro node(name, ppn) %}
+#PBS -l nodes=
+{%- if n_proc|node(ppn=ppn, mode='full') %}{{ n_proc // ppn }}:{{name}}:ppn=ppn{% endif %}
+{%- if n_proc|node(ppn=ppn, mode='both') %}:{% endif %}
+{%- if n_proc|node(ppn=ppn, mode='part') %}1:{{name}}:ppn={{ n_proc % ppn }}{% endif %}
+{% endmacro %}
+{{ node('xfds', 12) }}
+{{ node('pbd', 14) }}
+{{ node('tools', 16) }}
+#PBS -N {{ name }}
+#PBS -S /bin/bash
+#PBS -m abe
+#PBS -M xfds@pbd.tools
+#PBS -j oe
+
+# load required modules
+module load fds/6.7.5
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+
+# set MPI variables
+export I_MPI_PIN=1
+export I_MPI_PIN_MODE=pm
+export OMP_NUM_THREADS=1
+export MPI_PPN=$(($PBS_NUM_PPN / $OMP_NUM_THREADS))
+export MPI_NP=$(($PBS_NP / $OMP_NUM_THREADS))
+
+# run fds in parallel
+mpiexec -np $MPI_NP fds_mpi {{ name }}.fds

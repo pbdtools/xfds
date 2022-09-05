@@ -1,0 +1,33 @@
+xfds:
+  render:
+    # Primary model
+    - name: main_model
+      files:
+        - main_model.fds
+        - main_model.pbs
+      variables:
+        hrr: 1000 # kW
+        area: 1.5 # m
+        res: 20 # cm
+        bounds: [0, 20, 0, 30] # ft
+        floors: [0, 12, 24, 36] # ft
+        n_proc: 3
+
+    # Mesh resolution study local to fire
+    - name: mesh_res_{{res}}cm
+      files:
+        - mesh.fds
+      variables:
+        hrr: 1000 # kW
+        area: 1.5 # m
+        bounds: [-2, 2, -2, 2, 0, 4]
+      parameters:
+        res: [10, 15, 20] # cm
+
+    # Test to ensure burner is specified correctly
+    - name: simple_burner
+      files:
+        - simple_burner.fds
+      variables:
+        hrr: 1000 # kW
+        area: 1.5 # m
