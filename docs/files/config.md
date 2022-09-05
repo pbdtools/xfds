@@ -32,6 +32,19 @@ The `xfds render` command takes a list of objects that define the model and asso
     - **include**: Directive defining extra information to add to scenarios.
     - **exclude**: Directive defining conditions for removing scenarios.
 
+!!! warning
+    The `name` parameter must start with a letter
+    ```yaml
+    xfds:
+      render:
+        - name: 2-way-flow # This is invalid
+          files:
+            - input.fds
+        - name: two-way-flow # This works
+          files:
+            - input.fds
+    ```
+
 The example below shows a configuration for a mesh sensitivity study. This assumes there is a file `sensitivity.fds` in the same directory and that the file looks for two variables, `hrr` and `resolution`. Running `xfds render` will generate three output files:
 
 * sensitivity_10cm.fds
