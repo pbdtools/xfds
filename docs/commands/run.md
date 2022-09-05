@@ -3,7 +3,7 @@
 The xFDS run command is a convience wrapper for docker run. xFDS determines the appropriate arguments for the model and exectues the docker run command for you.
 
 Unless stated otherwise, the commands below assume you are at `/home/pbdtools/models` with the following directory structure.
-```console
+```console title="Directory Structure under /home/pbdtools/models/"
 /home/pbdtools/models $ tree
 .
 ├── multi_mesh # More than 1 processor required
@@ -52,7 +52,7 @@ For example, if you're in `/home/pbdtools/models/single_mesh`, executing `xfds r
 ```console title="xFDS Command"
 xfds run
 ```
-```console title="xFDS Output"
+```console title="Command called by xFDS"
 docker run --rm --name single_mesh-latest -v /home/pbdtools/models/single_mesh:/workdir openbcl/fds:latest fds single_mesh.fds
 ```
 
@@ -147,7 +147,11 @@ These subsections also indicate the priority of different methods. Specifying a 
 
 ### Command Line Argument
 
-=== "xFDS"
+=== "xFDS (Long Flag)"
+    ```console title="/home/pbdtools/models/single_mesh/"
+    xfds run --fds 6.7.5
+    ```
+=== "xFDS (Short Flag)"
     ```console title="/home/pbdtools/models/single_mesh/"
     xfds run -v 6.7.5
     ```
