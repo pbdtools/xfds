@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    image: xfds_docs
+    container_name: xfds_docs
+    restart: always
+    volumes:
+      - .:/docs
+    ports:
+      - 8000:8000
+    command: poetry run mkdocs serve -a 0.0.0.0:8000
