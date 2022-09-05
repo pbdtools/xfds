@@ -368,6 +368,10 @@ In the example below, the first device is located in the -X direction from the o
 {! filters/output/linspace/linspace.fds !}
 ```
 
+#### Node
+
+The `node` filter is useful for creating PBS files. See [Generating PBS Files](/topics/pbs) for more information.
+
 #### t2
 
 On a SURF, the TAU_Q parameter indicates the time at which the peak heat release rate is achieved. If a fire needs to be defined in terms of a standardized growth time (time to reach 1 MW), the `t2` filter will calculate TAU_Q from the peak heat release rate and characteristic growth time. Altenatively, alpha ($\alpha$) may be specified.

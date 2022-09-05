@@ -80,16 +80,18 @@ nav:
   - Home: 'index.md'
   - Installation: 'installation.md'
   - License: 'license.md'
-  - FAQs: 'faq.md'
   - 'File Formats':
+    - 'pbd.yml (Config File)': 'files/config.md'
     - 'Input Files': 'files/input.md'
-    - 'Config File: pbd.yml': 'files/config.md'
-  - API:
-    - Overview: 'commands/overview.md'
+  - Commands:
     - 'xfds run': 'commands/run.md'
     - 'xfds render': 'commands/render.md'
     - 'xfds reset': 'commands/reset.md'
     - 'xfds stop': 'commands/stop.md'
+  - Special Topics:
+    - 'Generating PBS Files': 'topics/pbs.md'
+    - 'Working with multiple models': 'topics/multiple_models.md'
+    - 'Working with CFAST': 'topics/cfast.md'
   - Contributing:
     - 'Getting Set Up': 'contributing/setup.md'
     - 'Repository Overview': 'contributing/repo_overview.md'

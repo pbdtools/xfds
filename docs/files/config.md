@@ -16,9 +16,6 @@ xfds:
   run:
     # run command options
     ...
-  stop:
-    # stop command options
-    ...
 ```
 
 ## Render
@@ -181,3 +178,7 @@ xfds:
       - '*.in'
       - '*.zip'
 ```
+
+## Run
+
+Configuration options are not available at this time. See the [run command](/commands/run) for more information

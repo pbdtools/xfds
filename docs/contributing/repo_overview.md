@@ -34,11 +34,11 @@ Documentation is built on [mkdocs](https://www.mkdocs.org/) and uses the [Materi
 The examples directory show ways that xFDS can be used. Most of the examples are used in the documentation. Thanks to [mdx-include](https://pypi.org/project/mdx-include/), the code below includes `/examples/variables/variables.fds`. The documentation is configured to look in the `examples` directory when looking for files to include.
 
 ```markdown title="mdx_include syntax"
-\{! variables/variables.fds !}
+\{! hrrpua/hrrpua.fds !}
 ```
 
 ```python title="included file"
-{! variables/variables.fds !}
+{! hrrpua/hrrpua.fds !}
 ```
 
 ## src/xfds
@@ -53,16 +53,19 @@ Thse files are files necesary to setup xFDS and pull the pieces together.
 - `cli.py`: This file is the main entry point for the command line interface.
 - `config.py`: Default settings for commands.
 - `core.py`: Basic functions required by multiple commands.
+- `errors.py`: Custom error types to make tracebacks more helpful.
+- `filters.py`: Custom Jinja filters useful for creating models.
 - `log.py`: Functions for printing information out to the terminal.
+- `units.py`: Module for defining custom units and managing unit conversion.
 
 ### Command Specific Files
 
 Files that start with an underscore (`_`) contain the logic for all the xFDS subcommands.
 
-- `_render.py`
-- `_reset.py`
-- `_run.py`
-- `_stop.py`
+- `_render.py` See [render command](/commands/render) for more information
+- `_reset.py` See [reset command](/commands/reset) for more information
+- `_run.py` See [run command](/commands/run) for more information
+- `_stop.py` See [stop command](/commands/stop) for more information
 
 ## Tests
 
@@ -78,6 +81,7 @@ xFDS uses [pytest](https://docs.pytest.org/) to ensure things are working as exp
 - [`.flake8`](https://flake8.pycqa.org/en/latest/): configuration for linting
 - [`.gitignore` ](https://git-scm.com/docs/gitignore): Tell [Git](https://git-scm.com) which files to ignore.
 - [`.pre-commit-config.yaml`](https://pre-commit.com/): Checks to perform before committing code.
+- [`docker-compose.yml`](https://docs.docker.com/compose/): Spins up docker container to develop these docs. Mkdocs will crash sometimes when editing `mkdocs.yml`, so Docker will restart the server automatically.
 - [`justfile`](https://github.com/casey/just): Common tasks for developing xFDS.
 - [`LICENSE`](https://opensource.org/licenses/MIT): Defines permissions for xFDS.
 - [`mkdocs.yml`](https://www.mkdocs.org/): Configuration for documentation.

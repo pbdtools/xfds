@@ -8,6 +8,9 @@ Refer to the [xFDS installation instructions](../installation.md)
 
 ### Install Git
 
+!!!info
+    [Installing Git](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup)
+
 Install [Git](https://git-scm.com/downloads) on your machine. Git is used for version control and must be used to contribute to the code base.
 
 Once you have Git installed, follow the [first time Git setup](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup) instructions.
@@ -29,6 +32,9 @@ cd xfds
 ```
 
 ### Install Poetry
+
+!!!info
+    [Installing Poetry](https://python-poetry.org/docs/#installation)
 
 [Poetry](https://python-poetry.org) is used to manage dependencies and build xFDS for distribution. Follow their [installation instructions](https://python-poetry.org/docs/#installation) for your operating system.
 
@@ -58,6 +64,9 @@ The Nox documentation suggests installing nox with `pip`, but `pipx` will isolat
 ## Other Tools
 
 ### Just
+
+!!!info
+    [Installing Just](https://github.com/casey/just#installation)
 
 [Just](https://github.com/casey/just) provides a way to save and run project-specific commands. These commands are stored in the [`justfile`](https://github.com/pbdtools/xfds/blob/main/justfile). Follow their [installation instructions](https://github.com/casey/just#installation) for your operating system.
 
