@@ -4,7 +4,6 @@ from pathlib import Path
 import typer
 
 from . import log
-from .core import locate_fds_file
 
 app = typer.Typer(
     name="stop",
@@ -14,20 +13,26 @@ app = typer.Typer(
 
 @app.callback(invoke_without_command=True)
 def stop(
-    fds_file: Path = typer.Argument(
+    file: Path = typer.Argument(
         ".",
-        callback=locate_fds_file,
         help=(
             "The FDS file or directory to stop. "
             "If a **FDS file** is specified, the FDS model will be stopped. "
-            "If a **directory** is specified, xFDS will find the first FDS file in the directory "
-            "and assume that is what it should stop. "
+            "If a **directory** is specified, xFDS will stop all FDS file in the directory. "
+            "This is especially useful when &CATF is used."
             "if **nothing** is specified, the current directory is used and the above rules are applied. "
         ),
     ),
 ) -> None:
     """Stop an FDS simulation."""
     log.section("Stop Command", icon="🛑")
-    stop_file = fds_file.resolve().with_suffix(".stop")
-    log.success(f"Stopping {fds_file}")
-    stop_file.touch()
+
+    if file.resolve().is_dir():
+        fds_files = list(file.glob("*.fds"))
+    else:
+        fds_files = [file]
+
+    for file in fds_files:
+        stop_file = file.resolve().with_suffix(".stop")
+        log.success(f"Stopping {file} with {stop_file}")
+        stop_file.touch()
