@@ -1,6 +1,6 @@
 xfds:
   render:
-    - name: ppn_{{n}}
+    - name: using_{{n}}_nodes
       files:
         - model.fds
         - model.pbs
