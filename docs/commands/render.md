@@ -1,51 +1,63 @@
 # Render Command
 
-```console title="Usage"
-xfds render [fds_file or config_file]
+## Usage
+```txt title="xfds render --help"
+{! ../docs/commands/render.help.txt !}
 ```
 
-The xFDS render command will take either an FDS file
+## Description
 
-```mermaid
-flowchart TB
+The xFDS render command converts template input files into usable modeling files. From a given directory (or the current directory if not specified), xFDS will traverse up the file system until it finds a `pbd.yml` [configuration file](/files/config/). It then parses the contents of the configuration file and generates a model for each set of [parameters](/files/config/#parameters).
 
-    classDef decision fill:#ddd,stroke:#000
-    classDef error fill:#ffaaaa,stroke:#f00
-    classDef success fill:#aaffaa,stroke:#424242
-    classDef load fill:#ccccff,stroke:#424242
-    classDef iterate fill:#FFE085,stroke:#424242
+Each input file specified in the configuration file will be treated like a [template](/files/input/). The templates will be processed with the data specified in the configuration file and placed in an `output` directory.
 
-    config_exists{Config File Exists}:::decision
-    fds_exists{FDS File Exists}:::decision
-    defaults{Defaults Defined}:::decision
-    models{Models Defined}:::decision
-    matrix{Matrix Defined}:::decision
+For example, the configuration file below expects two files to be located in the same directory as the configuration file: `model.fds` and `model.pbs`. It recognizes that a single `parameter` is set.
 
-    load_meta(Load Metadata):::load
-    load_defaults(Load Defaults):::load
-    load_values(Load Model Values Overriding Defaults):::load
-    load_template(Load FDS Tempalte):::load
-    render(Render Template):::success
+```python title="examples/pbs/pbd.yml" linenums="1"
+{! pbs/pbd.yml !}
+```
 
-    model_loop[\For Each Model/]:::iterate
-    permute[\For Each Config/]:::iterate
+The two input files are defined in a way that uses the `n` parameter from the configuration file. The `model.fds` template is a simple file that just creates `n` meshes placed next to each other in the x-direction. Meahwhile, the `model.pbs` template is a partial PBS file showing how the nodes specifications can be altered based on the `n`umber of processors required (assuming 1 processor per mesh).
 
-    file_not_found{{Raise FileNotFound Error}}:::error
-    models_not_defined{{Raise ModelsNotDefined Error}}:::error
-    export{{Export Rendered FDS File}}:::success
+```python title="examples/pbs/model.fds" linenums="1"
+{! pbs/model.fds !}
+```
+```python title="examples/pbs/model.pbs" linenums="1"
+{! pbs/model.pbs !}
+```
 
-    subgraph config_file[Config File]
-        defaults -->|yes| load_defaults --> models -->|yes| model_loop --> load_template --> matrix -->|yes| permute --> load_values
-        defaults -->|no| models
-        models -->|no| models_not_defined
-    end
+xFDS will process each of the templates and place them in a directory `./output/using_{{n}}_nodes` where `{{n}}` is replaced by the parameter `n`. Each model is placed in its own directory where the name matches the input files.
 
-    fds_exists -->|no| file_not_found
-    config_exists -->|no| fds_exists -->|yes| load_meta --> render
+!!! tip
+    While xFDS will treat every specified file as a template, if there is no template syntax defined, the file will be copied over to the output directory and be given the same base name as the model file. This is useful for having consistent Smokeview scripts, Smokeview ini files, or other files for each model.
 
-    config_exists -->|yes| defaults
-    matrix -->|no| render
-    load_values --> render
+!!! warning
+    xFDS will use the `name` defined in the configuration file and match the file extension from the template file. This is how `model.fds` gets renamed to `using_{{n}}_nodes.fds` in the output.
 
-    render --> export
+    If you are using the `&CATF` feature in FDS, make sure the `OTHER_FILES` do not have an `.fds` file extension. Use a `.txt` or `.data` extension instead if you need to use this feature.
+
+    You can have multiple `.fds` files in a project as long as they're specified as [different models](/topics/multiple_models/).
+
+Files in `output/using_4_nodes`:
+```python title="examples/pbs/output/using_4_nodes/using_4_nodes.fds" linenums="1"
+{! pbs/output/using_4_nodes/using_4_nodes.fds !}
+```
+```python title="examples/pbs/output/using_4_nodes/using_4_nodes.pbs" linenums="1"
+{! pbs/output/using_4_nodes/using_4_nodes.pbs !}
+```
+
+Files in `output/using_8_nodes`:
+```python title="examples/pbs/output/using_8_nodes/using_8_nodes.fds" linenums="1"
+{! pbs/output/using_8_nodes/using_8_nodes.fds !}
+```
+```python title="examples/pbs/output/using_8_nodes/using_8_nodes.pbs" linenums="1"
+{! pbs/output/using_8_nodes/using_8_nodes.pbs !}
+```
+
+Files in `output/using_12_nodes`:
+```python title="examples/pbs/output/using_12_nodes/using_12_nodes.fds" linenums="1"
+{! pbs/output/using_12_nodes/using_12_nodes.fds !}
+```
+```python title="examples/pbs/output/using_12_nodes/using_12_nodes.pbs" linenums="1"
+{! pbs/output/using_12_nodes/using_12_nodes.pbs !}
 ```
