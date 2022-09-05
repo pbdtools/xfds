@@ -1,5 +1,12 @@
 # Run Command
 
+## Usage
+```txt title="xfds run --help"
+{! ../docs/commands/run.help.txt !}
+```
+
+## Description
+
 The xFDS run command is a convience wrapper for docker run. xFDS determines the appropriate arguments for the model and exectues the docker run command for you.
 
 Unless stated otherwise, the commands below assume you are at `/home/pbdtools/models` with the following directory structure.
@@ -16,8 +23,6 @@ Unless stated otherwise, the commands below assume you are at `/home/pbdtools/mo
 └── single_mesh # Only 1 processor required
     └── single_mesh.fds
 ```
-
-
 
 ## Working in Different Shells
 

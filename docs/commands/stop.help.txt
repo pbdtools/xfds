@@ -1,0 +1,15 @@
+Usage: xfds stop [OPTIONS] [FILE] COMMAND [ARGS]...
+
+  Stop an FDS simulation that is running locally by creating a .stop file.
+
+Arguments:
+  [FILE]  The FDS file or directory to stop. If a **FDS file** is specified,
+          the FDS model will be stopped. If a **directory** is specified, xFDS
+          will stop all FDS file in the directory. This is especially useful
+          when &CATF is used.if **nothing** is specified, the current
+          directory is used and the above rules are applied.   [default: .]
+
+Options:
+  --help  Show this message and exit.
+
+  Developed by pbd.tools
