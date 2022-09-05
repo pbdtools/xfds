@@ -154,12 +154,13 @@ def render(
     config_file = locate_config(Path(directory))
     log.debug(f"Config File: {config_file}", icon="🛠️")
     os.chdir(config_file.parent)
+    project_root = config_file.parent.resolve()
 
-    user_filters = directory / "filters.py"
+    user_filters = project_root / "filters.py"
     if load_filters_from_path(user_filters):
         log.debug(f"Loaded Custom Filters: {user_filters}", icon="🛠️")
 
-    user_units = directory / "units.txt"
+    user_units = project_root / "units.txt"
     if user_units.exists():
         ureg.load_definitions(user_units.resolve())
 
@@ -168,12 +169,12 @@ def render(
 
     for model in models:
         for file in model["files"]:
-            input_file = directory / file
+            input_file = project_root / file
             if not input_file.exists():
                 raise FileNotFoundError(
                     f"Could not find {input_file.name} in {input_file.parent}"
                 )
-            output_dir = directory / "output" / model["name"]
+            output_dir = project_root / "output" / model["name"]
             output_file = output_dir / f"{model['name']}{input_file.suffix}"
             output_text = compile(input_file.read_text(), model["data"])
             write(output_file=output_file, contents=output_text)
