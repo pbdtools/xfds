@@ -1,0 +1,35 @@
+&HEAD VERSION = 7700, TITLE = 'CFAST Simulation' /
+
+!! Scenario Configuration
+&TIME SIMULATION = {{ tmax }} PRINT = 60 SMOKEVIEW = 15 SPREADSHEET = 15 /
+&INIT PRESSURE = 101325 RELATIVE_HUMIDITY = 50 INTERIOR_TEMPERATURE = 20 EXTERIOR_TEMPERATURE = 20 /
+
+!! Compartments
+&COMP ID = 'Comp 1'
+      DEPTH = {{ dx|str_convert('ft', 'm', '%.4f') }} HEIGHT = {{ dz|str_convert('ft', 'm', '%.4f') }} WIDTH = {{ dy|str_convert('ft', 'm', '%.4f') }}
+      ORIGIN = 0, 0, 0 GRID = 50, 50, 50 /
+
+!! Wall Vents
+&VENT TYPE = 'WALL'
+      ID = 'WallVent_1'
+      COMP_IDS = 'Comp 1' 'OUTSIDE' ,
+      BOTTOM = 0
+      HEIGHT = {{ H_v|str_convert('ft', 'm', '%.4f') }}
+      WIDTH = {{ W_v|str_convert('ft', 'm', '%.4f') }}
+      FACE = 'FRONT'
+      OFFSET = {{ offset|str_convert('ft', 'm', '%.4f') }} /
+
+!! Fires
+&FIRE ID = 'New Fire 1'  COMP_ID = '', FIRE_ID = 'New Fire 1'  LOCATION = 0, 0 /
+&CHEM ID = 'New Fire 1' CARBON = 1 CHLORINE = 0 HYDROGEN = 4 NITROGEN = 0 OXYGEN = 0 HEAT_OF_COMBUSTION = 50000 RADIATIVE_FRACTION = 0.35 /
+&TABL ID = 'New Fire 1' LABELS = 'TIME', 'HRR' , 'HEIGHT' , 'AREA' , 'CO_YIELD' , 'SOOT_YIELD' , 'HCN_YIELD' , 'HCL_YIELD' , 'TRACE_YIELD'  /
+
+!! Growth Phase
+{% for t in 15|arange(0, tg) %}
+&TABL ID = 'New Fire 1', DATA = {{ "%3d"|format(t) }}, {{ "%6.1f"|format(t|hrr(tg)) }}, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+{% endfor %}
+!! Steady State Phase
+&TABL ID = 'New Fire 1', DATA = {{ tg }}, {{ "%6.1f"|format(tg|hrr(tg)) }}, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = {{ tmax }}, {{ "%6.1f"|format((tmax - 1)|hrr(tg)) }}, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = {{ tmax + 1 }}, {{ "%6.1f"|format(0) }}, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TAIL /

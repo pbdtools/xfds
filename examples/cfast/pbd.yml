@@ -1,0 +1,18 @@
+xfds:
+  render:
+    - name: t2-fire_tg-{{ tg }}s
+      files:
+        - cfast.in
+      variables:
+        qmax: 1000
+        tmax: 800
+        # Compartment dimensions
+        dx: 20 # ft
+        dy: 15 # ft
+        dz: 8 # ft
+        # Vent Dimensions
+        H_v: 7 # ft
+        W_v: 3 # ft
+        offset: 5 # ft
+      parameters:
+        tg: [300, 600]

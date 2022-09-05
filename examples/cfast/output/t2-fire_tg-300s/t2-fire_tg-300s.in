@@ -1,0 +1,52 @@
+&HEAD VERSION = 7700, TITLE = 'CFAST Simulation' /
+
+!! Scenario Configuration
+&TIME SIMULATION = 800 PRINT = 60 SMOKEVIEW = 15 SPREADSHEET = 15 /
+&INIT PRESSURE = 101325 RELATIVE_HUMIDITY = 50 INTERIOR_TEMPERATURE = 20 EXTERIOR_TEMPERATURE = 20 /
+
+!! Compartments
+&COMP ID = 'Comp 1'
+      DEPTH = 6.0960 HEIGHT = 2.4384 WIDTH = 4.5720
+      ORIGIN = 0, 0, 0 GRID = 50, 50, 50 /
+
+!! Wall Vents
+&VENT TYPE = 'WALL'
+      ID = 'WallVent_1'
+      COMP_IDS = 'Comp 1' 'OUTSIDE' ,
+      BOTTOM = 0
+      HEIGHT = 2.1336
+      WIDTH = 0.9144
+      FACE = 'FRONT'
+      OFFSET = 1.5240 /
+
+!! Fires
+&FIRE ID = 'New Fire 1'  COMP_ID = '', FIRE_ID = 'New Fire 1'  LOCATION = 0, 0 /
+&CHEM ID = 'New Fire 1' CARBON = 1 CHLORINE = 0 HYDROGEN = 4 NITROGEN = 0 OXYGEN = 0 HEAT_OF_COMBUSTION = 50000 RADIATIVE_FRACTION = 0.35 /
+&TABL ID = 'New Fire 1' LABELS = 'TIME', 'HRR' , 'HEIGHT' , 'AREA' , 'CO_YIELD' , 'SOOT_YIELD' , 'HCN_YIELD' , 'HCL_YIELD' , 'TRACE_YIELD'  /
+
+!! Growth Phase
+&TABL ID = 'New Fire 1', DATA =   0,    0.0, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA =  15,    2.5, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA =  30,   10.0, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA =  45,   22.5, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA =  60,   40.0, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA =  75,   62.5, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA =  90,   90.0, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 105,  122.5, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 120,  160.0, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 135,  202.5, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 150,  250.0, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 165,  302.5, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 180,  360.0, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 195,  422.5, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 210,  490.0, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 225,  562.5, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 240,  640.0, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 255,  722.5, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 270,  810.0, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 285,  902.5, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+!! Steady State Phase
+&TABL ID = 'New Fire 1', DATA = 300, 1000.0, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 800, 1000.0, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TABL ID = 'New Fire 1', DATA = 801,    0.0, 0, 0.001, 0.01, 0.01, 0, 0, 0 /
+&TAIL /
