@@ -19,6 +19,10 @@ $ xfds --help
 
 ### Python
 
+!!!info
+    [Installing Python](https://realpython.com/installing-python/)
+
+
 [Python](https://www.python.org/) is a high-level general-purpose programming language. If you don't have Python installed on your machine, it is recommended that you get the latest stable version of the Python interpreter. [Real Python](https://realpython.com) has a nice [article](https://realpython.com/installing-python/) to help you get Python on your machine.
 
 **How does xFDS use Python?**
@@ -27,6 +31,9 @@ xFDS is written in Python! You will need a Python interpreter for xFDS to run.
 
 ### pipx
 
+!!!info
+    [Installing pipx](https://pypa.github.io/pipx/installation/)
+
 [pipx](https://pypa.github.io/pipx/) allows you to install python applications in isolated envrionments. To install pipx, check out their [installation instructions](https://pypa.github.io/pipx/installation/)
 
 **How does xFDS use pipx?**
@@ -34,6 +41,9 @@ xFDS is written in Python! You will need a Python interpreter for xFDS to run.
 While you could use [pip](https://pip.pypa.io/en/stable/) to install xFDS, it could interfere with the Python version your machine uses to function. pipx is the recommended way to install xFDS on your machine.
 
 ### Docker
+
+!!!info
+    [Installing Docker](https://www.docker.com/get-started/)
 
 [Docker](https://www.docker.com/) is a platform used to develop and deliver software in packages called containers. These containers are lightweight computing environment that use the host computer's resources, while isolating the running container from the host machine.
 
