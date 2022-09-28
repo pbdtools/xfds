@@ -25,6 +25,12 @@ $ xfds --help
 
 [Python](https://www.python.org/) is a high-level general-purpose programming language. If you don't have Python installed on your machine, it is recommended that you get the latest stable version of the Python interpreter. [Real Python](https://realpython.com) has a nice [article](https://realpython.com/installing-python/) to help you get Python on your machine.
 
+!!! warning
+    If you're installing xFDS on Ubuntu, Python may already be installed, but you will have to install `pip` and `venv`. `pip` is needed to install packages such as `pipx` and `venv` is required so `pipx` can install `xFDS` in an isolated environment.
+    ```console title="Install pip and venv"
+    sudo apt install python3-pip python3-venv
+    ```
+
 **How does xFDS use Python?**
 
 xFDS is written in Python! You will need a Python interpreter for xFDS to run.
@@ -43,7 +49,8 @@ While you could use [pip](https://pip.pypa.io/en/stable/) to install xFDS, it co
 ### Docker
 
 !!!info
-    [Installing Docker](https://www.docker.com/get-started/)
+    If you are installing this on a server install [Docker Engine](https://docs.docker.com/engine/install/). Otherwise, to get the desktop client, install
+    [Docker Desktop](https://www.docker.com/get-started/) (includes Docker Engine).
 
 [Docker](https://www.docker.com/) is a platform used to develop and deliver software in packages called containers. These containers are lightweight computing environment that use the host computer's resources, while isolating the running container from the host machine.
 
