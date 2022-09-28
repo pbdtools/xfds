@@ -1,0 +1,33 @@
+Usage: xfds run [OPTIONS] [FDS_FILE] COMMAND [ARGS]...
+
+  Run an FDS in a Docker container.
+
+Arguments:
+  [FDS_FILE]  The FDS file or directory to run. If a **FDS file** is
+              specified, the FDS model will run. If a **directory** is
+              specified, xFDS will find the first FDS file in the directory
+              and assume that is what it should run. If no fds file exists,
+              xFDS will default to interactive mode. if **nothing** is
+              specified, the current directory is used and the above rules are
+              applied.   [default: .]
+
+Options:
+  -i, --interactive               Launch Docke-r container in interactive mode
+                                  (`docker run -it`). By default, the Docker
+                                  image will run the FDS model, but
+                                  interactive mode will put you into the
+                                  container where you can start the FDS model
+                                  manually. This is good for when you are
+                                  rapidly iterating and don't want to wait for
+                                  the Docker image load time.
+  -n, --processors INTEGER RANGE  Specify number of processors. If the number
+                                  of processors is greater than 1, it will
+                                  invoke MPI for you (`mpiexec -n #`). Ignored
+                                  if interactive mode is enabled.   [default:
+                                  1; x>=1]
+  -v, --fds TEXT                  Specify FDS version to use. The FDS version
+                                  can also be extracted from the file path or
+                                  metadata in the FDS file.
+  --help                          Show this message and exit.
+
+  Developed by pbd.tools

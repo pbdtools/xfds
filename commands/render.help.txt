@@ -1,0 +1,11 @@
+Usage: xfds render [OPTIONS] [DIRECTORY] COMMAND [ARGS]...
+
+  Render an FDS template file into scenarios.
+
+Arguments:
+  [DIRECTORY]  Directory containing pbd.yml configuration file.  [default: .]
+
+Options:
+  --help  Show this message and exit.
+
+  Developed by pbd.tools

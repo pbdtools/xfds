@@ -1,0 +1,11 @@
+Usage: xfds reset [OPTIONS] [DIRECTORY] COMMAND [ARGS]...
+
+  Reset a folder by clearing everything except specified files.
+
+Arguments:
+  [DIRECTORY]  Directory containing model files.  [default: .]
+
+Options:
+  --help  Show this message and exit.
+
+  Developed by pbd.tools
